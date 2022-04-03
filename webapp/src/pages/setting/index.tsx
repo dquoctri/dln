@@ -1,10 +1,10 @@
 import React, { Fragment } from 'react'
-import AppTitle from '../../components/app-title'
+import PageTitle from '../../components/PageTitle'
 
 const Settings = () => {
   return (
     <Fragment>
-      <AppTitle title='Settings-Deadline' />
+      <PageTitle title="Settings-Deadline" />
       <p>Settings</p>
     </Fragment>
   )

@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { Theme } from '@mui/material/styles'
+// import { Theme } from '@mui/material/styles'
 import { LanguageKeys } from '../../locales'
 import { ThemeMode } from '../../theme'
 import { lightTheme, darkTheme } from '../../theme'

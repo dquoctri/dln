@@ -12,11 +12,12 @@ export interface AuthenticationState {
   email?: string
   issuedAt?: number
   expiresAt?: number
+  roles: Array<string>
   isAdmin: boolean
   //more infor
 }
 
-const initialState: AuthenticationState = { loggedIn: true, isAdmin: true }
+const initialState: AuthenticationState = { loggedIn: true, isAdmin: true, roles: ["USER", "VIEW"] }
 
 function loginReducer(
   state: AuthenticationState,

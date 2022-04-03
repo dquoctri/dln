@@ -7,5 +7,5 @@ export const LocalizationKeys = {
   langId: 'lang-id',
   langName: 'lang-name',
   locales: 'locales',
-  title: 'title',
+  title_key: 'title',
 }

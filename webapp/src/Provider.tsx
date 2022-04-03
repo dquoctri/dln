@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react'
+import React, { ReactNode, Suspense } from 'react'
 import { Provider as ReduxProvider } from 'react-redux'
 import { CookiesProvider } from 'react-cookie'
 import { I18nextProvider } from 'react-i18next'
@@ -17,11 +17,14 @@ const Provider = ({ children }: Props) => {
   return (
     <CookiesProvider>
       <ReduxProvider store={store}>
-        <PersistGate loading={<Loader />} persistor={persistor}>
-          <I18nextProvider i18n={i18n}>
-            <HelmetProvider>{children}</HelmetProvider>
-          </I18nextProvider>
-        </PersistGate>
+        <HelmetProvider>
+          <PersistGate loading={<Loader />} persistor={persistor}>
+            <Suspense fallback={<Loader />}>
+              <I18nextProvider i18n={i18n}>
+                {children}
+              </I18nextProvider></Suspense>
+          </PersistGate>
+        </HelmetProvider>
       </ReduxProvider>
     </CookiesProvider>
   )
