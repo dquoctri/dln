@@ -6,23 +6,29 @@ import { Menu } from '@mui/icons-material'
 import LogoSection from './LogoSection'
 
 const Header = () => {
-  const theme = useTheme();
+  const theme = useTheme()
   return (
     <>
       <Box
         sx={{
           width: 228,
           display: 'flex',
-          [theme.breakpoints.down('md')]: {
-            width: 'auto'
-          },
-          backgroundColor: `${alpha(theme.palette.background.default, 0.72)}`
+          backgroundColor: `${alpha(theme.palette.background.default, 0.72)}`,
         }}
       >
-        <Box component="span" sx={{ display: { xs: 'none', md: 'block' }, flexGrow: 1 }}>
+        <Box
+          component="span"
+          sx={{ display: { xs: 'none', md: 'block' }, flexGrow: 1 }}
+        >
           <LogoSection />
         </Box>
-        <ButtonBase sx={{ borderRadius: '12px', overflow: 'hidden', backgroundColor: `${alpha(theme.palette.background.default, 0.72)}` }}>
+        <ButtonBase
+          sx={{
+            borderRadius: '12px',
+            overflow: 'hidden',
+            backgroundColor: `${alpha(theme.palette.background.default, 0.72)}`,
+          }}
+        >
           <Avatar
             variant="rounded"
             sx={{
@@ -30,8 +36,8 @@ const Header = () => {
               color: theme.palette.secondary.dark,
               '&:hover': {
                 background: theme.palette.secondary.dark,
-                color: theme.palette.secondary.light
-              }
+                color: theme.palette.secondary.light,
+              },
             }}
             // onClick={handleLeftDrawerToggle}
             color="inherit"
@@ -45,7 +51,6 @@ const Header = () => {
         <Link to="/setting">setting </Link>
         <Link to="/admin">admin </Link>
         <Link to="/admin/management">management </Link>
-
       </Box>
     </>
   )

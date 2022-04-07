@@ -11,7 +11,7 @@ interface Props {
 
 const PrivateRoute = ({ children, roles }: Props) => {
   const auth = useSelector(authenticationSelector)
-  let location = useLocation()
+  const location = useLocation()
 
   if (!roles) return children
 
@@ -19,9 +19,11 @@ const PrivateRoute = ({ children, roles }: Props) => {
     return <Navigate to="/login" state={{ from: location }} replace />
   }
 
-  if ((roles.length === 0 && auth.loggedIn)
-    || roles.some(role => (auth.roles && auth.roles.includes(role)))) {
-    return children;
+  if (
+    (roles.length === 0 && auth.loggedIn) ||
+    roles.some((role) => auth.roles && auth.roles.includes(role))
+  ) {
+    return children
   }
 
   return <Navigate to="/403" />

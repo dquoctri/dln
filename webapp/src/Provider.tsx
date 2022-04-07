@@ -1,9 +1,9 @@
-import React, { ReactNode, Suspense } from 'react'
+import React, { ReactNode } from 'react'
 import { Provider as ReduxProvider } from 'react-redux'
+import { HelmetProvider } from 'react-helmet-async'
 import { CookiesProvider } from 'react-cookie'
 import { I18nextProvider } from 'react-i18next'
 import { PersistGate } from 'redux-persist/integration/react'
-import { HelmetProvider } from 'react-helmet-async'
 import { store, persistor } from './stote'
 import i18n from './locales/I18n'
 import Loader from './components/loader'
@@ -15,18 +15,15 @@ interface Props {
 
 const Provider = ({ children }: Props) => {
   return (
-    <CookiesProvider>
-      <ReduxProvider store={store}>
-        <HelmetProvider>
+    <HelmetProvider>
+      <CookiesProvider>
+        <ReduxProvider store={store}>
           <PersistGate loading={<Loader />} persistor={persistor}>
-            <Suspense fallback={<Loader />}>
-              <I18nextProvider i18n={i18n}>
-                {children}
-              </I18nextProvider></Suspense>
+            <I18nextProvider i18n={i18n}>{children}</I18nextProvider>
           </PersistGate>
-        </HelmetProvider>
-      </ReduxProvider>
-    </CookiesProvider>
+        </ReduxProvider>
+      </CookiesProvider>
+    </HelmetProvider>
   )
 }
 

@@ -12,8 +12,14 @@ const Home = Loadable(lazy(() => import('../pages/home')))
 const Dashboard = Loadable(lazy(() => import('../pages/dashboard')))
 const Profile = Loadable(lazy(() => import('../pages/profile')))
 const Settings = Loadable(lazy(() => import('../pages/setting')))
-const AdminDashboard = Loadable(lazy(() => import('../pages/admin/dashboard')), [])
-const Management = Loadable(lazy(() => import('../pages/admin/management')), [])
+const AdminDashboard = Loadable(
+  lazy(() => import('../pages/admin/dashboard')),
+  []
+)
+const Management = Loadable(
+  lazy(() => import('../pages/admin/management')),
+  []
+)
 
 export const MainRoutes: RouteObject = {
   path: '/',
@@ -27,9 +33,9 @@ export const MainRoutes: RouteObject = {
     { path: '403', element: <Forbidden /> },
     { path: '401', element: <Unauthorized /> },
     { path: '404', element: <NotFound /> },
-    { path: '*', element: <Navigate to="/404" /> }
+    { path: '*', element: <Navigate to="/404" /> },
   ],
-};
+}
 
 export const AdminRoutes: RouteObject = {
   path: '/admin',
@@ -38,4 +44,4 @@ export const AdminRoutes: RouteObject = {
     { index: true, element: <AdminDashboard /> },
     { path: 'management', element: <Management /> },
   ],
-};
+}

@@ -8,6 +8,6 @@ const LogoSection = () => (
   <ButtonBase disableRipple>
     <LogoDevSharp sx={{ color: red[500] }} />
   </ButtonBase>
-);
+)
 
-export default LogoSection;
+export default LogoSection

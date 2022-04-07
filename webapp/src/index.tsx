@@ -13,4 +13,4 @@ const appElement = (
   </React.StrictMode>
 )
 
-root?.render(appElement)
+root && root.render(appElement)

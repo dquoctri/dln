@@ -4,11 +4,7 @@ import { MainRoutes, AdminRoutes } from './config.d'
 
 const AppRoutes = () => {
   const routing = useRoutes([AdminRoutes, MainRoutes])
-  return (
-    <>
-      {routing}
-    </>
-  )
+  return <>{routing}</>
 }
 
 export default AppRoutes

@@ -16,11 +16,12 @@ const NotFound = () => {
               </Typography>
             </div>
             <Typography sx={{ color: 'text.secondary' }}>
-              Sorry, we couldn’t find the page you’re looking for. Perhaps you’ve mistyped the URL?
-              Be sure to check your spelling.
+              Sorry, we couldn&apos;t find the page you&apos;re looking for.
+              Perhaps you&apos;ve mistyped the URL? Be sure to check your
+              spelling.
             </Typography>
 
-            <div >
+            <div>
               <Box
                 component="img"
                 src="/static/illustrations/illustration_404.svg"
@@ -33,7 +34,7 @@ const NotFound = () => {
       </Container>
       <p>Oops! page not found </p>
       <p>
-        Sorry, we can't find that page! It might be an old link or maybe it
+        Sorry, we can&apos;t find that page! It might be an old link or maybe it
         moved
       </p>
       <p>/Search function</p>
