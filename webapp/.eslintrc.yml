@@ -14,4 +14,19 @@ parserOptions:
 plugins:
   - react
   - '@typescript-eslint'
-rules: {}
+rules:
+  indent:
+    - warn
+    - 2
+    - SwitchCase: 1
+  linebreak-style:
+    - warn
+    - unix
+  quotes:
+    - warn
+    - single
+  semi:
+    - warn
+    - never
+  '@typescript-eslint/no-explicit-any': 'off'
+  '@typescript-eslint/no-unused-vars': [warn, { argsIgnorePattern: ^_, varsIgnorePattern: "^_|[iI]gnored" }]

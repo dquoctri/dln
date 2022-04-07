@@ -2,10 +2,7 @@ export {}
 
 if (!Array.prototype.partition) {
   // eslint-disable-next-line
-  Array.prototype.partition = function <T>(
-    this: T[],
-    predicate: (element: T) => boolean
-  ): { first: T[]; second: T[] } {
+  Array.prototype.partition = function <T>(this: T[], predicate: (element: T) => boolean): { first: T[]; second: T[] } {
     const first: T[] = []
     const second: T[] = []
     for (const element of this) {

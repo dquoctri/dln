@@ -23,10 +23,7 @@ const initialState: AuthenticationState = {
   roles: ['USER', 'VIEW'],
 }
 
-function loginReducer(
-  state: AuthenticationState,
-  action: PayloadAction<AuthenticationState>
-) {
+function loginReducer(state: AuthenticationState, action: PayloadAction<AuthenticationState>) {
   state = { ...action.payload, loggedIn: true }
   return state
 }

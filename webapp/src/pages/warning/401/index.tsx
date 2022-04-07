@@ -7,8 +7,7 @@ const Unauthorized = () => {
     <Fragment>
       <PageTitle title="Unauthorized-Deadline" />
       <p>
-        Full authentication is required to access this resource:{' '}
-        <Link to="/login">/login</Link>
+        Full authentication is required to access this resource: <Link to="/login">/login</Link>
       </p>
     </Fragment>
   )

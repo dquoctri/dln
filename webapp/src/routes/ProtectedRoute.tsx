@@ -9,7 +9,7 @@ interface Props {
   children: JSX.Element
 }
 
-const PrivateRoute = ({ children, roles }: Props) => {
+const ProtectedRoute = ({ children, roles }: Props) => {
   const auth = useSelector(authenticationSelector)
   const location = useLocation()
 
@@ -19,14 +19,11 @@ const PrivateRoute = ({ children, roles }: Props) => {
     return <Navigate to="/login" state={{ from: location }} replace />
   }
 
-  if (
-    (roles.length === 0 && auth.loggedIn) ||
-    roles.some((role) => auth.roles && auth.roles.includes(role))
-  ) {
+  if ((roles.length === 0 && auth.loggedIn) || roles.some((role) => auth.roles && auth.roles.includes(role))) {
     return children
   }
 
   return <Navigate to="/403" />
 }
 
-export default PrivateRoute
+export default ProtectedRoute

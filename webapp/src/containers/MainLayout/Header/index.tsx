@@ -16,10 +16,7 @@ const Header = () => {
           backgroundColor: `${alpha(theme.palette.background.default, 0.72)}`,
         }}
       >
-        <Box
-          component="span"
-          sx={{ display: { xs: 'none', md: 'block' }, flexGrow: 1 }}
-        >
+        <Box component="span" sx={{ display: { xs: 'none', md: 'block' }, flexGrow: 1 }}>
           <LogoSection />
         </Box>
         <ButtonBase

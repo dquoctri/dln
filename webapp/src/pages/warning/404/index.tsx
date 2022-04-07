@@ -16,9 +16,8 @@ const NotFound = () => {
               </Typography>
             </div>
             <Typography sx={{ color: 'text.secondary' }}>
-              Sorry, we couldn&apos;t find the page you&apos;re looking for.
-              Perhaps you&apos;ve mistyped the URL? Be sure to check your
-              spelling.
+              Sorry, we couldn&apos;t find the page you&apos;re looking for. Perhaps you&apos;ve mistyped the URL? Be
+              sure to check your spelling.
             </Typography>
 
             <div>
@@ -33,10 +32,7 @@ const NotFound = () => {
         </div>
       </Container>
       <p>Oops! page not found </p>
-      <p>
-        Sorry, we can&apos;t find that page! It might be an old link or maybe it
-        moved
-      </p>
+      <p>Sorry, we can&apos;t find that page! It might be an old link or maybe it moved</p>
       <p>/Search function</p>
     </Fragment>
   )

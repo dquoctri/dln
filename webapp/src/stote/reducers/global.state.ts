@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-// import { Theme } from '@mui/material/styles'
 import { LanguageKeys } from '../../locales'
 import { ThemeMode } from '../../theme'
 import { lightTheme, darkTheme } from '../../theme'
+import { ThemeOptions } from '@mui/material/styles'
 
 export enum GlobalType {
   SET_LANGUAGE = 'global/language',
@@ -11,15 +11,12 @@ export enum GlobalType {
 
 export interface GlobalState {
   lng: LanguageKeys
-  theme: any
+  theme: ThemeOptions | any
 }
 
 const initialState: GlobalState = { lng: LanguageKeys.EN, theme: lightTheme }
 
-function LanguageReducer(
-  state: GlobalState,
-  action: PayloadAction<LanguageKeys>
-) {
+function LanguageReducer(state: GlobalState, action: PayloadAction<LanguageKeys>) {
   state.lng = action.payload
 }
 

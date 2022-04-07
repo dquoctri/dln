@@ -6,6 +6,46 @@ const Settings = () => {
     <Fragment>
       <PageTitle title="Settings-Deadline" />
       <p>Settings</p>
+      <p>Settings</p>
+      <p>Settings</p>
+      <p>Settings</p>
+      <p>Settings</p>
+
+      <p>Settings</p>
+      <p>Settings</p>
+      <p>Settings</p>
+      <p>Settings</p>
+      <p>Settings</p>
+      <p>Settings</p>
+      <p>Settings</p>
+      <p>Settings</p>
+
+      <p>Settings</p>
+      <p>Settings</p>
+      <p>Settings</p>
+      <p>Settings</p>
+      <p>Settings</p>
+      <p>Settings</p>
+
+      <p>Settings</p>
+      <p>Settings</p>
+      <p>Settings</p>
+      <p>Settings</p>
+      <p>Settings</p>
+      <p>Settings</p>
+      <p>Settings</p>
+
+      <p>Settings</p>
+      <p>Settings</p>
+      <p>Settings</p>
+      <p>Settings</p>
+      <p>Settings</p>
+      <p>Settings</p>
+      <p>Settings</p>
+      <p>Settings</p>
+      <p>Settings</p>
+
+      <p>Settings</p>
     </Fragment>
   )
 }

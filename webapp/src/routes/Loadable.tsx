@@ -1,25 +1,22 @@
 import React, { Suspense, LazyExoticComponent } from 'react'
 import Loader from '../components/loader'
-import PrivateRoute from './PrivateRoute'
+import ProtectedRoute from './ProtectedRoute'
+
+interface ProtectedProps {
+  roles?: Array<string>
+}
 
 const Loadable = (
-  Component: LazyExoticComponent<() => JSX.Element>,
-  roles?: Array<string>
+  Component: LazyExoticComponent<() => JSX.Element> | (() => JSX.Element),
+  protectedProps?: ProtectedProps
 ) => {
   const render = (props: any) => {
-    if (!roles) {
-      return (
-        <Suspense fallback={<Loader />}>
-          <Component {...props} />
-        </Suspense>
-      )
-    }
     return (
-      <PrivateRoute roles={roles}>
+      <ProtectedRoute roles={protectedProps?.roles}>
         <Suspense fallback={<Loader />}>
           <Component {...props} />
         </Suspense>
-      </PrivateRoute>
+      </ProtectedRoute>
     )
   }
   return render
