@@ -9,6 +9,7 @@ interface Props {
   title: string
 }
 
+
 const PageTitle = ({ title }: Props) => {
   const { t } = useTranslation()
   return (

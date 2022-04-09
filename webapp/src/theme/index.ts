@@ -2,6 +2,8 @@ import { PaletteMode } from '@mui/material'
 // import { createTheme } from '@mui/material/styles'
 import { amber, grey, deepOrange } from '@mui/material/colors'
 import { ThemeOptions } from '@mui/material/styles'
+import { Shadows } from '@mui/material/styles/shadows'
+
 
 export enum ThemeMode {
   LIGHT = 'light',
@@ -22,7 +24,8 @@ const darkDefaultTheme: ThemeOptions = {
       primary: '#fff',
       secondary: grey[500],
     },
-  }
+  },
+  shadows: Array(25).fill('none') as Shadows
 }
 
 const lightDefaultTheme: ThemeOptions = {
@@ -35,12 +38,13 @@ const lightDefaultTheme: ThemeOptions = {
       primary: grey[900],
       secondary: grey[800],
     },
-  }
+  },
+  shadows: Array(25).fill('none') as Shadows
 }
 
-const getDesignTokens = (mode: PaletteMode) => (() => {
+const getDesignTokens = (mode: PaletteMode) => () => {
   return mode === 'light' ? lightDefaultTheme : darkDefaultTheme
-})
+}
 
 // A custom theme for this app
 export const lightTheme: ThemeOptions = {
@@ -53,6 +57,7 @@ export const lightTheme: ThemeOptions = {
     //   secondary: grey[800],
     // },
   },
+  shadows: Array(25).fill('none') as Shadows
 }
 
 // A custom theme for this app
@@ -70,6 +75,7 @@ export const darkTheme: ThemeOptions = {
     //   secondary: grey[500],
     // },
   },
+  shadows: Array(25).fill('none') as Shadows
 }
 
 export default getDesignTokens

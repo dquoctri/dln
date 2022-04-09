@@ -1,26 +1,30 @@
 version: '3.9'
 
-x-common-variables: &common-variables
+x-common-variables:
+  &common-variables
   ASPNETCORE_ENVIRONMENT: development
   HOST_HOSTNAME: ${HOSTNAME}
 
 services:
   webapp:
     container_name: react_app
-    image: ${DOCKER_REGISTRY-}webapp:1.0
-    build: 
+    image: ${DOCKER_REGISTRY-}_webapp:1.0
+    build:
       dockerfile: ${WEBAPP_DOCKERFILE}
       context: ./webapp
     # depends_on:
     #   - rabbitmq0
     environment:
       <<: *common-variables
+      NODE_ENV: development
+      FAST_REFRESH: "false"
       CHOKIDAR_USEPOLLING: "true"
+      WDS_SOCKET_PORT: 0
     volumes:
       - './webapp:/app'
       - 'webapp_node_modules:/app/node_modules'
     ports:
-      - 3000:3000
+      - ${WEBAPP_PUBLIC_PORT}:${WEBAPP_PORT}
     stdin_open: true
     tty: true
     networks:

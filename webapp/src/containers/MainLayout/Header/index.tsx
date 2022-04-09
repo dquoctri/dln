@@ -47,7 +47,7 @@ const Header = () => {
         <Link to="/profile">Profile </Link>
         <Link to="/setting">setting </Link>
         <Link to="/admin">admin </Link>
-        <Link to="/admin/management">management </Link>
+        <Link to="/admin/management"> management </Link>
       </Box>
     </>
   )
