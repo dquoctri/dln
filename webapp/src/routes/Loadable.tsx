@@ -1,18 +1,12 @@
 import React, { Suspense, LazyExoticComponent } from 'react'
 import Loader from '../components/loader'
 import ProtectedRoute from './ProtectedRoute'
+import ProtectedProps from './protected.type'
 
-interface ProtectedProps {
-  roles?: Array<string>
-}
-
-const Loadable = (
-  Component: LazyExoticComponent<() => JSX.Element> | (() => JSX.Element),
-  protectedProps?: ProtectedProps
-) => {
+const Loadable = (Component: LazyExoticComponent<(ref: any) => JSX.Element>, protectedProps?: ProtectedProps) => {
   const render = (props: any) => {
     return (
-      <ProtectedRoute roles={protectedProps?.roles}>
+      <ProtectedRoute {...protectedProps}>
         <Suspense fallback={<Loader />}>
           <Component {...props} />
         </Suspense>

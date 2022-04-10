@@ -1,26 +1,48 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { Navigate, useLocation } from 'react-router-dom'
+import { Typography } from '@mui/material'
 import { authenticationSelector } from '../stote/selectors'
+import ProtectedProps from './protected.type'
 
 // define interface to represent component props
-interface Props {
-  roles?: Array<string>
+export interface Props extends ProtectedProps {
   children: JSX.Element
 }
 
-const ProtectedRoute = ({ children, roles }: Props) => {
+const ProtectedRoute = ({ children, roles, features }: Props) => {
   const auth = useSelector(authenticationSelector)
   const location = useLocation()
 
-  if (!roles) return children
+  function warnFeatures() {
+    if (!features || auth.roles.every((role) => features && features.includes(role))) {
+      return children
+    }
+    return (
+      <>
+        <Typography variant="body2">Lorem ipsum dolor sit</Typography>
+        <Typography variant="body2">Lorem ipsum dolor sit</Typography>
+        <Typography variant="body2">Lorem ipsum dolor sit</Typography>
+        <Typography variant="body2">Lorem ipsum dolor sit</Typography>
+        <Typography variant="body2">Lorem ipsum dolor sit</Typography>
+        <Typography variant="body2">Lorem ipsum dolor sit</Typography>
+        <Typography variant="body2">Lorem ipsum dolor sit</Typography>
+        <Typography variant="body2">Lorem ipsum dolor sit</Typography>
+        <Typography variant="body2">Lorem ipsum dolor sit</Typography>
+        <Typography variant="body2">Lorem ipsum dolor sit</Typography>
+        {children}
+      </>
+    )
+  }
+
+  if (!roles) return warnFeatures()
 
   if (!auth.loggedIn) {
     return <Navigate to="/login" state={{ from: location }} replace />
   }
 
   if ((roles.length === 0 && auth.loggedIn) || roles.some((role) => auth.roles && auth.roles.includes(role))) {
-    return children
+    return warnFeatures()
   }
 
   return <Navigate to="/403" />
