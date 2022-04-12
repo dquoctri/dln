@@ -1,41 +1,18 @@
-import React from 'react'
-import { Link, Outlet } from 'react-router-dom'
+import React, { Fragment } from 'react'
+import { Outlet } from 'react-router-dom'
 
-import { useTheme } from '@mui/material/styles'
-import { AppBar, Container, Toolbar } from '@mui/material'
-
-import Footer from './Footer'
 import Header from './Header'
+import Footer from './Footer'
 
 const MainLayout = () => {
-  const theme = useTheme()
-  const leftDrawerOpened = true
-
   return (
-    <Container>
-      <Container>
-        <AppBar
-          position="fixed"
-          enableColorOnDark
-          color="inherit"
-          elevation={14}
-          sx={{
-            bgcolor: theme.palette.background.default,
-            transition: leftDrawerOpened ? theme.transitions.create('width') : 'none',
-          }}
-        >
-          <Toolbar>
-            <Header />
-          </Toolbar>
-        </AppBar>
-      </Container>
-      <Container>
+    <Fragment>
+      <Header />
+      <main>
         <Outlet />
-      </Container>
-      <Footer>
-        <Link to="/setting">setting </Link>
-      </Footer>
-    </Container>
+      </main>
+      <Footer />
+    </Fragment>
   )
 }
 

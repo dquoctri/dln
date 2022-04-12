@@ -1,17 +1,12 @@
-import React, { Fragment, ReactNode } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
 import { Typography } from '@mui/material'
 import { Favorite } from '@mui/icons-material'
 import { red } from '@mui/material/colors'
 
-// define interface to represent component props
-interface Props {
-  children: ReactNode
-}
-
-const Footer = ({ children }: Props) => {
+const Footer = () => {
   return (
-    <Fragment>
+    <footer className="footer">
       <Typography variant="h6" align="center" gutterBottom>
         Footer
       </Typography>
@@ -21,8 +16,7 @@ const Footer = ({ children }: Props) => {
       <Typography variant="subtitle2" align="center" color="textSecondary" component="p">
         Made with <Favorite sx={{ color: red[500] }} /> by <Link to="/">Deadl!ne</Link>
       </Typography>
-      {children}
-    </Fragment>
+    </footer>
   )
 }
 

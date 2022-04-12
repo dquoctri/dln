@@ -1,55 +1,46 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import { useTheme, alpha } from '@mui/material/styles'
-import { Avatar, Box, ButtonBase } from '@mui/material'
-import { Menu } from '@mui/icons-material'
+import React, { Fragment } from 'react'
+import { useTheme } from '@mui/material/styles'
+import { AppBar, Box, Fab, Toolbar } from '@mui/material'
+import useScrollTrigger from '@mui/material/useScrollTrigger'
+import { KeyboardArrowUp } from '@mui/icons-material'
 import LogoSection from './LogoSection'
+import ScrollTop from '../../common/ScrollTop'
 
 const Header = () => {
   const theme = useTheme()
+  const trigger = useScrollTrigger({
+    disableHysteresis: true,
+    threshold: 0,
+  })
   return (
-    <>
-      <Box
+    <Fragment>
+      <AppBar
+        enableColorOnDark
+        elevation={trigger ? 4 : 0}
         sx={{
-          width: 228,
-          display: 'flex',
-          backgroundColor: `${alpha(theme.palette.background.default, 0.72)}`,
+          bgcolor: theme.palette.background.default,
         }}
       >
-        <Box component="span" sx={{ display: { xs: 'none', md: 'block' }, flexGrow: 1 }}>
-          <LogoSection />
-        </Box>
-        <ButtonBase
-          sx={{
-            borderRadius: '12px',
-            overflow: 'hidden',
-            backgroundColor: `${alpha(theme.palette.background.default, 0.72)}`,
-          }}
+        <Toolbar>
+          <Box component="span" sx={{ display: { xs: 'none', sm: 'block' }, flexGrow: 1 }}>
+            <LogoSection />
+          </Box>
+          {/* todo */}
+        </Toolbar>
+      </AppBar>
+      <Toolbar id="back-to-top-anchor" />
+      <ScrollTop anchorId="back-to-top-anchor">
+        <Fab
+          color="secondary"
+          style={{ borderRadius: '5%' }}
+          size="small"
+          variant="circular"
+          aria-label="scroll back to top"
         >
-          <Avatar
-            variant="rounded"
-            sx={{
-              background: theme.palette.secondary.light,
-              color: theme.palette.secondary.dark,
-              '&:hover': {
-                background: theme.palette.secondary.dark,
-                color: theme.palette.secondary.light,
-              },
-            }}
-            // onClick={handleLeftDrawerToggle}
-            color="inherit"
-          >
-            <Menu />
-          </Avatar>
-        </ButtonBase>
-        <Link to="/">home </Link>
-        <Link to="/dashboard">dashboard </Link>
-        <Link to="/profile">Profile </Link>
-        <Link to="/setting">setting </Link>
-        <Link to="/admin">admin </Link>
-        <Link to="/admin/management"> management </Link>
-      </Box>
-    </>
+          <KeyboardArrowUp />
+        </Fab>
+      </ScrollTop>
+    </Fragment>
   )
 }
 

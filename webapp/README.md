@@ -50,3 +50,10 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 yarn run prettier --write src
 
 yarn eslint --init
+
+Default breakpoints
+xs, extra-small: 0px
+sm, small: 600px
+md, medium: 900px
+lg, large: 1200px
+xl, extra-large: 1536px

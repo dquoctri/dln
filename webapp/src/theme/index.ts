@@ -1,8 +1,7 @@
 import { PaletteMode } from '@mui/material'
 // import { createTheme } from '@mui/material/styles'
-import { amber, grey, deepOrange } from '@mui/material/colors'
+import { common, amber, grey, blue, green, deepOrange } from '@mui/material/colors'
 import { ThemeOptions } from '@mui/material/styles'
-import { Shadows } from '@mui/material/styles/shadows'
 
 export enum ThemeMode {
   LIGHT = 'light',
@@ -24,21 +23,30 @@ const darkDefaultTheme: ThemeOptions = {
       secondary: grey[500],
     },
   },
-  shadows: Array(25).fill('none') as Shadows,
 }
 
 const lightDefaultTheme: ThemeOptions = {
   palette: {
     mode: 'light',
     // palette values for light mode
+    common: common,
     primary: amber,
+    secondary: deepOrange,
+    error: {
+      main: '#d32f2f',
+      // light: '#ef5350',
+      // dark: '#c52828',
+      contrastText: '#fff',
+    },
+    warning: amber,
+    info: blue,
+    success: green,
     divider: amber[200],
     text: {
       primary: grey[900],
       secondary: grey[800],
     },
   },
-  shadows: Array(25).fill('none') as Shadows,
 }
 
 const getDesignTokens = (mode: PaletteMode) => () => {
@@ -49,14 +57,21 @@ const getDesignTokens = (mode: PaletteMode) => () => {
 export const lightTheme: ThemeOptions = {
   palette: {
     mode: 'light',
+    // palette values for light mode
+    // common: common,
     // primary: amber,
-    // divider: amber[200],
-    // text: {
-    //   primary: grey[900],
-    //   secondary: grey[800],
+    // secondary: deepOrange,
+    // error: {
+    //   main: '#d32f2f',
+    //   // light: '#ef5350',
+    //   // dark: '#c52828',
+    //   // contrastText: '#fff'
     // },
+    // warning: amber,
+    // info: blue,
+    // success: green,
+    divider: amber[200],
   },
-  shadows: Array(25).fill('none') as Shadows,
 }
 
 // A custom theme for this app
@@ -74,7 +89,6 @@ export const darkTheme: ThemeOptions = {
     //   secondary: grey[500],
     // },
   },
-  shadows: Array(25).fill('none') as Shadows,
 }
 
 export default getDesignTokens
