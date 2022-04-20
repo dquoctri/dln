@@ -35,7 +35,6 @@ const Settings = () => {
         Exceptive sin ocean cuspidate non president, sunk in culpa qui officiate descent molls anim id est labours.
       </Typography>
       <p>Settings</p>
-
       <p>Settings</p>
     </Fragment>
   )
