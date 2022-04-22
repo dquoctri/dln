@@ -49,7 +49,7 @@ const lightDefaultTheme: ThemeOptions = {
   },
 }
 
-const getDesignTokens = (mode: PaletteMode) => () => {
+const getDesignTokens = (mode: PaletteMode) => (): ThemeOptions => {
   return mode === 'light' ? lightDefaultTheme : darkDefaultTheme
 }
 
