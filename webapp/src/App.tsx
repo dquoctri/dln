@@ -1,12 +1,9 @@
-import React from 'react'
-import { BrowserRouter } from 'react-router-dom'
-import CssBaseline from '@mui/material/CssBaseline'
+import React, { BrowserRouter } from 'react-router-dom'
 import Routes from './routes'
 
 function App() {
   return (
     <BrowserRouter>
-      <CssBaseline />
       <Routes />
     </BrowserRouter>
   )

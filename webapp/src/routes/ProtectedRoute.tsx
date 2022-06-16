@@ -1,7 +1,6 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { Navigate, useLocation } from 'react-router-dom'
-import { Typography } from '@mui/material'
 import { authenticationSelector } from '../stote/selectors'
 import ProtectedProps from './protected.type'
 
@@ -20,16 +19,6 @@ const ProtectedRoute = ({ children, roles, features }: Props) => {
     }
     return (
       <>
-        <Typography variant="body2">Lorem ipsum dolor sit</Typography>
-        <Typography variant="body2">Lorem ipsum dolor sit</Typography>
-        <Typography variant="body2">Lorem ipsum dolor sit</Typography>
-        <Typography variant="body2">Lorem ipsum dolor sit</Typography>
-        <Typography variant="body2">Lorem ipsum dolor sit</Typography>
-        <Typography variant="body2">Lorem ipsum dolor sit</Typography>
-        <Typography variant="body2">Lorem ipsum dolor sit</Typography>
-        <Typography variant="body2">Lorem ipsum dolor sit</Typography>
-        <Typography variant="body2">Lorem ipsum dolor sit</Typography>
-        <Typography variant="body2">Lorem ipsum dolor sit</Typography>
         {children}
       </>
     )
