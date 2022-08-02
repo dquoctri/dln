@@ -19,9 +19,7 @@ const Provider = ({ children }: Props) => {
       <CookiesProvider>
         <ReduxProvider store={store}>
           <PersistGate loading={<Loader />} persistor={persistor}>
-            <I18nextProvider i18n={i18n}>
-              {children}
-            </I18nextProvider>
+            <I18nextProvider i18n={i18n}>{children}</I18nextProvider>
           </PersistGate>
         </ReduxProvider>
       </CookiesProvider>

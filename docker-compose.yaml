@@ -7,8 +7,8 @@ x-common-variables:
 
 services:
   webapp:
-    container_name: react_app
-    image: ${DOCKER_REGISTRY-}_webapp:1.0
+    container_name: webapp_container
+    image: ${DOCKER_REGISTRY-}_webapp:${WEBAPP_VERSION:-latest}
     build:
       dockerfile: ${WEBAPP_DOCKERFILE}
       context: ./webapp
@@ -17,9 +17,9 @@ services:
     environment:
       <<: *common-variables
       NODE_ENV: development
-      FAST_REFRESH: "false"
-      CHOKIDAR_USEPOLLING: "true"
-      WDS_SOCKET_PORT: 0
+      # FAST_REFRESH: "false"
+      # CHOKIDAR_USEPOLLING: "true"
+      # WDS_SOCKET_PORT: 0
     volumes:
       - './webapp:/app'
       - 'webapp_node_modules:/app/node_modules'

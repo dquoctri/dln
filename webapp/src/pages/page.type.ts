@@ -3,7 +3,8 @@ interface PageProps {
 }
 
 export interface CustomPageProps extends PageProps {
-  description?: string
+  description?: string,
+  children: any
 }
 
 export default PageProps

@@ -5,5 +5,4 @@ export enum ThemeMode {
   DARK = 'dark',
 }
 
-
 export default ThemeMode

@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import Provider from './Provider'
 import App from './App'
 import { env } from './utils'
+import './main.css'
 
 const isStrictMode = env.NODE_ENV === 'development'
 const Wrapper = isStrictMode ? React.StrictMode : React.Fragment

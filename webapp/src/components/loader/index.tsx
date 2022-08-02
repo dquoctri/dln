@@ -1,10 +1,7 @@
 import React from 'react'
 
 const Loader = () => {
-  return (
-    <>
-    </>
-  )
+  return <></>
 }
 
 export default Loader

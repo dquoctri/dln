@@ -6,7 +6,6 @@ import { Link, Outlet } from 'react-router-dom'
 const AdminLayout = () => {
   return (
     <Fragment>
-
       <header>
         {/* <Header /> */}
         <Link to="/">home </Link>

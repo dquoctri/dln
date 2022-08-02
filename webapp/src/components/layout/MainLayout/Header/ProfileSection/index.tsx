@@ -1,10 +1,6 @@
 import React from 'react'
 const ProfileSection = () => {
-  return (
-    <>
-
-    </>
-  )
+  return <></>
 }
 
 export default ProfileSection

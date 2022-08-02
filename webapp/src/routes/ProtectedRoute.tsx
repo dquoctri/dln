@@ -17,11 +17,7 @@ const ProtectedRoute = ({ children, roles, features }: Props) => {
     if (!features || auth.roles.every((role) => features && features.includes(role))) {
       return children
     }
-    return (
-      <>
-        {children}
-      </>
-    )
+    return <>{children}</>
   }
 
   if (!roles) return warnFeatures()
