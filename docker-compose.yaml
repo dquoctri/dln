@@ -35,4 +35,4 @@ networks:
     external: true
 
 volumes:
-  webapp_node_modules:
+  reactapp_node_modules:
