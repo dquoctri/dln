@@ -22,16 +22,10 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "sourceMap": true,
-    "baseUrl": "./src",
-    "paths": { 
-      "assets/*": [ "assets/*" ],
-      "@components/*": [ "components/*" ],
-      "models/*": [ "models/*" ],
-      "pages/*": [ "pages/*" ],
-    }
+    "baseUrl": "./src"
   },
   "include": [
-    "src",
+    "src"
   ],
   "exclude": [
     "node_modules"

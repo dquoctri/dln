@@ -14,6 +14,7 @@ COPY package.json ./
 COPY yarn.lock ./
 
 RUN yarn
+# RUN yarn add @tailwindcss/forms
 
 # add app
 COPY . ./

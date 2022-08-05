@@ -6,12 +6,12 @@ x-common-variables:
   HOST_HOSTNAME: ${HOSTNAME}
 
 services:
-  webapp:
-    container_name: webapp_container
-    image: ${DOCKER_REGISTRY-}_webapp:${WEBAPP_VERSION:-latest}
+  reactapp:
+    container_name: reactapp_container
+    image: ${DOCKER_REGISTRY-}_reactapp:${REACTAPP_VERSION:-latest}
     build:
-      dockerfile: ${WEBAPP_DOCKERFILE}
-      context: ./webapp
+      dockerfile: ${REACTAPP_DOCKERFILE}
+      context: ./reactapp
     # depends_on:
     #   - rabbitmq0
     environment:
@@ -21,10 +21,10 @@ services:
       # CHOKIDAR_USEPOLLING: "true"
       # WDS_SOCKET_PORT: 0
     volumes:
-      - './webapp:/app'
-      - 'webapp_node_modules:/app/node_modules'
+      - './reactapp:/app'
+      - 'reactapp_node_modules:/app/node_modules'
     ports:
-      - ${WEBAPP_PUBLIC_PORT}:${WEBAPP_PORT}
+      - ${REACTAPP_PUBLIC_PORT}:${REACTAPP_PORT}
     stdin_open: true
     tty: true
     networks:
