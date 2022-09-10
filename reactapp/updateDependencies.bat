@@ -1,0 +1,1 @@
+yarn add react @types/react & yarn add react-dom @types/react-dom & yarn add react-redux @types/react-redux & yarn add react-scripts typescript & yarn add react-cookie redux-persist redux-thunk @types/react-redux @types/redux-logger & yarn add @types/uuid
