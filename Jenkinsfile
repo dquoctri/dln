@@ -1,12 +1,15 @@
 pipeline {
   agent any
+  environment {
+    DOCKER_IMAGE = "test"
+  }
   stages {
     stage("verify tooling") {
       steps {
         sh '''
           docker version
           docker info
-          docker compose version 
+          docker-compose version 
           curl --version
           jq --version
         '''
@@ -17,17 +20,17 @@ pipeline {
         sh 'docker system prune -a --volumes -f'
       }
     }
-    stage('Start container') {
-      steps {
-        sh 'docker compose up -d --no-color --wait'
-        sh 'docker compose ps'
-      }
-    }
-    stage('Run tests against the container') {
-      steps {
-        sh 'curl http://localhost:3000 | jq'
-      }
-    }
+    // stage('Start container') {
+    //   steps {
+    //     sh 'docker compose up -d --no-color --wait'
+    //     sh 'docker compose ps'
+    //   }
+    // }
+    // stage('Run tests against the container') {
+    //   steps {
+    //     sh 'curl http://localhost:3000 | jq'
+    //   }
+    // }
   }
   post {
     always {
