@@ -1,0 +1,16 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: load-balancer
+  labels:
+    app: load-balancer
+spec:
+  type: LoadBalancer
+  externalTrafficPolicy: Cluster
+  ports:
+    - port: 8037
+      targetPort: 80
+      protocol: TCP
+      nodePort: 32000
+  selector:
+    app: react-docker

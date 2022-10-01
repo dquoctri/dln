@@ -1,0 +1,15 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: node-port
+  labels:
+    app: node-port
+spec:
+  type: NodePort
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+      nodePort: 31000
+  selector:
+    app: react-docker
