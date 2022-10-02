@@ -1,9 +1,9 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 
-export const BASE_URL = process.env.BASE_URL || 'http://localhost:5000'
+export const SERVER_URL = process.env.REACT_APP_SERVER_URL || 'http://localhost:5000'
 
 export const options = {
-  baseURL: BASE_URL,
+  baseURL: SERVER_URL,
 }
 
 export interface Header {
@@ -50,6 +50,7 @@ export abstract class WebService {
     verb = verb.toUpperCase()
     try {
       const res = await call
+      console.log(res)
       return res.data
     } catch (err) {
       const message = `${verb} ${url} - Not successful;`

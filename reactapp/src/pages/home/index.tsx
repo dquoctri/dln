@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react'
+import React, { Fragment, useEffect, useMemo, useState } from 'react'
 import PageTitle from 'components/PageTitle'
 import { Dialog, Disclosure, Menu, Transition } from '@headlessui/react'
 import { SpeakerphoneIcon, BellIcon, MenuIcon, XIcon } from '@heroicons/react/outline'
@@ -17,6 +17,8 @@ import {
   PaperClipIcon,
   AnnotationIcon,
 } from '@heroicons/react/solid'
+import { PingService } from 'apis/ping.service'
+import Ping from 'models/apis/ping'
 
 const features = [
   {
@@ -70,11 +72,34 @@ function classNames(...classes: any[]) {
 
 const Home = () => {
   const [open, setOpen] = useState(false)
+  const [pings, setPings] = useState<Ping[]>([])
+
+  useEffect(() => {
+    const ping = new PingService()
+    ping
+      .ping()
+      .then((data) => {
+        setPings(data)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }, [])
+
+  const pingsRender = useMemo(() => {
+    if (!pings || pings.length === 0) {
+      return null
+    }
+    return pings.map((ping) => {
+      return <p key={ping.id}>{ping.name}</p>
+    })
+  }, [pings])
 
   return (
     <>
       <PageTitle title="HHHHH-Deadline" />
       <div className="min-h-full">
+        {pingsRender}
         <Disclosure as="nav" className="bg-gray-800">
           {({ open }) => (
             <>
