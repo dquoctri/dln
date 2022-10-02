@@ -18,9 +18,9 @@ export interface AuthenticationState {
 }
 
 const initialState: AuthenticationState = {
-  loggedIn: true,
-  isAdmin: true,
-  roles: ['USER', 'VIEW'],
+  loggedIn: false,
+  isAdmin: false,
+  roles: [],
 }
 
 function loginReducer(state: AuthenticationState, action: PayloadAction<AuthenticationState>) {
