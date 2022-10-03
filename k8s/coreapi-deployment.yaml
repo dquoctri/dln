@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: coreapi-deployment
+spec:
+  selector:
+    matchLabels:
+      app: dln
+      tier: coreapi-pod
+      track: stable
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: dln
+        tier: coreapi-pod
+        track: stable
+    spec:
+      containers:
+      - name: coreapi-container
+        image: coreapi:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+          - name: http
+            containerPort: 80
+        env:
+          - name: ASPNETCORE_URLS
+            value: http://+:80

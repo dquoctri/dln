@@ -3,6 +3,7 @@ FROM node:lts AS builder
 
 ENV NODE_ENV production
 ENV GENERATE_SOURCEMAP false
+ENV REACT_APP_SERVER_URL=${REACT_APP_SERVER_URL}
 
 # set working directory
 WORKDIR /app

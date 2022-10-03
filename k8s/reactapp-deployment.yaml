@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reactapp-deployment
+spec:
+  selector:
+    matchLabels:
+      app: dln
+      tier: reactapp-pod
+      track: stable
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: dln
+        tier: reactapp-pod
+        track: stable
+    spec:
+      containers:
+      - name: reactapp-container
+        image: reactapp:v2
+        imagePullPolicy: IfNotPresent
+        # ports:
+        #   - containerPort: 80
+        #     protocol: TCP
+        # env:
+        #   - name: ASPNETCORE_URLS
+        #     value: http://+:80
+        #   - name: REACT_APP_SERVER_URL
+        #     value: http://coreapi-pod
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/usr/sbin/nginx","-s","quit"]
