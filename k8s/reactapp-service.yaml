@@ -1,14 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: reactapp-pod
+  name: reactapp-service
 spec:
-  selector:
-    app: dln
-    tier: reactapp-pod
   ports:
-  - protocol: "TCP"
-    port: 80
+  - port: 80
+    protocol: TCP
     targetPort: 80
-    nodePort: 32000
-  type: LoadBalancer
+  selector:
+    app: reactapp-deployment
+    tier: reactapp-pod
+  type: ClusterIP

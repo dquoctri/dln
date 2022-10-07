@@ -1,0 +1,114 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dln
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: coreapi-deployment
+  namespace: dln
+spec:
+  selector:
+    matchLabels:
+      app: coreapi-deployment
+      track: stable
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: coreapi-deployment
+        track: stable
+    spec:
+      containers:
+      - name: coreapi-container
+        image: coreapi:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+          - name: http
+            containerPort: 80
+        env:
+          - name: ASPNETCORE_URLS
+            value: http://+:80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: coreapi-service
+  namespace: dln
+spec:
+  type: ClusterIP
+  selector:
+    app: coreapi-deployment
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: http
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reactapp-deployment
+  namespace: dln
+spec:
+  selector:
+    matchLabels:
+      app: reactapp-deployment
+      track: stable
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: reactapp-deployment
+        track: stable
+    spec:
+      containers:
+      - name: reactapp-container
+        image: reactapp:v2
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+          protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: reactapp-service
+  namespace: dln
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: reactapp-deployment
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: dln-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+  namespace: dln
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: demo.localdev.me
+    http:
+      paths:
+      - pathType: Prefix
+        path: /api/*
+        backend:
+          service:
+            name: coreapi-service
+            port:
+              number: 80
+      - pathType: Prefix
+        path: /*
+        backend:
+          service:
+            name: reactapp-service
+            port:
+              number: 80
+# kubectl port-forward --namespace=ingress-nginx service/ingress-nginx-controller 8082:80

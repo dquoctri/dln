@@ -1,0 +1,13 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: reactapp-ingress
+spec:
+  rules:
+  - host: hello-test.internal
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: reactapp-service
+          servicePort: http

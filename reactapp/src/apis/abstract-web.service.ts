@@ -1,9 +1,9 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 
-export const SERVER_URL = process.env.REACT_APP_SERVER_URL || 'http://localhost'
+export const SERVER_URL = process.env.PUBLIC_URL || 'http://demo.localdev.me:8081'
 
 export const options = {
-  baseURL: SERVER_URL,
+  baseURL: '',
 }
 
 export interface Header {
@@ -21,27 +21,27 @@ export abstract class WebService {
     this.instance.interceptors.request.use((config) => this.setHeaders(config))
   }
 
-  protected async get<T = unknown>(url: string): Promise<T> {
+  protected async get<T>(url: string): Promise<T> {
     const req = this.instance.get<T>(url)
     return this.exec('GET', url, req)
   }
 
-  protected async post<T = unknown>(url: string, data?: unknown): Promise<T> {
+  protected async post<T>(url: string, data?: unknown): Promise<T> {
     const req = this.instance.post<T>(url, data)
     return this.exec('POST', url, req)
   }
 
-  protected async put<T = unknown>(url: string, data: unknown): Promise<T> {
+  protected async put<T>(url: string, data: unknown): Promise<T> {
     const req = this.instance.put<T>(url, data)
     return this.exec('PUT', url, req)
   }
 
-  protected async patch<T = unknown>(url: string, data: unknown): Promise<T> {
+  protected async patch<T>(url: string, data: unknown): Promise<T> {
     const req = this.instance.patch<T>(url, data)
     return this.exec('PATCH', url, req)
   }
 
-  protected async delete<T = unknown>(url: string): Promise<T> {
+  protected async delete<T>(url: string): Promise<T> {
     const req = this.instance.delete<T>(url)
     return this.exec('DELETE', url, req)
   }

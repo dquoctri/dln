@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: dln
+  name: coreapi-service
 spec:
   type: ClusterIP
   selector:
-    app: dln
+    app: coreapi-deployment
     tier: coreapi-pod
   ports:
   - port: 80

@@ -5,30 +5,26 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: dln
+      app: reactapp-deployment
       tier: reactapp-pod
       track: stable
   replicas: 1
   template:
     metadata:
       labels:
-        app: dln
+        app: reactapp-deployment
         tier: reactapp-pod
         track: stable
     spec:
       containers:
       - name: reactapp-container
-        image: reactapp:v2
+        image: reactapp:v1
         imagePullPolicy: IfNotPresent
-        # ports:
-        #   - containerPort: 80
-        #     protocol: TCP
+        ports:
+        - containerPort: 80
+          protocol: TCP
         # env:
         #   - name: ASPNETCORE_URLS
         #     value: http://+:80
         #   - name: REACT_APP_SERVER_URL
         #     value: http://coreapi-pod
-        lifecycle:
-          preStop:
-            exec:
-              command: ["/usr/sbin/nginx","-s","quit"]
