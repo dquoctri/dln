@@ -1,10 +1,10 @@
-import { Link } from 'react-router-dom'
+import { Link } from "react-router-dom"
 
-import Logo from '../../../common/Logo'
+import Logo from "../../../common/Logo"
 
 const LogoSection = () => {
   return (
-    <Link to="/" style={{ textDecoration: 'none' }}>
+    <Link to="/" style={{ textDecoration: "none" }}>
       <button>
         <Logo />
         <h5>Deadl</h5>

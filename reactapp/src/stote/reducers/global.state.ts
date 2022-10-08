@@ -1,10 +1,10 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import Mode from 'models/ui/mode'
-import { LanguageKeys } from '../../locales'
+import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import Mode from "models/ui/mode"
+import { LanguageKeys } from "../../locales"
 
 export enum GlobalType {
-  SET_LANGUAGE = 'global/language',
-  SET_THEME = 'global/theme',
+  SET_LANGUAGE = "global/language",
+  SET_THEME = "global/theme",
 }
 
 export interface GlobalState {
@@ -23,7 +23,7 @@ function ThemeReducer(state: GlobalState, action: PayloadAction<Mode>) {
 }
 
 const { reducer } = createSlice({
-  name: 'global',
+  name: "global",
   initialState,
   reducers: {
     language: LanguageReducer,

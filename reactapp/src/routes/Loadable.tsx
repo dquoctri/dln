@@ -1,7 +1,7 @@
-import React, { Suspense, LazyExoticComponent } from 'react'
-import Loader from '../components/loader'
-import ProtectedRoute from './ProtectedRoute'
-import ProtectedProps from './protected.type'
+import React, { Suspense, LazyExoticComponent } from "react"
+import Loader from "../components/loader"
+import ProtectedRoute from "./ProtectedRoute"
+import ProtectedProps from "./protected.type"
 
 const Loadable = (Component: LazyExoticComponent<(ref: any) => JSX.Element>, protectedProps?: ProtectedProps) => {
   const render = (props: any) => {

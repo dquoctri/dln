@@ -1,4 +1,4 @@
-import { WebService } from './abstract-web.service'
+import { WebService } from "./abstract-web.service"
 
 export interface FileResult {
   filename: string
@@ -11,7 +11,7 @@ export abstract class FileService extends WebService {
   }
 
   protected async postDownload(url: string, payload?: unknown): Promise<FileResult> {
-    const res = await this.instance.post(url, payload, { responseType: 'blob' })
+    const res = await this.instance.post(url, payload, { responseType: "blob" })
     const filename = this.extractFilename(res.headers)
     return { filename, data: res.data }
   }
@@ -23,14 +23,14 @@ export abstract class FileService extends WebService {
   }
 
   protected async downloadBlob(url: string): Promise<Blob> {
-    const res = await this.instance.get(url, { responseType: 'blob' })
+    const res = await this.instance.get(url, { responseType: "blob" })
     return res.data
   }
 
   private extractFilename(headers: any): string {
-    return headers['content-disposition']
-      .split(';')
-      .find((n: string) => n.includes('filename='))
+    return headers["content-disposition"]
+      .split(";")
+      .find((n: string) => n.includes("filename="))
       .match(/filename="(.*)"/)[1]
       .trim()
   }

@@ -1,7 +1,7 @@
-import React, { Fragment, useEffect, useMemo, useState } from 'react'
-import PageTitle from 'components/PageTitle'
-import { Dialog, Disclosure, Menu, Transition } from '@headlessui/react'
-import { SpeakerphoneIcon, BellIcon, MenuIcon, XIcon } from '@heroicons/react/outline'
+import React, { Fragment, useEffect, useMemo, useState } from "react"
+import PageTitle from "components/PageTitle"
+import { Dialog, Disclosure, Menu, Transition } from "@headlessui/react"
+import { SpeakerphoneIcon, BellIcon, MenuIcon, XIcon } from "@heroicons/react/outline"
 import {
   BriefcaseIcon,
   CalendarIcon,
@@ -16,58 +16,58 @@ import {
   ScaleIcon,
   PaperClipIcon,
   AnnotationIcon,
-} from '@heroicons/react/solid'
-import { PingService } from 'apis/ping.service'
-import Ping from 'models/apis/ping'
+} from "@heroicons/react/solid"
+import { PingService } from "apis/ping.service"
+import Ping from "models/apis/ping"
 
 const features = [
   {
-    name: 'Competitive exchange rates',
+    name: "Competitive exchange rates",
     description:
-      'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.',
+      "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.",
     icon: GlobeAltIcon,
   },
   {
-    name: 'No hidden fees',
+    name: "No hidden fees",
     description:
-      'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.',
+      "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.",
     icon: ScaleIcon,
   },
   {
-    name: 'Transfers are instant',
+    name: "Transfers are instant",
     description:
-      'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.',
+      "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.",
     icon: LightningBoltIcon,
   },
   {
-    name: 'Mobile notifications',
+    name: "Mobile notifications",
     description:
-      'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.',
+      "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.",
     icon: AnnotationIcon,
   },
 ]
 
 const user = {
-  name: 'Tom Cook',
-  email: 'tom@example.com',
+  name: "Tom Cook",
+  email: "tom@example.com",
   imageUrl:
-    'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+    "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
 }
 const navigation = [
-  { name: 'Dashboard', href: '/dashboard', current: true },
-  { name: 'Team', href: '#', current: false },
-  { name: 'Projects', href: '#', current: false },
-  { name: 'Calendar', href: '#', current: false },
-  { name: 'Reports', href: '#', current: false },
+  { name: "Dashboard", href: "/dashboard", current: true },
+  { name: "Team", href: "#", current: false },
+  { name: "Projects", href: "#", current: false },
+  { name: "Calendar", href: "#", current: false },
+  { name: "Reports", href: "#", current: false },
 ]
 const userNavigation = [
-  { name: 'Your Profile', href: '#' },
-  { name: 'Settings', href: '#' },
-  { name: 'Sign out', href: '#' },
+  { name: "Your Profile", href: "#" },
+  { name: "Settings", href: "#" },
+  { name: "Sign out", href: "#" },
 ]
 
 function classNames(...classes: any[]) {
-  return classes.filter(Boolean).join(' ')
+  return classes.filter(Boolean).join(" ")
 }
 
 const Home = () => {
@@ -90,6 +90,7 @@ const Home = () => {
     if (!pings || pings.length === 0) {
       return null
     }
+    console.log("hello! i'm here!")
     return pings.map((ping) => {
       return <p key={ping.id}>{ping.name}</p>
     })
@@ -121,11 +122,11 @@ const Home = () => {
                             href={item.href}
                             className={classNames(
                               item.current
-                                ? 'bg-gray-900 text-white'
-                                : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                              'px-3 py-2 rounded-md text-sm font-medium'
+                                ? "bg-gray-900 text-white"
+                                : "text-gray-300 hover:bg-gray-700 hover:text-white",
+                              "px-3 py-2 rounded-md text-sm font-medium"
                             )}
-                            aria-current={item.current ? 'page' : undefined}
+                            aria-current={item.current ? "page" : undefined}
                           >
                             {item.name}
                           </a>
@@ -167,8 +168,8 @@ const Home = () => {
                                   <a
                                     href={item.href}
                                     className={classNames(
-                                      active ? 'bg-gray-100' : '',
-                                      'block px-4 py-2 text-sm text-gray-700'
+                                      active ? "bg-gray-100" : "",
+                                      "block px-4 py-2 text-sm text-gray-700"
                                     )}
                                   >
                                     {item.name}
@@ -203,10 +204,10 @@ const Home = () => {
                       as="a"
                       href={item.href}
                       className={classNames(
-                        item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                        'block px-3 py-2 rounded-md text-base font-medium'
+                        item.current ? "bg-gray-900 text-white" : "text-gray-300 hover:bg-gray-700 hover:text-white",
+                        "block px-3 py-2 rounded-md text-base font-medium"
                       )}
-                      aria-current={item.current ? 'page' : undefined}
+                      aria-current={item.current ? "page" : undefined}
                     >
                       {item.name}
                     </Disclosure.Button>
@@ -336,7 +337,7 @@ const Home = () => {
                                 rows={3}
                                 className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-md"
                                 placeholder="you@example.com"
-                                defaultValue={''}
+                                defaultValue={""}
                               />
                             </div>
                             <p className="mt-2 text-sm text-gray-500">
@@ -1057,7 +1058,7 @@ const Home = () => {
                         {({ active }) => (
                           <a
                             href="#"
-                            className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
+                            className={classNames(active ? "bg-gray-100" : "", "block px-4 py-2 text-sm text-gray-700")}
                           >
                             Edit
                           </a>
@@ -1067,7 +1068,7 @@ const Home = () => {
                         {({ active }) => (
                           <a
                             href="#"
-                            className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
+                            className={classNames(active ? "bg-gray-100" : "", "block px-4 py-2 text-sm text-gray-700")}
                           >
                             View
                           </a>

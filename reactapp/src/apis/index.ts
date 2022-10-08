@@ -1,5 +1,5 @@
-import * as authentication from './authentication.service'
-export * from './authentication.service'
+import * as authentication from "./authentication.service"
+export * from "./authentication.service"
 
 const apis = {
   authentication,

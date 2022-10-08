@@ -1,6 +1,6 @@
-import { WebService } from './abstract-web.service'
-import { useSelector } from 'react-redux'
-import { authenticationSelector } from 'stote/selectors'
+import { WebService } from "./abstract-web.service"
+import { useSelector } from "react-redux"
+import { authenticationSelector } from "stote/selectors"
 
 export abstract class SecuredService extends WebService {
   constructor() {
@@ -14,8 +14,8 @@ export abstract class SecuredService extends WebService {
       if (!authentication || !authentication.token || isExpired(authentication.expiresAt || 0)) {
         return null
       }
-      return 'Bearer ' + authentication.token
+      return "Bearer " + authentication.token
     }
-    this.addDynamicHeader('Authorization', getToken)
+    this.addDynamicHeader("Authorization", getToken)
   }
 }

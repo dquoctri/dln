@@ -1,4 +1,4 @@
-export const formatStringToLocale = (utcStrDate?: string, defaultStr = ''): string => {
+export const formatStringToLocale = (utcStrDate?: string, defaultStr = ""): string => {
   if (!utcStrDate) {
     return defaultStr
   }

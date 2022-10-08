@@ -1,5 +1,5 @@
-import React, { Fragment } from 'react'
-import ProfileSection from './ProfileSection'
+import React, { Fragment } from "react"
+import ProfileSection from "./ProfileSection"
 
 const Header = () => {
   return (

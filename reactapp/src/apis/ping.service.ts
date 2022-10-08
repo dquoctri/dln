@@ -1,8 +1,8 @@
-import { WebService } from './abstract-web.service'
-import Ping from 'models/apis/ping'
+import { WebService } from "./abstract-web.service"
+import Ping from "models/apis/ping"
 
 export const PING_ENDPOINTS = {
-  ping: '/api/ping',
+  ping: "/api/ping",
 }
 
 export class PingService extends WebService {

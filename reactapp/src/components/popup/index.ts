@@ -1,1 +1,1 @@
-export const TODO = 'to do something'
+export const TODO = "to do something"

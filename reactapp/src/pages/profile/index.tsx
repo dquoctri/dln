@@ -1,5 +1,5 @@
-import React, { Fragment } from 'react'
-import PageTitle from 'components/PageTitle'
+import React, { Fragment } from "react"
+import PageTitle from "components/PageTitle"
 
 const Profile = () => {
   return (

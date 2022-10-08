@@ -1,9 +1,9 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios"
 
-export const SERVER_URL = process.env.PUBLIC_URL || 'http://demo.localdev.me:8081'
+export const SERVER_URL = process.env.NODE_ENV === "development" ? process.env.REACT_APP_SERVER_URL : ""
 
 export const options = {
-  baseURL: '',
+  baseURL: SERVER_URL,
 }
 
 export interface Header {
@@ -23,27 +23,27 @@ export abstract class WebService {
 
   protected async get<T>(url: string): Promise<T> {
     const req = this.instance.get<T>(url)
-    return this.exec('GET', url, req)
+    return this.exec("GET", url, req)
   }
 
   protected async post<T>(url: string, data?: unknown): Promise<T> {
     const req = this.instance.post<T>(url, data)
-    return this.exec('POST', url, req)
+    return this.exec("POST", url, req)
   }
 
   protected async put<T>(url: string, data: unknown): Promise<T> {
     const req = this.instance.put<T>(url, data)
-    return this.exec('PUT', url, req)
+    return this.exec("PUT", url, req)
   }
 
   protected async patch<T>(url: string, data: unknown): Promise<T> {
     const req = this.instance.patch<T>(url, data)
-    return this.exec('PATCH', url, req)
+    return this.exec("PATCH", url, req)
   }
 
   protected async delete<T>(url: string): Promise<T> {
     const req = this.instance.delete<T>(url)
-    return this.exec('DELETE', url, req)
+    return this.exec("DELETE", url, req)
   }
 
   private async exec<T>(verb: string, url: string, call: Promise<AxiosResponse<T>>): Promise<T> {
@@ -57,7 +57,7 @@ export abstract class WebService {
       console.warn(message)
       return Promise.reject(err)
     } finally {
-      console.info('finally')
+      console.info("finally")
     }
   }
 
@@ -79,7 +79,7 @@ export abstract class WebService {
 
   protected setHeaders(config: AxiosRequestConfig): AxiosRequestConfig {
     if (!config.headers) {
-      console.warn('Skipping setting headers since Axios config headers is null')
+      console.warn("Skipping setting headers since Axios config headers is null")
       return config
     }
     for (const header of this.headers) {

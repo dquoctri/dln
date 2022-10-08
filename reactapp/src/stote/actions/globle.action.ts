@@ -1,6 +1,6 @@
-import { GlobalType } from '../reducers/global.state'
-import { LanguageKeys } from '../../locales'
-import Mode from 'models/ui/mode'
+import { GlobalType } from "../reducers/global.state"
+import { LanguageKeys } from "../../locales"
+import Mode from "models/ui/mode"
 
 export const setLanguage = (data: LanguageKeys) => {
   return {

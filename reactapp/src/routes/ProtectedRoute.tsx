@@ -1,8 +1,8 @@
-import React from 'react'
-import { useSelector } from 'react-redux'
-import { Navigate, useLocation } from 'react-router-dom'
-import { authenticationSelector } from '../stote/selectors'
-import ProtectedProps from './protected.type'
+import React from "react"
+import { useSelector } from "react-redux"
+import { Navigate, useLocation } from "react-router-dom"
+import { authenticationSelector } from "../stote/selectors"
+import ProtectedProps from "./protected.type"
 
 // define interface to represent component props
 export interface Props extends ProtectedProps {

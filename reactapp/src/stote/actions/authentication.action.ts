@@ -1,4 +1,4 @@
-import { AuthenticationState, AuthenticationType } from '../reducers/authentication.state'
+import { AuthenticationState, AuthenticationType } from "../reducers/authentication.state"
 
 export const login = (data: AuthenticationState) => {
   return {

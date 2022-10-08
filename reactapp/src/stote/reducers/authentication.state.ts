@@ -1,8 +1,8 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 
 export enum AuthenticationType {
-  LOGIN = 'authentication/login',
-  LOGOUT = 'authentication/logout',
+  LOGIN = "authentication/login",
+  LOGOUT = "authentication/logout",
 }
 
 export interface AuthenticationState {
@@ -34,7 +34,7 @@ function logoutReducer(state: any, _: PayloadAction<void>) {
 }
 
 const { reducer } = createSlice({
-  name: 'authentication',
+  name: "authentication",
   initialState,
   reducers: {
     login: loginReducer,

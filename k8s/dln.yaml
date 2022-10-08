@@ -94,7 +94,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: demo.localdev.me
+  - host: reactapp.dqtri.com
     http:
       paths:
       - pathType: Prefix

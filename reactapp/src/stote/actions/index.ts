@@ -1,2 +1,2 @@
-export * from './globle.action'
-export * from './authentication.action'
+export * from "./globle.action"
+export * from "./authentication.action"

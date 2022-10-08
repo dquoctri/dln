@@ -1,12 +1,12 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import './index.css'
-import App from './App'
-import Provider from './Provider'
-import reportWebVitals from './reportWebVitals'
+import React from "react"
+import ReactDOM from "react-dom/client"
+import "./index.css"
+import App from "./App"
+import Provider from "./Provider"
+import reportWebVitals from "./reportWebVitals"
 
-const isDevelopment = process.env.NODE_ENV === 'development'
-const rootElement = document.getElementById('root') as HTMLElement
+const isDevelopment = process.env.NODE_ENV === "development"
+const rootElement = document.getElementById("root") as HTMLElement
 const root = ReactDOM.createRoot(rootElement)
 const Envelop = isDevelopment ? React.StrictMode : React.Fragment
 

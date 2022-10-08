@@ -1,6 +1,6 @@
-import React, { Fragment } from 'react'
-import { Link } from 'react-router-dom'
-import PageTitle from 'components/PageTitle'
+import React, { Fragment } from "react"
+import { Link } from "react-router-dom"
+import PageTitle from "components/PageTitle"
 
 const Unauthorized = () => {
   return (

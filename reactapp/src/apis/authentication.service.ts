@@ -1,13 +1,13 @@
-import { WebService } from './abstract-web.service'
+import { WebService } from "./abstract-web.service"
 
 export const AUTH_ENDPOINTS = {
-  login: '/api/auth/login',
-  logout: '/api/auth/logout',
+  login: "/api/auth/login",
+  logout: "/api/auth/logout",
 }
 
 export class AuthenticationService extends WebService {
   private static token: string | undefined
-  private static LS_TOKEN_KEY = 'TOKEN'
+  private static LS_TOKEN_KEY = "TOKEN"
 
   constructor() {
     super()
