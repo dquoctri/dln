@@ -1,7 +1,9 @@
-﻿using Authentication.Service;
-using Authentication.Service.Models;
+﻿using Authentication.Api.Models;
+using Authentication.Api.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -11,9 +13,9 @@ namespace Authentication.Api.Controllers
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
-        private readonly IAuthenticationService _service;
+        private readonly ITokenService _service;
 
-        public AuthenticationController(IAuthenticationService service)
+        public AuthenticationController(ITokenService service)
         {
             _service = service;
         }
@@ -21,38 +23,28 @@ namespace Authentication.Api.Controllers
         [AllowAnonymous]
         [Route("login")]
         [HttpPost]
-        public ActionResult<object> Login([FromBody] LoginRequest payload)
+        public IActionResult Login([FromBody] UserCredential payload)
         {
-            var username = payload.Username;
-            var password = payload.Password;
-            var token = _service.Login(new LoginRequest(username, password));
-            if (string.IsNullOrEmpty(token))
+            Token? jwtToken = _service.CreateToken(payload);
+            if (null == jwtToken)
             {
                 return Unauthorized();
             }
-            return token;
+            return Ok(jwtToken);
         }
 
-        [Authorize]
-        [Route("logout")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Route("refresh")]
         [HttpPost]
-        public ActionResult<string> Logout()
+        public IActionResult Refresh()
         {
-            //await _tokenManager.DeactivateCurrentAsync();
-
-            return NoContent();
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            Token? jwtToken = _service.CreateToken(userId);
+            if (null == jwtToken)
+            {
+                return Unauthorized();
+            }
+            return Ok(jwtToken);
         }
-
-
-        [Authorize(Roles = "Adminitrator")]
-        [Route("cancelToken")]
-        [HttpPost]
-        public ActionResult<string> CancelToken()
-        {
-            //await _tokenManager.DeactivateCurrentAsync();
-
-            return NoContent();
-        }
-
     }
 }

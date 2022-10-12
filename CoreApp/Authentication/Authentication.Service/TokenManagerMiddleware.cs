@@ -6,7 +6,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Authentication.Service.Implements
+namespace Authentication.Service
 {
     public class TokenManagerMiddleware : IMiddleware
     {

@@ -27,14 +27,11 @@ namespace Authentication.Service
             _jwtOptions = jwtOptions;
         }
 
-        public async Task<bool> IsCurrentActiveToken()
-            => await IsActiveAsync(GetCurrentAsync());
+        public async Task<bool> IsCurrentActiveToken() => await IsActiveAsync(GetCurrentAsync());
 
-        public async Task DeactivateCurrentAsync()
-            => await DeactivateAsync(GetCurrentAsync());
+        public async Task DeactivateCurrentAsync() => await DeactivateAsync(GetCurrentAsync());
 
-        public async Task<bool> IsActiveAsync(string token)
-            => await _cache.GetStringAsync(GetKey(token)) == null;
+        public async Task<bool> IsActiveAsync(string token) => await _cache.GetStringAsync(GetKey(token)) == null;
 
         public async Task DeactivateAsync(string token)
             => await _cache.SetStringAsync(GetKey(token),
@@ -46,15 +43,11 @@ namespace Authentication.Service
 
         private string GetCurrentAsync()
         {
-            var authorizationHeader = _httpContextAccessor
-                .HttpContext.Request.Headers["authorization"];
-
-            return authorizationHeader == StringValues.Empty
-                ? string.Empty
-                : authorizationHeader.Single().Split(" ").Last();
+            var authorizationHeader = _httpContextAccessor.HttpContext.Request.Headers["authorization"];
+            if (string.IsNullOrEmpty(authorizationHeader)) return string.Empty;
+            return authorizationHeader.Single().Split(" ").Last();
         }
 
-        private static string GetKey(string token)
-            => $"tokens:{token}:deactivated";
+        private static string GetKey(string token) => $"tokens:{token}:deactivated";
     }
 }

@@ -1,20 +1,12 @@
-
-using Authentication.Api.Extensions;
-using Authentication.Api.Models;
-using Authentication.Api.Services;
 using User.Api.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
-var secretOptions = builder.Configuration.GetSection(SecretOptions.CONFIG_KEY);
-var serect = secretOptions.Get<SecretOptions>();
-builder.Services.Configure<SecretOptions>(secretOptions);
 
 // Add services to the container.
-builder.Services.AddScoped<ITokenService, TokenService>();
-builder.Services.AddTransient<SecretOptions>();
 
-builder.Services.AddRefreshAuthentication(serect);
 
+
+builder.Services.AddAsymmetricAuthentication();
 builder.Services.AddAuthorization();
 
 builder.Services.AddControllers();
@@ -22,10 +14,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddConfiguringSwagger();
 
+
 var app = builder.Build();
 
-app.UseSwagger();
 // Configure the HTTP request pipeline.
+app.UseSwagger();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwaggerUI();
@@ -33,7 +26,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
