@@ -26,7 +26,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Export", "Export", "{339C61
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Export.Api", "Export\Export.Api\Export.Api.csproj", "{8DF63637-D4BD-41AC-9367-0B8D49A6EC0B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "User.Api", "User\User.Api\User.Api.csproj", "{DEE6A4F7-42DE-4673-BE5E-91655FE9365F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "User.Api", "User\User.Api\User.Api.csproj", "{DEE6A4F7-42DE-4673-BE5E-91655FE9365F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

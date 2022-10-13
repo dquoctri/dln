@@ -8,7 +8,7 @@ namespace User.Entity
 {
     public class User
     {
-        public int Id { get; set; }
+        public long ID { get; set; }
         public string? Name { get; set; }
         public string? FullName { get; set; }
         public string Username { get; set; }

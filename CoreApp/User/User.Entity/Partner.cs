@@ -8,7 +8,7 @@ namespace User.Entity
 {
     public class Partner
     {
-        public string ID { get; set; }
+        public long ID { get; set; }
         public string Name { get; set; }
     }
 }
