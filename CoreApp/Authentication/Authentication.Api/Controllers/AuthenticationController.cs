@@ -25,26 +25,26 @@ namespace Authentication.Api.Controllers
         [HttpPost]
         public IActionResult Login([FromBody] UserCredential payload)
         {
-            Token? jwtToken = _service.CreateToken(payload);
-            if (null == jwtToken)
+            RefreshToken? token = _service.CreateRefreshToken(payload);
+            if (null == token)
             {
                 return Unauthorized();
             }
-            return Ok(jwtToken);
+            return Ok(token);
         }
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        [Route("refresh")]
+        [Route("accessToken")]
         [HttpPost]
         public IActionResult Refresh()
         {
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            Token? jwtToken = _service.CreateToken(userId);
-            if (null == jwtToken)
+            AccessToken? token = _service.CreateAccessToken(userId);
+            if (null == token)
             {
                 return Unauthorized();
             }
-            return Ok(jwtToken);
+            return Ok(token);
         }
     }
 }

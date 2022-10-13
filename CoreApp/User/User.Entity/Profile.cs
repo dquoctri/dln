@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace User.Entity
 {
-    public class Partner
+    public class Profile
     {
-        public string ID { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
     }
 }

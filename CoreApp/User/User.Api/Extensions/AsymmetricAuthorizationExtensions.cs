@@ -4,9 +4,9 @@ using User.Api.Certificates;
 
 namespace User.Api.Extensions
 {
-    public static class AsymmetricAuthenticationExtensions
+    public static class AsymmetricAuthorizationExtensions
     {
-        public static IServiceCollection AddAsymmetricAuthentication(this IServiceCollection services)
+        public static IServiceCollection AddAsymmetricAuthorization(this IServiceCollection services)
         {
             var issuerSigningCertificate = new SigningIssuerCertificate();
             RsaSecurityKey issuerSigningKey = issuerSigningCertificate.GetIssuerSigningKey();

@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Net;
 
 namespace Authentication.Api.Services
 {
@@ -19,66 +20,62 @@ namespace Authentication.Api.Services
             _secretOptions = secretOptions.Value;
         }
 
-        public Token? CreateToken(UserCredential credential)
+        public AccessToken? CreateAccessToken(string? userId)
+        {
+            if (userId != "dqtri")
+            {
+                return null;
+            }
+
+            SecurityTokenDescriptor refreshTokenDescriptor = GetAccessTokenDescriptor(userId);
+            var refreshTokenHandler = new JwtSecurityTokenHandler();
+            SecurityToken refreshCecurityToken = refreshTokenHandler.CreateToken(refreshTokenDescriptor);
+            string accessToken = refreshTokenHandler.WriteToken(refreshCecurityToken);
+            return new AccessToken(AccessToken.DEFAULT_TOKEN_TYPE, accessToken);
+        }
+
+        public RefreshToken? CreateRefreshToken(UserCredential credential)
         {
             if (credential.Username != "dqtri" || credential.Password != "123456")
             {
                 return null;
             }
 
-            SecurityTokenDescriptor refreshTokenDescriptor = GetTokenDescriptor(credential);
-            var refreshTokenHandler = new JwtSecurityTokenHandler();
-            SecurityToken refreshCecurityToken = refreshTokenHandler.CreateToken(refreshTokenDescriptor);
-            string accessToken = refreshTokenHandler.WriteToken(refreshCecurityToken);
-
-            SecurityTokenDescriptor tokenDescriptor = GetTokenDescriptor(credential.Username);
+            SecurityTokenDescriptor tokenDescriptor = GetRefreshTokenDescriptor(credential);
             var tokenHandler = new JwtSecurityTokenHandler();
             var securityToken = tokenHandler.CreateToken(tokenDescriptor);
             var refreshToken = tokenHandler.WriteToken(securityToken);
-
-            return new Token(accessToken, refreshToken);
+            return new RefreshToken(RefreshToken.DEFAULT_TOKEN_TYPE, refreshToken);
         }
 
-        public Token? CreateToken(string? userId)
+       
+        private SecurityTokenDescriptor GetAccessTokenDescriptor(string userId)
         {
-            if (userId == null) { return null; }
-            if (!userId.Equals("dqtri")) { return null; }
-            SecurityTokenDescriptor tokenDescriptor = GetTokenDescriptor(userId);
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var securityToken = tokenHandler.CreateToken(tokenDescriptor);
-            var accessToken = tokenHandler.WriteToken(securityToken);
-            return new Token(accessToken);
-        }
-
-        private SecurityTokenDescriptor GetTokenDescriptor(UserCredential user)
-        {
-            //accesstoken
-            var claims = new List<Claim> { new Claim(ClaimTypes.NameIdentifier, user.Username) };
+            var Roles = new[] { "User", "Admin" };
+            var claims = new List<Claim> { new Claim(ClaimTypes.NameIdentifier, userId) };
+            claims.AddRange(Roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddMinutes(_secretOptions.RefreshExpiryMinutes),
+                Expires = DateTime.UtcNow.AddMinutes(_secretOptions.AccessExpiryMinutes),
                 SigningCredentials = signingAudienceCertificate.GetAudienceSigningKey()
             };
 
             return tokenDescriptor;
         }
 
-        private SecurityTokenDescriptor GetTokenDescriptor(string userId)
-        {   //refeshtoken
-            var Roles = new[] { "User", "Admin" };
-            var claims = new List<Claim> { new Claim(ClaimTypes.NameIdentifier, userId) };
-            claims.Add(new Claim(ClaimTypes.Name, userId));
-            claims.AddRange(Roles.Select(role => new Claim(ClaimTypes.Role, role)));
-            var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_secretOptions.RefreshSecretKey));
-            var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+        private SecurityTokenDescriptor GetRefreshTokenDescriptor(UserCredential user)
+        {   
+            var claims = new List<Claim> { new Claim(ClaimTypes.NameIdentifier, user.Username), new Claim(ClaimTypes.Name, user.Username) };
+            var refreshSecurityKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_secretOptions.RefreshSecretKey));
+            var signingCredentials = new SigningCredentials(refreshSecurityKey, SecurityAlgorithms.HmacSha512Signature);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Issuer = _secretOptions.Issuer,
                 Audience = _secretOptions.Audience,
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddMinutes(_secretOptions.ExpiryMinutes),
+                Expires = DateTime.UtcNow.AddMinutes(_secretOptions.RefreshExpiryMinutes),
                 SigningCredentials = signingCredentials
             };
 
