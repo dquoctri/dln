@@ -1,0 +1,26 @@
+version: '3.9'
+
+services:
+  mssql_db:
+    container_name: mssql_container
+    image: ${MSSQL_IMAGE:-mcr.microsoft.com/mssql/server:latest}
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: ${MSSQL_PRODUCT_ID:-Developer}
+      SA_PASSWORD: "${MSSQL_SA_PASSWORD:-StrongP@ssword}"
+    volumes:
+      - mssqlsystem:/var/opt/mssql
+      - mssqluser:/var/opt/sqlserver
+    ports:
+      - "${MSSQL_PORT:-1433}:1433"
+    networks:
+      - dln_net
+    restart: unless-stopped
+
+networks:
+  dln_net: # external: true
+    driver: bridge
+
+volumes:
+  mssqlsystem: # external: true
+  mssqluser: # external: true
