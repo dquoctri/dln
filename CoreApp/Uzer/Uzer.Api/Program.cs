@@ -1,8 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Repository.Common;
-using User.Api.Extensions;
-using User.Context;
-using User.Repository;
+using Uzer.Api.Extensions;
+using Uzer.Api.Services;
+using Uzer.Context;
+using Uzer.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +12,8 @@ var builder = WebApplication.CreateBuilder(args);
 #region Repositories
 builder.Services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddTransient<IUserRepository, UserRepository>();
-//builder.Services.AddTransient<IProjectRepository, ProjectRepository>();
+builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
+
 #endregion
 builder.Services.AddDbContext<UserContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),

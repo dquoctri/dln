@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using User.Api.Certificates;
+using Uzer.Api.Certificates;
 
-namespace User.Api.Extensions
+namespace Uzer.Api.Extensions
 {
     public static class AsymmetricAuthenticationExtensions
     {

@@ -4,11 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace User.Entity
+namespace Uzer.Repository
 {
-    public class Partner
+    public interface IOrganisationRepository
     {
-        public long ID { get; set; }
-        public string Name { get; set; }
     }
 }

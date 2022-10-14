@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using User.Entity;
+using Uzer.Entity;
 
-namespace User.Context
+namespace Uzer.Context
 {
     public class UserContext : DbContext
     {
@@ -9,8 +9,9 @@ namespace User.Context
         {
 
         }
+
         public DbSet<Partner> Partners { get; set; }
         public DbSet<Organisation> Organisations { get; set; }
-        public DbSet<Entity.User> Users { get; set; }
+        public DbSet<User> Users { get; set; }
     }
 }

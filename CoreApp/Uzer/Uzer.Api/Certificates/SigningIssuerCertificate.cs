@@ -1,8 +1,7 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using System.Security.Cryptography;
-using System.Text;
 
-namespace User.Api.Certificates
+namespace Uzer.Api.Certificates
 {
     public class SigningIssuerCertificate : IDisposable
     {

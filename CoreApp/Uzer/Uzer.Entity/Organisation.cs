@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace User.Entity
+namespace Uzer.Entity
 {
     public class Organisation
     {
@@ -12,6 +12,5 @@ namespace User.Entity
         public string Name { get; set; }
         public Partner Partner { get; set; }
         public DateTime CreatedDate { get; set; }
-        
     }
 }
