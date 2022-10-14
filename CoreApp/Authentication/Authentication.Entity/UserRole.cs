@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace Authentication.Entity
 {
-    public class Profile
+    public enum UserRole
     {
-        public int ID { get; set; }
-        public string Name { get; set; }
+
     }
 }

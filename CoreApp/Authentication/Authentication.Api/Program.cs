@@ -1,4 +1,5 @@
 
+using Microsoft.EntityFrameworkCore;
 using Authentication.Api.Extensions;
 using Authentication.Api.Models;
 using Authentication.Api.Services;
@@ -12,6 +13,10 @@ builder.Services.Configure<SecretOptions>(secretOptions);
 // Add services to the container.
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddTransient<SecretOptions>();
+
+builder.Services.AddDbContext<AuthenticationContext>(
+    options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
+    b => b.MigrationsAssembly(typeof(AuthenticationContext).Assembly.FullName)));
 
 builder.Services.AddRefreshAuthentication(serect);
 
