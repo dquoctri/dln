@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Repository.Common;
 using Uzer.Api.Extensions;
 using Uzer.Api.Services;
@@ -6,6 +7,15 @@ using Uzer.Context;
 using Uzer.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Configuration
+    .AddJsonFile("appsettings.json")
+    .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json", optional: true)
+    .Build();
+
+builder.Services.AddDbContext<UserContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
+    x => x.MigrationsAssembly(typeof(UserContext).FullName)
+    .MigrationsHistoryTable(HistoryRepository.DefaultTableName, UserContext.SCHEMA)));
 
 // Add services to the container.
 #region Repositories
@@ -14,12 +24,6 @@ builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 
 #endregion
-
-
-
-builder.Services.AddDbContext<UserContext>(
-    options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
-    b => b.MigrationsAssembly(typeof(UserContext).Assembly.FullName)));
 
 builder.Services.AddAsymmetricAuthentication();
 builder.Services.AddControllers();
@@ -30,11 +34,8 @@ builder.Services.AddConfiguringSwagger();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 

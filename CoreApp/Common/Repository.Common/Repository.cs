@@ -6,6 +6,7 @@ namespace Repository.Common
     public class Repository<T> : IRepository<T> where T : class
     {
         protected readonly DbContext _dbContext;
+
         public Repository(DbContext dbContext)
         {
             _dbContext = dbContext;

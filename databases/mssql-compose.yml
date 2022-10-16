@@ -18,7 +18,8 @@ services:
     restart: unless-stopped
 
 networks:
-  dln_net: # external: true
+  dln_net: 
+    external: true
     driver: bridge
 
 volumes:

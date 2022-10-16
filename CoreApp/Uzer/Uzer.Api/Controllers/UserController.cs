@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using Uzer.Api.Services;
 using Uzer.Repository;
 
 namespace Uzer.Api.Controllers
@@ -14,10 +15,22 @@ namespace Uzer.Api.Controllers
 
         private readonly IUnitOfWork _unitOfWork;
 
-        public UserController(ILogger<UserController> logger, IUnitOfWork unitOfWork)
+        private readonly IUserRepository _userRepository;
+
+        public UserController(ILogger<UserController> logger, IUnitOfWork unitOfWork, IUserRepository userRepository)
         {
             _logger = logger;
             _unitOfWork = unitOfWork;
+            _userRepository = userRepository;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetUsersAsync()
+        {
+            var users = await _unitOfWork.Users.GetAllAsync();
+            var users2 = await _userRepository.GetAllAsync();
+            _logger.Log(LogLevel.Information, Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"));
+            return Ok(users2);
         }
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]

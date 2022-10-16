@@ -14,9 +14,9 @@ builder.Services.Configure<SecretOptions>(secretOptions);
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddTransient<SecretOptions>();
 
-builder.Services.AddDbContext<AuthenticationContext>(
-    options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
-    b => b.MigrationsAssembly(typeof(AuthenticationContext).Assembly.FullName)));
+//builder.Services.AddDbContext<AuthenticationContext>(
+//    options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
+//    b => b.MigrationsAssembly(typeof(AuthenticationContext).Assembly.FullName)));
 
 builder.Services.AddRefreshAuthentication(serect);
 
