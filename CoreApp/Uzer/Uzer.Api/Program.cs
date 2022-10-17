@@ -33,11 +33,12 @@ builder.Services.AddConfiguringSwagger();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-app.UseSwagger();
-app.UseSwaggerUI();
+app.UseCustomSwaggerUI("docs/uzer");
 
-app.UseHttpsRedirection();
-
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/api/error");
+}
 app.UseAuthorization();
 
 app.MapControllers();

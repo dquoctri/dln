@@ -7,19 +7,27 @@ namespace Uzer.Api.Services
     public class UnitOfWork : ContextAware<UserContext>, IUnitOfWork, IDisposable
     {
         private readonly UserContext? _context;
+
+        public IUserRepository Users { get; private set; }
+        public IOrganisationRepository Organisations { get; private set; }
+        public IPartnerRepository Partners { get; private set; }
+
         public UnitOfWork(UserContext userContext) : base(null)
         {
             _context = userContext;
-            Users = new UserRepository(_context);
+            Partners = new PartnerRepository(userContext);
+            Organisations = new OrganisationRepository(userContext);
+            Users = new UserRepository(userContext);
         }
 
         public UnitOfWork(UserContext userContext, ContextFactory<UserContext>? contextFactory = null) : base(contextFactory)
         {
-            _context = userContext ?? Context();
-            Users = new UserRepository(_context);
+            var context = userContext ?? Context();
+            _context = context;
+            Users = new UserRepository(context);
+            Partners = new PartnerRepository(context);
+            Organisations = new OrganisationRepository(context);
         }
-
-        public IUserRepository Users { get; private set; }
 
         public async Task<int> DeadlineAsync()
         {

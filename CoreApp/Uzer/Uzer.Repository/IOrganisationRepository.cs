@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Repository.Common;
+using Uzer.Entity;
 
 namespace Uzer.Repository
 {
-    public interface IOrganisationRepository
+    public interface IOrganisationRepository : IRepository<Organisation>
     {
     }
 }

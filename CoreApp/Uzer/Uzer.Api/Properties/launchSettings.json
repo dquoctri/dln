@@ -1,9 +1,9 @@
 {
   "profiles": {
-    "User.Api": {
+    "Uzer.Api": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "swagger",
+      "launchUrl": "docs/uzer/swagger",
       "dotnetRunMessages": true,
       "applicationUrl": "http://localhost:5132",
       "environmentVariables": {
@@ -21,7 +21,7 @@
     "Docker": {
       "commandName": "Docker",
       "launchBrowser": true,
-      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/docs/uzer/swagger",
       "publishAllPorts": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
