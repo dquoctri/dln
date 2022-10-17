@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 
 namespace Repository.Common
@@ -6,31 +7,74 @@ namespace Repository.Common
     public class Repository<T> : IRepository<T> where T : class
     {
         protected readonly DbContext _dbContext;
+        protected internal DbSet<T> _dbSet;
 
         public Repository(DbContext dbContext)
         {
             _dbContext = dbContext;
+            _dbSet = dbContext.Set<T>();
         }
 
-        public async Task AddAsync(T entity) 
-            => await _dbContext.Set<T>().AddAsync(entity);
+        public virtual IEnumerable<T> Get(
+            Expression<Func<T, bool>>? filter = null,
+            Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
+            string includeProperties = "")
+        {
+            IQueryable<T> query = _dbSet;
 
-        public async Task AddRangeAsync(IEnumerable<T> entities) 
-            => await _dbContext.Set<T>().AddRangeAsync(entities);
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
 
-        public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> expression)
-            => await _dbContext.Set<T>().Where(expression).ToArrayAsync();
+            foreach (var includeProperty in includeProperties.Split
+                (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                query = query.Include(includeProperty);
+            }
 
-        public async Task<IEnumerable<T>> GetAllAsync()
-            => await _dbContext.Set<T>().ToArrayAsync();
+            if (orderBy != null)
+            {
+                return orderBy(query).ToList();
+            }
+            else
+            {
+                return query.ToList();
+            }
+        }
 
-        public async Task<T?> GetByIdAsync(long ID)
-            => await _dbContext.Set<T>().FindAsync(ID);
+        public virtual T? GetByID(params object?[]? keyValues)
+        {
+            return _dbSet.Find(keyValues);
+        }
 
-        public void Remove(T entity)
-            => _dbContext.Set<T>().Remove(entity);
+        public virtual void Insert(T entity)
+        {
+            _dbSet.Add(entity);
+        }
 
-        public void RemoveRange(IEnumerable<T> entities)
-            => _dbContext.Set<T>().RemoveRange(entities);
+        public virtual void Delete(params object?[]? keyValues)
+        {
+            T? entity = _dbSet.Find(keyValues);
+            if (entity != null)
+            {
+                Delete(entity);
+            }
+        }
+
+        public virtual void Delete(T entityToDelete)
+        {
+            if (_dbContext.Entry(entityToDelete).State == EntityState.Detached)
+            {
+                _dbSet.Attach(entityToDelete);
+            }
+            _dbSet.Remove(entityToDelete);
+        }
+
+        public virtual void Update(T entity)
+        {
+            _dbSet.Attach(entity);
+            _dbContext.Entry(entity).State = EntityState.Modified;
+        }
     }
 }

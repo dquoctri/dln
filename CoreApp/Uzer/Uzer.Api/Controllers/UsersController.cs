@@ -21,9 +21,9 @@ namespace Uzer.Api.Controllers
         // GET: api/Users
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetUsers()
+        public IActionResult GetUsers()
         {
-            return Ok(await _unitOfWork.Users.GetAllAsync());
+            return Ok(_unitOfWork.Users.Get());
         }
 
         // GET: api/Users/5
@@ -31,9 +31,9 @@ namespace Uzer.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetUser(long id)
+        public IActionResult GetUser(long id)
         {
-            var user = await _unitOfWork.Users.GetByIdAsync(id);
+            var user = _unitOfWork.Users.GetByID(id);
 
             if (user == null)
             {
@@ -57,8 +57,7 @@ namespace Uzer.Api.Controllers
                 return BadRequest();
             }
 
-            //todo must update
-            await _unitOfWork.Users.AddAsync(user);
+            _unitOfWork.Users.Update(user);
 
             try
             {
@@ -66,7 +65,7 @@ namespace Uzer.Api.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!await UserExistsAsync(id))
+                if (!UserExists(id))
                 {
                     return NotFound();
                 }
@@ -86,7 +85,7 @@ namespace Uzer.Api.Controllers
         [ProducesDefaultResponseType]
         public async Task<ActionResult<User>> PostUser(User user)
         {
-            await _unitOfWork.Users.AddAsync(user);
+            _unitOfWork.Users.Insert(user);
             await _unitOfWork.DeadlineAsync();
 
             return CreatedAtAction("GetUser", new { id = user.Id }, user);
@@ -99,21 +98,21 @@ namespace Uzer.Api.Controllers
         [ProducesDefaultResponseType]
         public async Task<IActionResult> DeleteUser(long id)
         {
-            var user = await _unitOfWork.Users.GetByIdAsync(id);
+            var user = _unitOfWork.Users.GetByID(id);
             if (user == null)
             {
                 return NotFound();
             }
 
-            _unitOfWork.Users.Remove(user);
+            _unitOfWork.Users.Delete(user);
             await _unitOfWork.DeadlineAsync();
 
             return NoContent();
         }
 
-        private async Task<bool> UserExistsAsync(long id)
+        private bool UserExists(long id)
         {
-            var user = await _unitOfWork.Users.GetByIdAsync(id);
+            var user = _unitOfWork.Users.GetByID(id);
             return user != null;
         }
     }

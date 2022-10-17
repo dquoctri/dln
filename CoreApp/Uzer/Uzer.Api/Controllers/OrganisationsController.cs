@@ -21,9 +21,9 @@ namespace Uzer.Api.Controllers
         // GET: api/Organisations
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetOrganisations()
+        public IActionResult GetOrganisations()
         {
-            return Ok(await _unitOfWork.Organisations.GetAllAsync());
+            return Ok(_unitOfWork.Organisations.Get());
         }
 
         // GET: api/Organisations/5
@@ -31,9 +31,9 @@ namespace Uzer.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetOrganisation(long id)
+        public IActionResult GetOrganisation(long id)
         {
-            var organisation = await _unitOfWork.Organisations.GetByIdAsync(id);
+            var organisation = _unitOfWork.Organisations.GetByID(id);
 
             if (organisation == null)
             {
@@ -57,17 +57,14 @@ namespace Uzer.Api.Controllers
             {
                 return BadRequest();
             }
-
-            //todo must update
-            await _unitOfWork.Organisations.AddAsync(organisation);
-
+            _unitOfWork.Organisations.Update(organisation);
             try
             {
                 await _unitOfWork.DeadlineAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!await OrganisationExistsAsync(id))
+                if (!OrganisationExists(id))
                 {
                     return NotFound();
                 }
@@ -88,7 +85,7 @@ namespace Uzer.Api.Controllers
         [ProducesDefaultResponseType]
         public async Task<IActionResult> PostOrganisation(Organisation organisation)
         {
-            await _unitOfWork.Organisations.AddAsync(organisation);
+            _unitOfWork.Organisations.Insert(organisation);
             await _unitOfWork.DeadlineAsync();
 
             return CreatedAtAction("GetOrganisation", new { id = organisation.Id }, organisation);
@@ -101,13 +98,13 @@ namespace Uzer.Api.Controllers
         [ProducesDefaultResponseType]
         public async Task<IActionResult> DeleteOrganisation(long id)
         {
-            var organisation = await _unitOfWork.Organisations.GetByIdAsync(id);
+            var organisation = _unitOfWork.Organisations.GetByID(id);
             if (organisation == null)
             {
                 return NotFound();
             }
 
-            _unitOfWork.Organisations.Remove(organisation);
+            _unitOfWork.Organisations.Delete(organisation);
             await _unitOfWork.DeadlineAsync();
 
             return NoContent();
@@ -135,10 +132,10 @@ namespace Uzer.Api.Controllers
         [Route("/error")]
         public IActionResult HandleError() => Problem();
 
-        private async Task<bool> OrganisationExistsAsync(long id)
+        private bool OrganisationExists(long id)
         {
-            var org = await _unitOfWork.Organisations.GetByIdAsync(id);
-            return org != null;
+            var organisation = _unitOfWork.Organisations.GetByID(id);
+            return organisation != null;
         }
     }
 }

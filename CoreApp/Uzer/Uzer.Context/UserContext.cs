@@ -9,7 +9,7 @@ namespace Uzer.Context
     {
         public static string SCHEMA = "dln_uzer";
 
-        private readonly StreamWriter _logStream = new StreamWriter("mylog.txt", append: true);
+        //private readonly StreamWriter _logStream = new StreamWriter("mylog.txt", append: true);
 
         public DbSet<Partner>? Partners { get; set; }
         public DbSet<Organisation>? Organisations { get; set; }
@@ -31,8 +31,9 @@ namespace Uzer.Context
                 var cs = $"Server=localhost,1433;Database={SCHEMA};User Id=admin;Password=P@ssword;";
                 optionsBuilder.UseSqlServer(cs, x => x.MigrationsHistoryTable(HistoryRepository.DefaultTableName, SCHEMA));
             }
+            //todo unitest cannot access here
             //view more https://learn.microsoft.com/en-us/ef/core/logging-events-diagnostics/simple-logging
-            optionsBuilder.LogTo(_logStream.WriteLine, LogLevel.Information).EnableDetailedErrors();
+            //optionsBuilder.LogTo(_logStream.WriteLine, LogLevel.Information).EnableDetailedErrors();
             base.OnConfiguring(optionsBuilder);
         }
 
@@ -44,13 +45,13 @@ namespace Uzer.Context
         public override void Dispose()
         {
             base.Dispose();
-            _logStream.Dispose();
+            //_logStream.Dispose();
         }
 
         public override async ValueTask DisposeAsync()
         {
             await base.DisposeAsync();
-            await _logStream.DisposeAsync();
+            //await _logStream.DisposeAsync();
         }
     }
 }

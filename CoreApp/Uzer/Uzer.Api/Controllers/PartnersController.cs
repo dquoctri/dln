@@ -20,9 +20,9 @@ namespace Uzer.Api.Controllers
         // GET: api/Partners
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetPartners()
+        public IActionResult GetPartners()
         {
-            return Ok(await _unitOfWork.Partners.GetAllAsync());
+            return Ok(_unitOfWork.Partners.Get());
         }
 
         // GET: api/Partners/5
@@ -30,9 +30,9 @@ namespace Uzer.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetPartner(long id)
+        public IActionResult GetPartner(long id)
         {
-            var partner = await _unitOfWork.Partners.GetByIdAsync(id);
+            var partner = _unitOfWork.Partners.GetByID(id);
 
             if (partner == null)
             {
@@ -55,8 +55,7 @@ namespace Uzer.Api.Controllers
             {
                 return BadRequest();
             }
-            //todo must update
-            await _unitOfWork.Partners.AddAsync(partner);
+            _unitOfWork.Partners.Update(partner);
 
             try
             {
@@ -64,7 +63,7 @@ namespace Uzer.Api.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!await PartnerExistsAsync(id))
+                if (!PartnerExists(id))
                 {
                     return NotFound();
                 }
@@ -84,7 +83,7 @@ namespace Uzer.Api.Controllers
         [ProducesDefaultResponseType]
         public async Task<IActionResult> PostPartner(Partner partner)
         {
-            await _unitOfWork.Partners.AddAsync(partner);
+            _unitOfWork.Partners.Insert(partner);
             await _unitOfWork.DeadlineAsync();
 
             return CreatedAtAction("GetPartner", new { id = partner.Id }, partner);
@@ -97,13 +96,13 @@ namespace Uzer.Api.Controllers
         [ProducesDefaultResponseType]
         public async Task<IActionResult> DeletePartner(long id)
         {
-            var partner = await _unitOfWork.Partners.GetByIdAsync(id);
+            var partner = _unitOfWork.Partners.GetByID(id);
             if (partner == null)
             {
                 return NotFound();
             }
 
-            _unitOfWork.Partners.Remove(partner);
+            _unitOfWork.Partners.Delete(partner);
             await _unitOfWork.DeadlineAsync();
 
             return NoContent();
@@ -131,9 +130,9 @@ namespace Uzer.Api.Controllers
         [Route("/error")]
         public IActionResult HandleError() => Problem();
 
-        private async Task<bool> PartnerExistsAsync(long id)
+        private bool PartnerExists(long id)
         {
-            var partner = await _unitOfWork.Partners.GetByIdAsync(id);
+            var partner = _unitOfWork.Partners.GetByID(id);
             return partner != null;
         }
     }

@@ -1,9 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Context.Common
 {
@@ -26,6 +21,30 @@ namespace Context.Common
                 return Activator.CreateInstance(type, newArguments) as T;
             }
             return Activator.CreateInstance(typeof(T), arguments) as T;
+        }
+
+        public void EnsureCreated()
+        {
+            if (!InMemory)
+            {
+                throw new InvalidOperationException("EnsureCreated for testing only!");
+            }
+            using (var ctx = Create())
+            {
+                _ = ctx?.Database.EnsureCreated();
+            }
+        }
+
+        public void EnsureDeleted()
+        {
+            if (!InMemory)
+            {
+                throw new InvalidOperationException("EnsureDeleted for testing only!");
+            }
+            using (var ctx = Create())
+            {
+                _ = ctx?.Database.EnsureDeleted();
+            }
         }
     }
 }

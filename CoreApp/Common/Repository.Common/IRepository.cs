@@ -4,12 +4,14 @@ namespace Repository.Common
 {
     public interface IRepository<T> where T : class
     {
-        Task<T?> GetByIdAsync(long ID);
-        Task<IEnumerable<T>> GetAllAsync();
-        Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> expression);
-        Task AddAsync(T entity);
-        Task AddRangeAsync(IEnumerable<T> entities);
-        void Remove(T entity);
-        void RemoveRange(IEnumerable<T> entities);
+        IEnumerable<T> Get(
+            Expression<Func<T, bool>>? filter = null,
+            Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
+            string includeProperties = "");
+        T? GetByID(params object?[]? keyValues);
+        void Insert(T entity);
+        void Delete(params object?[]? keyValues);
+        void Delete(T entityToDelete);
+        void Update(T entity);
     }
 }
