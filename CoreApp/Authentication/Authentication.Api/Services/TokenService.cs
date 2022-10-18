@@ -5,7 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Net;
+using Authentication.Entity;
 
 namespace Authentication.Api.Services
 {
@@ -13,16 +13,23 @@ namespace Authentication.Api.Services
     {
         private readonly SigningAudienceCertificate signingAudienceCertificate;
         private readonly SecretOptions _secretOptions;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public TokenService(IOptions<SecretOptions> secretOptions)
+        public TokenService(IOptions<SecretOptions> secretOptions, IUnitOfWork unitOfWork)
         {
             signingAudienceCertificate = new SigningAudienceCertificate(secretOptions);
             _secretOptions = secretOptions.Value;
+            _unitOfWork = unitOfWork;
         }
 
         public AccessToken? CreateAccessToken(string? userId)
         {
             if (userId != "dqtri")
+            {
+                return null;
+            }
+            Account? account = _unitOfWork.Accounts.GetAccountByUsername(userId);
+            if (account == null)
             {
                 return null;
             }
@@ -67,7 +74,10 @@ namespace Authentication.Api.Services
 
         private SecurityTokenDescriptor GetRefreshTokenDescriptor(UserCredential user)
         {   
-            var claims = new List<Claim> { new Claim(ClaimTypes.NameIdentifier, user.Username), new Claim(ClaimTypes.Name, user.Username) };
+            var claims = new List<Claim> { new Claim(ClaimTypes.NameIdentifier, user.Username),
+                new Claim(ClaimTypes.Name, user.Username) };
+            claims.Add(new Claim("organization", user.Username));
+
             var refreshSecurityKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_secretOptions.RefreshSecretKey));
             var signingCredentials = new SigningCredentials(refreshSecurityKey, SecurityAlgorithms.HmacSha512Signature);
             var tokenDescriptor = new SecurityTokenDescriptor

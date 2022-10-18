@@ -1,26 +1,24 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Authentication.Entity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Uzer.Entity;
 
-namespace Uzer.Context
+namespace Authentication.Context
 {
-    public class UserContext : DbContext
+    public class AuthenticationContext : DbContext
     {
-        public static string SCHEMA = "dln_uzer";
+        public static string SCHEMA = "dln_auth";
 
-        public DbSet<Partner>? Partners { get; set; }
-        public DbSet<Organisation>? Organisations { get; set; }
-        public DbSet<User>? Users { get; set; }
+        public DbSet<Account>? Accounts { get; set; }
 
-        public UserContext() {}
+        public AuthenticationContext() { }
 
-        public UserContext(DbContextOptions<UserContext> options) : base(options) {}
+        public AuthenticationContext(DbContextOptions<AuthenticationContext> options) : base(options) { }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                var cs = $"Server=localhost,1433;Database={SCHEMA};User Id=admin;Password=P@ssword;";
+                var cs = $"Server=localhost,51433;Database={SCHEMA};User Id=sa;Password=StrongP@ssword;";
                 optionsBuilder.UseSqlServer(cs, x => x.MigrationsHistoryTable(HistoryRepository.DefaultTableName, SCHEMA));
             }
             base.OnConfiguring(optionsBuilder);

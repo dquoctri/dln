@@ -6,11 +6,13 @@ namespace Uzer.Api.Extensions
 {
     public static class AddDbContextExtentions
     {
+        //public static readonly ILoggerFactory MyLoggerFactory = LoggerFactory.Create(builder => { builder.AddConsole(); });
+
         public static IServiceCollection AddDefaultDbContext(this IServiceCollection services, string connectionString)
         {
             services.AddDbContext<UserContext>(options => options.UseSqlServer(connectionString,
                 x => x.MigrationsAssembly(typeof(UserContext).FullName)
-                .MigrationsHistoryTable(HistoryRepository.DefaultTableName, UserContext.SCHEMA)));
+                    .MigrationsHistoryTable(HistoryRepository.DefaultTableName, UserContext.SCHEMA)));
 
             return services;
 

@@ -1,34 +1,30 @@
-﻿using Context.Common;
-using Uzer.Context;
-using Uzer.Repository;
+﻿using Authentication.Context;
+using Authentication.Repository;
+using Context.Common;
 
-namespace Uzer.Api.Services
+namespace Authentication.Api.Services
 {
-    public class UnitOfWork : ContextAware<UserContext>, IUnitOfWork, IDisposable
+    public class UnitOfWork : ContextAware<AuthenticationContext>, IUnitOfWork, IDisposable
     {
-        private readonly UserContext? _context;
+        private readonly AuthenticationContext? _context;
 
-        public IUserRepository Users { get; private set; }
-        public IOrganisationRepository Organisations { get; private set; }
-        public IPartnerRepository Partners { get; private set; }
+        public IAccountRepository Accounts { get; private set; }
 
-        public UnitOfWork(UserContext context, ContextFactory<UserContext>? contextFactory = null) : base(contextFactory)
+        public UnitOfWork(AuthenticationContext context, ContextFactory<AuthenticationContext>? contextFactory = null) : base(contextFactory)
         {
             if (contextFactory != null)
             {
                 context = CreateContext() ?? context;
             }
             _context = context;
-            Users = new UserRepository(context);
-            Partners = new PartnerRepository(context);
-            Organisations = new OrganisationRepository(context);
+            Accounts = new AccountRepository(context);
         }
 
         /// <summary>
         /// The unit of work for unit testing
         /// </summary>
         /// <param name="contextFactory">Creational factory to create a context</param>
-        public UnitOfWork(ContextFactory<UserContext> contextFactory) : base(contextFactory)
+        public UnitOfWork(ContextFactory<AuthenticationContext> contextFactory) : base(contextFactory)
         {
             var context = CreateContext();
             if (context == null)
@@ -36,9 +32,7 @@ namespace Uzer.Api.Services
                 throw new ArgumentNullException(nameof(context));
             }
             _context = context;
-            Users = new UserRepository(context);
-            Partners = new PartnerRepository(context);
-            Organisations = new OrganisationRepository(context);
+            Accounts = new AccountRepository(context);
         }
 
         public async Task<int> DeadlineAsync()
