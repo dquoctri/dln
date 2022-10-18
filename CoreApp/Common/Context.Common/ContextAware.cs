@@ -5,10 +5,12 @@ namespace Context.Common
     public abstract class ContextAware<T> where T : DbContext, new()
     {
         protected ContextFactory<T> ContextFactory { get; }
-        protected virtual T Context() => ContextFactory.Create();
+        protected virtual T? CreateContext() => ContextFactory.CreateContext();
 
-        public ContextAware() : this(null)
-        { }
+        public ContextAware()
+        {
+            ContextFactory = new ContextFactory<T>();
+        }
 
         public ContextAware(ContextFactory<T>? contextFactory)
         {

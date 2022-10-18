@@ -20,15 +20,8 @@ namespace Uzer.Tests
         public UnitTest1()
         {
             _contextFactory = new ContextFactory<UserContext>(true);
-            UserContext? userContext = _contextFactory.Create();
-            if (userContext == null)
-            {
-                var options = new DbContextOptionsBuilder<UserContext>()
-                    .UseInMemoryDatabase(databaseName: "dln_uzer").Options;
-                userContext = new UserContext(options);
-            }
             _contextFactory.EnsureCreated();
-            _unitOfWork = new UnitOfWork(userContext);
+            _unitOfWork = new UnitOfWork(_contextFactory);
         }
 
         // teardown

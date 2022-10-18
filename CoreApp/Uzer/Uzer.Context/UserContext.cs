@@ -1,28 +1,21 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Context.Common;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Microsoft.Extensions.Logging;
 using Uzer.Entity;
 
 namespace Uzer.Context
 {
-    public class UserContext : DbContext
+    public class UserContext : DbContext, IDeadline
     {
         public static string SCHEMA = "dln_uzer";
-
-        //private readonly StreamWriter _logStream = new StreamWriter("mylog.txt", append: true);
 
         public DbSet<Partner>? Partners { get; set; }
         public DbSet<Organisation>? Organisations { get; set; }
         public DbSet<User>? Users { get; set; }
 
-        public UserContext()
-        {
-        }
+        public UserContext() {}
 
-        public UserContext(DbContextOptions<UserContext> options)
-            : base(options)
-        {
-        }
+        public UserContext(DbContextOptions<UserContext> options) : base(options) {}
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -31,9 +24,6 @@ namespace Uzer.Context
                 var cs = $"Server=localhost,1433;Database={SCHEMA};User Id=admin;Password=P@ssword;";
                 optionsBuilder.UseSqlServer(cs, x => x.MigrationsHistoryTable(HistoryRepository.DefaultTableName, SCHEMA));
             }
-            //todo unitest cannot access here
-            //view more https://learn.microsoft.com/en-us/ef/core/logging-events-diagnostics/simple-logging
-            //optionsBuilder.LogTo(_logStream.WriteLine, LogLevel.Information).EnableDetailedErrors();
             base.OnConfiguring(optionsBuilder);
         }
 
@@ -45,13 +35,31 @@ namespace Uzer.Context
         public override void Dispose()
         {
             base.Dispose();
-            //_logStream.Dispose();
         }
 
         public override async ValueTask DisposeAsync()
         {
             await base.DisposeAsync();
-            //await _logStream.DisposeAsync();
+        }
+
+        public override int SaveChanges()
+        {
+            throw new DbUpdateException("The context is read-only");
+        }
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            throw new DbUpdateException("The context is read-only");
+        }
+
+        public int Deadline()
+        {
+            return base.SaveChanges();
+        }
+
+        public async Task<int> DeadlineAsync(CancellationToken cancellationToken = default)
+        {
+            return await base.SaveChangesAsync(cancellationToken);
         }
     }
 }

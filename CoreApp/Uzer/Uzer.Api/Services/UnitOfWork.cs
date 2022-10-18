@@ -1,4 +1,5 @@
 ﻿using Context.Common;
+using Microsoft.EntityFrameworkCore;
 using Uzer.Context;
 using Uzer.Repository;
 
@@ -12,17 +13,29 @@ namespace Uzer.Api.Services
         public IOrganisationRepository Organisations { get; private set; }
         public IPartnerRepository Partners { get; private set; }
 
-        public UnitOfWork(UserContext userContext) : base(null)
+        public UnitOfWork(UserContext context, ContextFactory<UserContext>? contextFactory = null) : base(contextFactory)
         {
-            _context = userContext;
-            Partners = new PartnerRepository(userContext);
-            Organisations = new OrganisationRepository(userContext);
-            Users = new UserRepository(userContext);
+            if (contextFactory != null)
+            {
+                context = CreateContext() ?? context;
+            }
+            _context = context;
+            Users = new UserRepository(context);
+            Partners = new PartnerRepository(context);
+            Organisations = new OrganisationRepository(context);
         }
 
-        public UnitOfWork(UserContext userContext, ContextFactory<UserContext>? contextFactory = null) : base(contextFactory)
+        /// <summary>
+        /// The unit of work for unit testing
+        /// </summary>
+        /// <param name="contextFactory">Creational factory to create a context</param>
+        public UnitOfWork(ContextFactory<UserContext> contextFactory) : base(contextFactory)
         {
-            var context = userContext ?? Context();
+            var context = CreateContext();
+            if (context == null)
+            {
+                throw new ArgumentNullException(nameof(context));
+            }
             _context = context;
             Users = new UserRepository(context);
             Partners = new PartnerRepository(context);
@@ -32,7 +45,21 @@ namespace Uzer.Api.Services
         public async Task<int> DeadlineAsync()
         {
             if (_context == null) return -1;
-            return await _context.SaveChangesAsync();
+            if (_context is IDeadline deadline)
+            {
+                return await deadline.DeadlineAsync();
+            }
+            throw new DbUpdateException("The context is read-only");
+        }
+
+        public int Deadline()
+        {
+            if (_context == null) return -1;
+            if (_context is IDeadline deadline)
+            {
+                return deadline.Deadline();
+            }
+            throw new DbUpdateException("The context is read-only");
         }
 
         private bool disposed = false;

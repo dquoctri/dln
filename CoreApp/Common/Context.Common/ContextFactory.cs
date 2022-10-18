@@ -11,16 +11,23 @@ namespace Context.Common
             InMemory = inMemory;
         }
 
-        public T? Create(params object[] arguments)
+        public T CreateContext(params object[] arguments)
         {
+            var type = typeof(T);
             if (InMemory)
             {
-                var type = typeof(T);
-                var o = Options ?? (Options = new DbContextOptionsBuilder<T>().UseInMemoryDatabase(databaseName: type.Name).Options);
+                var o = Options ??= new DbContextOptionsBuilder<T>().UseInMemoryDatabase(databaseName: type.Name).Options;
                 var newArguments = arguments.Prepend(o).ToArray();
-                return Activator.CreateInstance(type, newArguments) as T;
+                if (Activator.CreateInstance(type, newArguments) is T memoryContext)
+                {
+                    return memoryContext;
+                }
             }
-            return Activator.CreateInstance(typeof(T), arguments) as T;
+            if (Activator.CreateInstance(type, arguments) is T context)
+            {
+                return context;
+            }
+            throw new ArgumentException($"{typeof(T)} is not a DbContext!");
         }
 
         public void EnsureCreated()
@@ -29,7 +36,7 @@ namespace Context.Common
             {
                 throw new InvalidOperationException("EnsureCreated for testing only!");
             }
-            using (var ctx = Create())
+            using (var ctx = CreateContext())
             {
                 _ = ctx?.Database.EnsureCreated();
             }
@@ -41,7 +48,7 @@ namespace Context.Common
             {
                 throw new InvalidOperationException("EnsureDeleted for testing only!");
             }
-            using (var ctx = Create())
+            using (var ctx = CreateContext())
             {
                 _ = ctx?.Database.EnsureDeleted();
             }

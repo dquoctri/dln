@@ -1,9 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Repository.Common;
 using Uzer.Api.Extensions;
 using Uzer.Api.Services;
-using Uzer.Context;
 using Uzer.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,11 +9,7 @@ builder.Configuration
     .AddJsonFile("appsettings.json")
     .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json", optional: true);
 
-builder.Services.AddDbContext<UserContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
-    x => x.MigrationsAssembly(typeof(UserContext).FullName)
-    .MigrationsHistoryTable(HistoryRepository.DefaultTableName, UserContext.SCHEMA)));
-
+builder.Services.AddDefaultDbContext(builder.Configuration.GetConnectionString("DefaultConnection"));
 // Add services to the container.
 #region Repositories
 builder.Services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
