@@ -1,6 +1,7 @@
 ﻿using Authentication.Entity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Migrations;
+//using Microsoft.EntityFrameworkCore.Migrations;
+//using Authentication.Entity;
 
 namespace Authentication.Context
 {
@@ -8,7 +9,11 @@ namespace Authentication.Context
     {
         public static string SCHEMA = "dln_auth";
 
+        public DbSet<Partner>? Partners { get; set; }
+        public DbSet<Organizer>? Organizers { get; set; }
+        public DbSet<User>? Users { get; set; }
         public DbSet<Account>? Accounts { get; set; }
+        public DbSet<Profile>? Profiles { get; set; }
 
         public AuthenticationContext() { }
 
@@ -16,11 +21,11 @@ namespace Authentication.Context
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured)
-            {
-                var cs = $"Server=localhost,51433;Database={SCHEMA};User Id=sa;Password=StrongP@ssword;";
-                optionsBuilder.UseSqlServer(cs, x => x.MigrationsHistoryTable(HistoryRepository.DefaultTableName, SCHEMA));
-            }
+            //if (!optionsBuilder.IsConfigured)
+            //{
+            //    var cs = $"Server=localhost,51433;Database={SCHEMA};User Id=sa;Password=StrongP@ssword;";
+            //    optionsBuilder.UseSqlServer(cs, x => x.MigrationsHistoryTable(HistoryRepository.DefaultTableName, SCHEMA));
+            //}
             base.OnConfiguring(optionsBuilder);
         }
 

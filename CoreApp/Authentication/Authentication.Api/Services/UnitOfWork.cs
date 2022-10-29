@@ -1,22 +1,29 @@
-﻿using Authentication.Context;
+﻿using Authentication.Api.Models;
+using Authentication.Context;
 using Authentication.Repository;
 using Context.Common;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Concurrent;
 
 namespace Authentication.Api.Services
 {
     public class UnitOfWork : ContextAware<AuthenticationContext>, IUnitOfWork, IDisposable
     {
         private readonly AuthenticationContext? _context;
+        private readonly dln_authContext? _authContext;
 
         public IAccountRepository Accounts { get; private set; }
 
-        public UnitOfWork(AuthenticationContext context, ContextFactory<AuthenticationContext>? contextFactory = null) : base(contextFactory)
+        public UnitOfWork(AuthenticationContext context, dln_authContext authContext, ContextFactory<AuthenticationContext>? contextFactory = null) : base(contextFactory)
         {
             if (contextFactory != null)
             {
                 context = CreateContext() ?? context;
             }
             _context = context;
+            _authContext = authContext;
             Accounts = new AccountRepository(context);
         }
 
@@ -65,6 +72,15 @@ namespace Authentication.Api.Services
         {
             Dispose(true);
             GC.SuppressFinalize(this);
+        }
+
+        public List<PartitionTable> GetPartitionTable()
+        {
+            DateTime startDate = new DateTime(2022, 10, 1);
+            DateTime now = DateTime.UtcNow;
+            int PR = 12 * (now.Year - startDate.Year) + (now.Month - startDate.Month);
+            PR = PR < 0 ? 2 : PR + 2;
+            return _authContext.PartitionTables.FromSqlInterpolated($"SELECT * FROM dbo.PartitionTable WHERE $PARTITION.myRangePF1(col1) = $PARTITION.myRangePF1({now});").ToList();
         }
     }
 }

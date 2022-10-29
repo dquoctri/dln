@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 
 namespace Repository.Common
 {
-    public class Repository<T> : IRepository<T> where T : class
+    public class Repository<T> : IRepository<T> where T : class, new()
     {
         protected readonly DbContext _dbContext;
         protected internal DbSet<T> _dbSet;

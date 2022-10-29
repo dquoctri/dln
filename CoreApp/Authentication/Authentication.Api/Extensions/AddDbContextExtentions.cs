@@ -11,7 +11,6 @@ namespace Authentication.Api.Extensions
             services.AddDbContext<AuthenticationContext>(options => options.UseSqlServer(connectionString,
                 x => x.MigrationsAssembly(typeof(AuthenticationContext).FullName)
                     .MigrationsHistoryTable(HistoryRepository.DefaultTableName, AuthenticationContext.SCHEMA)));
-
             return services;
         }
     }

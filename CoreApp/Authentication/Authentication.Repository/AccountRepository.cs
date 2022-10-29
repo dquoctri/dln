@@ -4,6 +4,11 @@ using Repository.Common;
 
 namespace Authentication.Repository
 {
+    public interface IAccountRepository : IRepository<Account>
+    {
+        public Account? GetAccountByUsername(string username);
+    }
+
     public class AccountRepository : Repository<Account>, IAccountRepository
     {
         public AccountRepository(AuthenticationContext dbContext) : base(dbContext) {}

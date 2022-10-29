@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Authentication.Entity
 {
-    public class Profile
+    public class Partner
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -16,6 +11,6 @@ namespace Authentication.Entity
         [Required(AllowEmptyStrings = false)]
         public string Name { get; set; } = null!;
         public string? Description { get; set; }
-        public ICollection<UserRole> Roles { get; set; } = new HashSet<UserRole>();
+        public ICollection<Organizer> Organizers { get; set; } = new List<Organizer>();
     }
 }

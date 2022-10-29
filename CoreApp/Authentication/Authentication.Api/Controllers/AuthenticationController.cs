@@ -26,11 +26,16 @@ namespace Authentication.Api.Controllers
         public IActionResult Login([FromBody] UserCredential payload)
         {
             RefreshToken? token = _service.CreateRefreshToken(payload);
-            if (null == token)
-            {
-                return Unauthorized();
-            }
+            if (null == token) return Unauthorized();
             return Ok(token);
+        }
+
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Route("logout")]
+        [HttpPost]
+        public IActionResult Logout()
+        {
+            return Ok();
         }
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]

@@ -43,10 +43,7 @@ namespace Authentication.Api.Services
 
         public RefreshToken? CreateRefreshToken(UserCredential credential)
         {
-            if (credential.Username != "dqtri" || credential.Password != "123456")
-            {
-                return null;
-            }
+            Account? account = _unitOfWork.Accounts.GetAccountByUsername(credential.Username);
 
             SecurityTokenDescriptor tokenDescriptor = GetRefreshTokenDescriptor(credential);
             var tokenHandler = new JwtSecurityTokenHandler();

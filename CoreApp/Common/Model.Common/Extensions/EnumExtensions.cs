@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Reflection;
 
 namespace Model.Common.Extensions
 {
@@ -8,8 +9,18 @@ namespace Model.Common.Extensions
         {
             var field = value.GetType().GetField(value.ToString());
             if (null == field) return value.ToString();
-            var attributes = (DescriptionAttribute[])field.GetCustomAttributes(typeof(DescriptionAttribute), false);
-            return attributes.Length > 0 ? attributes[0].Description : value.ToString();
+            var attribute = field.GetCustomAttributes(typeof(DescriptionAttribute), false).FirstOrDefault();
+            if (attribute is DescriptionAttribute description) return description.Description;
+            return value.ToString();
+        }
+
+        public static T? GetAttribute<T>(this Enum value) where T : Attribute
+        {
+            var fields = value.GetType().GetMember(value.ToString()).FirstOrDefault();
+            if (fields == null) return default;
+            var field = fields.GetCustomAttributes(typeof(T), false).FirstOrDefault();
+            if (field is T t) return t;
+            return default;
         }
     }
 }
