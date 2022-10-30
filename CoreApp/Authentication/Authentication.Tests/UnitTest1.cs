@@ -1,14 +1,16 @@
 using Authentication.Api.Controllers;
+using Authentication.Api.Models.Partners;
 using Authentication.Api.Services;
 using Authentication.Context;
 using Authentication.Entity;
+using Authentication.Repository;
 using Context.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Authentication.Tests
 {
-    public class UnitTest1
+    public class UnitTest1 : IDisposable
     {
         private readonly ContextFactory<AuthenticationContext> _contextFactory;
         private readonly IUnitOfWork _unitOfWork;
@@ -18,7 +20,8 @@ namespace Authentication.Tests
         {
             _contextFactory = new ContextFactory<AuthenticationContext>(true);
             _contextFactory.EnsureCreated();
-            _unitOfWork = new UnitOfWork(_contextFactory);
+            var context = _contextFactory.CreateContext();
+            _unitOfWork = new UnitOfWork(_contextFactory, new PartnerRepository(context));
         }
 
         // teardown
@@ -39,14 +42,14 @@ namespace Authentication.Tests
             var controller = new PartnersController(_unitOfWork);
 
             // Act
-            var result = await controller.PostPartner(new Partner() { Name = "Hello" });
+            var result = await controller.PostPartner(new PartnerRequest() { Name = "Hello" });
             // Assert
             var viewResult = Assert.IsType<CreatedAtActionResult>(result);
 
             Assert.Equal(StatusCodes.Status201Created, viewResult.StatusCode);
 
             // Act
-            var result2 = controller.GetPartner(1L);
+            var result2 = controller.GetPartner(1);
             // Assert
             var viewResult2 = Assert.IsType<OkObjectResult>(result2);
             Assert.Equal(StatusCodes.Status200OK, viewResult2.StatusCode);
@@ -95,13 +98,13 @@ namespace Authentication.Tests
             var controller2 = new PartnersController(_unitOfWork);
 
             // Act
-            var result2 = await controller2.PostPartner(new Partner() { Name = "Hello" });
+            var result2 = await controller2.PostPartner(new PartnerRequest() { Name = "Hello" });
             // Assert
             var viewResult2 = Assert.IsType<CreatedAtActionResult>(result2);
 
             Assert.Equal(StatusCodes.Status201Created, viewResult2.StatusCode);
             // Act
-            var result3 = controller2.GetPartner(1L);
+            var result3 = controller2.GetPartner(1);
             // Assert
             var viewResult3 = Assert.IsType<OkObjectResult>(result3);
             Assert.Equal(StatusCodes.Status200OK, viewResult3.StatusCode);

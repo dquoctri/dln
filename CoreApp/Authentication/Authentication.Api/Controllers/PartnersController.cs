@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Authentication.Entity;
 using Authentication.Api.Services;
+using Authentication.Api.Models.Partners;
 
 namespace Authentication.Api.Controllers
 {
@@ -30,7 +31,7 @@ namespace Authentication.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
-        public IActionResult GetPartner(long id)
+        public IActionResult GetPartner(int id)
         {
             var partner = _unitOfWork.Partners.GetByID(id);
 
@@ -49,7 +50,7 @@ namespace Authentication.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> PutPartner(long id, Partner partner)
+        public async Task<IActionResult> PutPartner(int id, Partner partner)
         {
             if (id != partner.Id)
             {
@@ -75,18 +76,27 @@ namespace Authentication.Api.Controllers
 
             return NoContent();
         }
-
+        /// <summary>
+        /// Create partner by name
+        /// </summary>
+        /// <param name="partner"></param>
+        /// <returns>created partner</returns>
         // POST: api/Partners
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> PostPartner(Partner partner)
+        public async Task<IActionResult> PostPartner(PartnerRequest partner)
         {
-            _unitOfWork.Partners.Insert(partner);
+            var existedPartner = _unitOfWork.Partners.GetByName(partner.Name);
+            if (existedPartner != null)
+            {
+                return BadRequest($"{partner.Name} already existed.");
+            }
+            var _partner = new Partner() { Name = partner.Name, Description = partner.Description };
+            _unitOfWork.Partners.Insert(_partner);
             await _unitOfWork.DeadlineAsync();
-
-            return CreatedAtAction("GetPartner", new { id = partner.Id }, partner);
+            return CreatedAtAction("PostPartner", new { id = _partner.Id }, _partner);
         }
 
         // DELETE: api/Partners/5
@@ -94,7 +104,7 @@ namespace Authentication.Api.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> DeletePartner(long id)
+        public async Task<IActionResult> DeletePartner(int id)
         {
             var partner = _unitOfWork.Partners.GetByID(id);
             if (partner == null)
@@ -130,7 +140,7 @@ namespace Authentication.Api.Controllers
         [Route("/error")]
         public IActionResult HandleError() => Problem();
 
-        private bool PartnerExists(long id)
+        private bool PartnerExists(int id)
         {
             var partner = _unitOfWork.Partners.GetByID(id);
             return partner != null;

@@ -21,8 +21,9 @@ builder.Services.Configure<SecretOptions>(secretOptions);
 //// Add services to the container.
 #region Repositories
 builder.Services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
-builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<IPartnerRepository, PartnerRepository>();
+builder.Services.AddTransient<IOrganisationRepository, OrganisationRepository>();
+builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddTransient<SecretOptions>();

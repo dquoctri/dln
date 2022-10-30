@@ -25,7 +25,7 @@ namespace Authentication.Context
         {
             if (!optionsBuilder.IsConfigured)
             {
-                var cs = $"Server=localhost,51433;Database={SCHEMA};User Id=sa;Password=StrongP@ssword;";
+                var cs = $"Server=localhost,51433;Database=dln_auth;User Id=sa;Password=StrongP@ssword;";
                 optionsBuilder.UseSqlServer(cs, x => x.MigrationsHistoryTable(HistoryRepository.DefaultTableName, SCHEMA));
             }
             base.OnConfiguring(optionsBuilder);
@@ -33,10 +33,10 @@ namespace Authentication.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            var valueComparer = new ValueComparer<ICollection<UserRole>>(
+            var valueComparer = new ValueComparer<ISet<UserRole>>(
                     (c1, c2) => c1.SequenceEqual(c2),
                     c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
-                    c => (ICollection<UserRole>)c.ToHashSet());
+                    c => (ISet<UserRole>)c.ToHashSet());
 
             var valueConversion = new EnumCollectionJsonValueConverter<UserRole>();
 
@@ -44,10 +44,14 @@ namespace Authentication.Context
             modelBuilder.Entity<Profile>()
                 .Property(e => e.Roles)
                 .HasConversion(valueConversion);
-                //.HasConversion(
-                //    v => string.Join(',', v),
-                //    v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(x => (UserRole)Enum.Parse(typeof(UserRole), x)).ToList() ?? new List<UserRole>())
-                //.Metadata.SetValueComparer(valueComparer);
+            //.HasConversion(
+            //    v => string.Join(',', v),
+            //    v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(x => (UserRole)Enum.Parse(typeof(UserRole), x)).ToList() ?? new List<UserRole>())
+            //.Metadata.SetValueComparer(valueComparer);
+
+            modelBuilder.Entity<Partner>()
+               .Property(b => b.CreatedDate)
+               .HasDefaultValueSql("getutcdate()");
 
             modelBuilder.Entity<Organizer>()
                 .Property(b => b.CreatedDate)

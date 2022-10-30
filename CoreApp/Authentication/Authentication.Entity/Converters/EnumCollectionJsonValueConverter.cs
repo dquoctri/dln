@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace Authentication.Entity.Converters
 {
-    public class EnumCollectionJsonValueConverter<T> : ValueConverter<ICollection<T>, string> where T : Enum
+    public class EnumCollectionJsonValueConverter<T> : ValueConverter<ISet<T>, string> where T : Enum
     {
         public EnumCollectionJsonValueConverter() : base(
             v => JsonConvert.SerializeObject(v.Select(x => x.ToString())),
-            v => JsonConvert.DeserializeObject<ICollection<string>>(v).Select(x => (T)Enum.Parse(typeof(T), x)) as ICollection<T>)
+            v => JsonConvert.DeserializeObject<ISet<string>>(v).Select(x => (T)Enum.Parse(typeof(T), x)) as ISet<T>)
         { 
         }
     }
