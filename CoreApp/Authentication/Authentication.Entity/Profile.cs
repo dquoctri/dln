@@ -16,6 +16,7 @@ namespace Authentication.Entity
         [Required(AllowEmptyStrings = false)]
         public string Name { get; set; } = null!;
         public string? Description { get; set; }
-        public ICollection<UserRole> Roles { get; set; } = new HashSet<UserRole>();
+        [Column(TypeName = "nvarchar(255)")]
+        public ISet<UserRole> Roles { get; set; } = new HashSet<UserRole>();
     }
 }

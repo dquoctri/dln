@@ -3,11 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using Authentication.Api.Extensions;
 using Authentication.Api.Models;
 using Authentication.Api.Services;
-using User.Api.Extensions;
 using Authentication.Context;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Repository.Common;
-using Authentication.Api.Extensions;
 using Authentication.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,25 +19,24 @@ builder.Services.Configure<SecretOptions>(secretOptions);
 
 //builder.Services.AddDefaultDbContext(builder.Configuration.GetConnectionString("DefaultConnection"));
 //// Add services to the container.
-//#region Repositories
-//builder.Services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
-//builder.Services.AddTransient<IUserRepository, UserRepository>();
-//builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
+#region Repositories
+builder.Services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
+builder.Services.AddTransient<IUserRepository, UserRepository>();
+builder.Services.AddTransient<IPartnerRepository, PartnerRepository>();
+builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddTransient<SecretOptions>();
 
-//#endregion
+#endregion
 
 //builder.Services.AddAsymmetricAuthentication();
 
-// Add services to the container.
-builder.Services.AddScoped<ITokenService, TokenService>();
-builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
-builder.Services.AddTransient<SecretOptions>();
 
 //builder.Services.AddDefaultDbContext(builder.Configuration.GetConnectionString("DefaultConnection"));
 builder.Services.AddDbContext<AuthenticationContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
                 x => x.MigrationsHistoryTable(HistoryRepository.DefaultTableName, AuthenticationContext.SCHEMA)));
-builder.Services.AddDbContext<dln_authContext>();
+
 builder.Services.AddRefreshAuthentication(serect);
 
 builder.Services.AddAuthorization();

@@ -1,11 +1,6 @@
 ﻿using Authentication.Entity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Authentication.Context
 {
@@ -19,8 +14,8 @@ namespace Authentication.Context
                 context.Database.Migrate();
                 InitPartners(context);
                 InitOrganizers(context);
+                InitProfiles(context);
                 InitAccounts(context);
-                context.SaveChanges();
             }
         }
 
@@ -38,6 +33,7 @@ namespace Authentication.Context
                     Description = "The system partner"
                 }
             );
+            context.SaveChanges();
         }
 
         public static void InitOrganizers(AuthenticationContext context)
@@ -58,8 +54,26 @@ namespace Authentication.Context
                     Name = "System",
                     Description = "The system partner",
                     Partner = partner,
+                    Type = OrganizerType.SYSTEM,
                 }
             );
+            context.SaveChanges();
+        }
+
+        public static void InitProfiles(AuthenticationContext context)
+        {
+            // Look for any profiles.
+            if (context.Profiles == null || context.Profiles.Any())
+            {
+                return;   // DB has been seeded
+            }
+            context.Profiles.AddRange(new Profile
+            {
+                Name = "admin",
+                Description = "admin profile",
+                Roles = new HashSet<UserRole>() { UserRole.PARTNER_MANAGER, UserRole.ORGANIZER_MANAGER, UserRole.PROFILE_MANAGER, UserRole.USER_MANAGER }
+            });
+            context.SaveChanges();
         }
 
         public static void InitAccounts(AuthenticationContext context)
@@ -93,6 +107,7 @@ namespace Authentication.Context
                     Organizer = organizer,
                 }
             );
+            context.SaveChanges();
         }
     }
 }

@@ -1,6 +1,4 @@
-﻿using Authentication.Api.Models;
-using Authentication.Repository;
-using Authentication.Repository;
+﻿using Authentication.Repository;
 
 namespace Authentication.Api.Services
 {
@@ -10,9 +8,7 @@ namespace Authentication.Api.Services
         IOrganisationRepository Organisations { get; }
         IUserRepository Users { get; }
         IAccountRepository Accounts { get; }
-
-        public List<PartitionTable> GetPartitionTable();
-
+        IProfileRepository Profiles { get; }
         Task<int> DeadlineAsync();
     }
 }

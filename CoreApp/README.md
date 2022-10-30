@@ -12,10 +12,13 @@ dotnet add package Microsoft.EntityFrameworkCore.InMemory
 Install-Package Microsoft.EntityFrameworkCore.Relational
 
 dotnet ef migrations add InitialCreate --project Authentication\Authentication.Context
+dotnet ef migrations remove InitialCreate --project Authentication\Authentication.Context
 dotnet ef database update --project Authentication\Authentication.Context
+dotnet ef database drop InitialCreate --project Authentication\Authentication.Context
 
 dotnet ef database update InitialCreate
 dotnet ef database update 20180904195021_InitialCreate --connection your_connection_string
+
 Scaffold-DbContext "Server=localhost,51433;Database=dln_auth;User Id=sa;Password=StrongP@ssword;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models
 
 

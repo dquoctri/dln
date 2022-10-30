@@ -1,7 +1,9 @@
 ﻿using Authentication.Entity;
+using Authentication.Entity.Converters;
 using Microsoft.EntityFrameworkCore;
-//using Microsoft.EntityFrameworkCore.Migrations;
-//using Authentication.Entity;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Authentication.Context
 {
@@ -21,17 +23,41 @@ namespace Authentication.Context
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            //if (!optionsBuilder.IsConfigured)
-            //{
-            //    var cs = $"Server=localhost,51433;Database={SCHEMA};User Id=sa;Password=StrongP@ssword;";
-            //    optionsBuilder.UseSqlServer(cs, x => x.MigrationsHistoryTable(HistoryRepository.DefaultTableName, SCHEMA));
-            //}
+            if (!optionsBuilder.IsConfigured)
+            {
+                var cs = $"Server=localhost,51433;Database={SCHEMA};User Id=sa;Password=StrongP@ssword;";
+                optionsBuilder.UseSqlServer(cs, x => x.MigrationsHistoryTable(HistoryRepository.DefaultTableName, SCHEMA));
+            }
             base.OnConfiguring(optionsBuilder);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            var valueComparer = new ValueComparer<ICollection<UserRole>>(
+                    (c1, c2) => c1.SequenceEqual(c2),
+                    c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
+                    c => (ICollection<UserRole>)c.ToHashSet());
+
+            var valueConversion = new EnumCollectionJsonValueConverter<UserRole>();
+
             modelBuilder.HasDefaultSchema(SCHEMA);
+            modelBuilder.Entity<Profile>()
+                .Property(e => e.Roles)
+                .HasConversion(valueConversion);
+                //.HasConversion(
+                //    v => string.Join(',', v),
+                //    v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(x => (UserRole)Enum.Parse(typeof(UserRole), x)).ToList() ?? new List<UserRole>())
+                //.Metadata.SetValueComparer(valueComparer);
+
+            modelBuilder.Entity<Organizer>()
+                .Property(b => b.CreatedDate)
+                .HasDefaultValueSql("getutcdate()");
+            modelBuilder.Entity<Organizer>()
+                .Property(b => b.Type)
+                .HasConversion(new EnumToStringConverter<OrganizerType>());
+            modelBuilder.Entity<Organizer>()
+                .Property(b => b.Status)
+                .HasConversion(new EnumToStringConverter<OrganizerStatus>());
         }
 
         public override void Dispose()

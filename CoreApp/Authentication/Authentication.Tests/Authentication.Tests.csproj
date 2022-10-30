@@ -21,4 +21,10 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\Context.Common\Context.Common.csproj" />
+    <ProjectReference Include="..\Authentication.Api\Authentication.Api.csproj" />
+    <ProjectReference Include="..\Authentication.Context\Authentication.Context.csproj" />
+  </ItemGroup>
+
 </Project>

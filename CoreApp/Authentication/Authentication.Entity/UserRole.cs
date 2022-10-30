@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Authentication.Entity
 {
-    public enum UserRole
+    public enum UserRole : ushort
     {
         [OrganizerTypes(OrganizerType.SYSTEM)]
         PARTNER_MANAGER,

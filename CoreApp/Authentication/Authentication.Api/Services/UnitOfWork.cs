@@ -1,30 +1,30 @@
-﻿using Authentication.Api.Models;
-using Authentication.Context;
+﻿using Authentication.Context;
 using Authentication.Repository;
 using Context.Common;
-using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Concurrent;
 
 namespace Authentication.Api.Services
 {
     public class UnitOfWork : ContextAware<AuthenticationContext>, IUnitOfWork, IDisposable
     {
         private readonly AuthenticationContext? _context;
-        private readonly dln_authContext? _authContext;
-
+        public IPartnerRepository Partners { get; private set; }
+        public IOrganisationRepository Organisations { get; private set; }
+        public IUserRepository Users { get; private set; }
         public IAccountRepository Accounts { get; private set; }
+        public IProfileRepository Profiles { get; private set; }
 
-        public UnitOfWork(AuthenticationContext context, dln_authContext authContext, ContextFactory<AuthenticationContext>? contextFactory = null) : base(contextFactory)
+        public UnitOfWork(AuthenticationContext context, IPartnerRepository partner, ContextFactory<AuthenticationContext>? contextFactory = null) : base(contextFactory)
         {
             if (contextFactory != null)
             {
                 context = CreateContext() ?? context;
             }
             _context = context;
-            _authContext = authContext;
+            Partners = new PartnerRepository(context);
+            Organisations = new OrganisationRepository(context);
+            Users = new UserRepository(context);
             Accounts = new AccountRepository(context);
+            Profiles = new ProfileRepository(context);
         }
 
         /// <summary>
@@ -39,7 +39,11 @@ namespace Authentication.Api.Services
                 throw new ArgumentNullException(nameof(context));
             }
             _context = context;
+            Partners = new PartnerRepository(context);
+            Organisations = new OrganisationRepository(context);
+            Users = new UserRepository(context);
             Accounts = new AccountRepository(context);
+            Profiles = new ProfileRepository(context);
         }
 
         public async Task<int> DeadlineAsync()
@@ -72,15 +76,6 @@ namespace Authentication.Api.Services
         {
             Dispose(true);
             GC.SuppressFinalize(this);
-        }
-
-        public List<PartitionTable> GetPartitionTable()
-        {
-            DateTime startDate = new DateTime(2022, 10, 1);
-            DateTime now = DateTime.UtcNow;
-            int PR = 12 * (now.Year - startDate.Year) + (now.Month - startDate.Month);
-            PR = PR < 0 ? 2 : PR + 2;
-            return _authContext.PartitionTables.FromSqlInterpolated($"SELECT * FROM dbo.PartitionTable WHERE $PARTITION.myRangePF1(col1) = $PARTITION.myRangePF1({now});").ToList();
         }
     }
 }

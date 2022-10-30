@@ -1,6 +1,6 @@
 ﻿using Microsoft.OpenApi.Models;
 
-namespace User.Api.Extensions
+namespace Authentication.Api.Extensions
 {
     public static class ConfiguringSwaggerExtensions
     {

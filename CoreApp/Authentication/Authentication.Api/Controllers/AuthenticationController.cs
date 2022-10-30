@@ -45,10 +45,7 @@ namespace Authentication.Api.Controllers
         {
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             AccessToken? token = _service.CreateAccessToken(userId);
-            if (null == token)
-            {
-                return Unauthorized();
-            }
+            if (null == token) return Unauthorized();
             return Ok(token);
         }
     }

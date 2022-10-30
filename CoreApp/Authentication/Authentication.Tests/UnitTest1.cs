@@ -1,14 +1,22 @@
+using Authentication.Api.Controllers;
+using Authentication.Api.Services;
+using Authentication.Context;
+using Authentication.Entity;
+using Context.Common;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+
 namespace Authentication.Tests
 {
     public class UnitTest1
     {
-        private readonly ContextFactory<UserContext> _contextFactory;
+        private readonly ContextFactory<AuthenticationContext> _contextFactory;
         private readonly IUnitOfWork _unitOfWork;
 
         // setup
         public UnitTest1()
         {
-            _contextFactory = new ContextFactory<UserContext>(true);
+            _contextFactory = new ContextFactory<AuthenticationContext>(true);
             _contextFactory.EnsureCreated();
             _unitOfWork = new UnitOfWork(_contextFactory);
         }

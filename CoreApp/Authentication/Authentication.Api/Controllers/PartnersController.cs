@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Authentication.Entity;
-using Authentication.Repository;
+using Authentication.Api.Services;
 
 namespace Authentication.Api.Controllers
 {

@@ -7,4 +7,6 @@ namespace Authentication.Api.Services
         public AccessToken? CreateAccessToken(string? userId);
         public RefreshToken? CreateRefreshToken(UserCredential credential);
     }
+
+
 }
