@@ -13,14 +13,10 @@ namespace Authentication.Api.Services
         public IAccountRepository Accounts { get; private set; }
         public IProfileRepository Profiles { get; private set; }
 
-        public UnitOfWork(AuthenticationContext context, IPartnerRepository partner, ContextFactory<AuthenticationContext>? contextFactory = null) : base(contextFactory)
+        public UnitOfWork(AuthenticationContext context, IContextFactory<AuthenticationContext>? contextFactory = null) : base(null)
         {
-            if (contextFactory != null)
-            {
-                context = CreateContext() ?? context;
-            }
             _context = context;
-            Partners = partner;
+            Partners = new PartnerRepository(context);
             Organisations = new OrganisationRepository(context);
             Users = new UserRepository(context);
             Accounts = new AccountRepository(context);
@@ -31,11 +27,10 @@ namespace Authentication.Api.Services
         /// The unit of work for unit testing
         /// </summary>
         /// <param name="contextFactory">Creational factory to create a context</param>
-        public UnitOfWork(ContextFactory<AuthenticationContext> contextFactory, IPartnerRepository partner) : base(contextFactory)
+        public UnitOfWork(IContextFactory<AuthenticationContext> contextFactory) : base(contextFactory)
         {
-            var context = CreateContext() ?? throw new ArgumentNullException(nameof(AuthenticationContext));
-            _context = context;
-            Partners = partner;
+            var context = _context = CreateContext();
+            Partners = new PartnerRepository(context);
             Organisations = new OrganisationRepository(context);
             Users = new UserRepository(context);
             Accounts = new AccountRepository(context);

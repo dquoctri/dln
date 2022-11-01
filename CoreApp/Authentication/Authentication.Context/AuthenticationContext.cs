@@ -51,11 +51,11 @@ namespace Authentication.Context
 
             modelBuilder.Entity<Partner>()
                .Property(b => b.CreatedDate)
-               .HasDefaultValueSql("getutcdate()");
+               .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
             modelBuilder.Entity<Organizer>()
                 .Property(b => b.CreatedDate)
-                .HasDefaultValueSql("getutcdate()");
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
             modelBuilder.Entity<Organizer>()
                 .Property(b => b.Type)
                 .HasConversion(new EnumToStringConverter<OrganizerType>());

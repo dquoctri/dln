@@ -18,7 +18,7 @@ namespace Authentication.Entity
         public OrganizerType Type { get; set; } = OrganizerType.NORMAL;
         public string? Description { get; set; }
 
-        [DefaultValue("getutcdate()")]
+        [DefaultValue("CURRENT_TIMESTAMP")]
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
         public DateTime? ModifiedDate { get; set; }

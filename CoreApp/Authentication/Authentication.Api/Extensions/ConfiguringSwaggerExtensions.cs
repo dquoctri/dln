@@ -1,4 +1,6 @@
-﻿using Microsoft.OpenApi.Models;
+﻿using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Models;
+using System.Reflection;
 
 namespace Authentication.Api.Extensions
 {
@@ -32,6 +34,10 @@ namespace Authentication.Api.Extensions
                         new string[]{}
                     }
                 });
+                var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var path = Path.Combine(AppContext.BaseDirectory, xmlFilename);
+                if (File.Exists(path))
+                    option.IncludeXmlComments(path);
             });
             return services;
         }

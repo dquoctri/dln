@@ -3,7 +3,6 @@ using Authentication.Api.Models.Partners;
 using Authentication.Api.Services;
 using Authentication.Context;
 using Authentication.Entity;
-using Authentication.Repository;
 using Context.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -12,23 +11,25 @@ namespace Authentication.Tests
 {
     public class UnitTest1 : IDisposable
     {
-        private readonly ContextFactory<AuthenticationContext> _contextFactory;
+        private readonly IContextFactory<AuthenticationContext> _contextFactory;
         private readonly IUnitOfWork _unitOfWork;
 
         // setup
         public UnitTest1()
         {
-            _contextFactory = new ContextFactory<AuthenticationContext>(true);
-            _contextFactory.EnsureCreated();
+            _contextFactory = new SqliteContextFactory<AuthenticationContext>();
             var context = _contextFactory.CreateContext();
-            _unitOfWork = new UnitOfWork(_contextFactory, new PartnerRepository(context));
+            _unitOfWork = new UnitOfWork(_contextFactory);
         }
 
         // teardown
         public void Dispose()
         {
-            _contextFactory.EnsureDeleted();
             // Dispose here
+            if (_contextFactory is IDisposable factory)
+            {
+                factory.Dispose();
+            }
         }
 
 

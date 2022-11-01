@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Authentication.Entity;
 using Authentication.Api.Services;
 using Authentication.Api.Models.Partners;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Authentication.Api.Controllers
 {
@@ -76,27 +77,29 @@ namespace Authentication.Api.Controllers
 
             return NoContent();
         }
+
         /// <summary>
         /// Create partner by name
         /// </summary>
-        /// <param name="partner"></param>
+        /// <param name="partnerRequest"></param>
         /// <returns>created partner</returns>
         // POST: api/Partners
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(Partner), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> PostPartner(PartnerRequest partner)
+        public async Task<IActionResult> PostPartner(PartnerRequest partnerRequest)
         {
-            var existedPartner = _unitOfWork.Partners.GetByName(partner.Name);
-            if (existedPartner != null)
+            if (_unitOfWork.Partners.IsExisted(partnerRequest.Name.Trim()))
             {
-                return BadRequest($"{partner.Name} already existed.");
+                return Conflict($"Partner {partnerRequest.Name.Trim()} is already in use.");
             }
-            var _partner = new Partner() { Name = partner.Name, Description = partner.Description };
+            var _partner = partnerRequest.ToPartner();
             _unitOfWork.Partners.Insert(_partner);
             await _unitOfWork.DeadlineAsync();
-            return CreatedAtAction("PostPartner", new { id = _partner.Id }, _partner);
+            return CreatedAtAction("PostPartner", new { Id = _partner.Id }, _partner);
         }
 
         // DELETE: api/Partners/5

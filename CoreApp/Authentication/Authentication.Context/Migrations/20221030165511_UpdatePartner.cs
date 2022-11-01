@@ -32,7 +32,7 @@ namespace Authentication.Context.Migrations
                 table: "Partners",
                 type: "datetime2",
                 nullable: false,
-                defaultValueSql: "getutcdate()");
+                defaultValueSql: "CURRENT_TIMESTAMP");
 
             migrationBuilder.AddColumn<DateTime>(
                 name: "ModifiedDate",
