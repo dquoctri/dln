@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Authentication.Api.Services;
 using Authentication.Entity;
+using Authentication.Repository;
 
 namespace Authentication.Api.Controllers
 {
@@ -10,10 +11,11 @@ namespace Authentication.Api.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
-
-        public UsersController(IUnitOfWork unitOfWork)
+        private readonly IUserRepository _userRepository;
+        public UsersController(IUnitOfWork unitOfWork, IUserRepository userRepository)
         {
             _unitOfWork = unitOfWork;
+            _userRepository = userRepository;
         }
 
         // GET: api/Users
@@ -21,7 +23,7 @@ namespace Authentication.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult GetUsers()
         {
-            return Ok(_unitOfWork.Users.Get());
+            return Ok(_userRepository.Get());
         }
 
         // GET: api/Users/5
@@ -31,7 +33,7 @@ namespace Authentication.Api.Controllers
         [ProducesDefaultResponseType]
         public IActionResult GetUser(long id)
         {
-            var user = _unitOfWork.Users.GetByID(id);
+            var user = _userRepository.GetByID(id);
 
             if (user == null)
             {
@@ -55,7 +57,7 @@ namespace Authentication.Api.Controllers
                 return BadRequest();
             }
 
-            _unitOfWork.Users.Update(user);
+            _userRepository.Update(user);
 
             try
             {
@@ -83,7 +85,7 @@ namespace Authentication.Api.Controllers
         [ProducesDefaultResponseType]
         public async Task<ActionResult<User>> PostUser(User user)
         {
-            _unitOfWork.Users.Insert(user);
+            _userRepository.Insert(user);
             await _unitOfWork.DeadlineAsync();
 
             return CreatedAtAction("GetUser", new { id = user.Id }, user);
@@ -96,13 +98,13 @@ namespace Authentication.Api.Controllers
         [ProducesDefaultResponseType]
         public async Task<IActionResult> DeleteUser(long id)
         {
-            var user = _unitOfWork.Users.GetByID(id);
+            var user = _userRepository.GetByID(id);
             if (user == null)
             {
                 return NotFound();
             }
 
-            _unitOfWork.Users.Delete(user);
+            _userRepository.Delete(user);
             await _unitOfWork.DeadlineAsync();
 
             return NoContent();
@@ -110,7 +112,7 @@ namespace Authentication.Api.Controllers
 
         private bool UserExists(long id)
         {
-            var user = _unitOfWork.Users.GetByID(id);
+            var user = _userRepository.GetByID(id);
             return user != null;
         }
     }

@@ -13,7 +13,7 @@ namespace Context.Common
             ContextFactory = new ContextFactory<T>();
         }
 
-        public ContextAware(IContextFactory<T>? contextFactory)
+        public ContextAware(IContextFactory<T> contextFactory)
         {
             ContextFactory = contextFactory ?? new ContextFactory<T>();
         }

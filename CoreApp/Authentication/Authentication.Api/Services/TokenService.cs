@@ -6,6 +6,7 @@ using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Authentication.Entity;
+using Authentication.Repository;
 
 namespace Authentication.Api.Services
 {
@@ -14,12 +15,14 @@ namespace Authentication.Api.Services
         private readonly SigningAudienceCertificate signingAudienceCertificate;
         private readonly SecretOptions _secretOptions;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IAccountRepository _accountRepository;
 
-        public TokenService(IOptions<SecretOptions> secretOptions, IUnitOfWork unitOfWork)
+        public TokenService(IOptions<SecretOptions> secretOptions, IUnitOfWork unitOfWork, IAccountRepository accountRepository)
         {
             signingAudienceCertificate = new SigningAudienceCertificate(secretOptions);
             _secretOptions = secretOptions.Value;
             _unitOfWork = unitOfWork;
+            _accountRepository = accountRepository;
         }
 
         public AccessToken? CreateAccessToken(string? userId)
@@ -28,7 +31,7 @@ namespace Authentication.Api.Services
             {
                 return null;
             }
-            Account? account = _unitOfWork.Accounts.GetAccountByUsername(userId);
+            Account? account = _accountRepository.GetAccountByUsername(userId);
             if (account == null)
             {
                 return null;
@@ -43,7 +46,7 @@ namespace Authentication.Api.Services
 
         public RefreshToken? CreateRefreshToken(UserCredential credential)
         {
-            Account? account = _unitOfWork.Accounts.GetAccountByUsername(credential.Username);
+            Account? account = _accountRepository.GetAccountByUsername(credential.Username);
 
             SecurityTokenDescriptor tokenDescriptor = GetRefreshTokenDescriptor(credential);
             var tokenHandler = new JwtSecurityTokenHandler();

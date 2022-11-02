@@ -12,77 +12,189 @@ namespace Authentication.Tests.Controllers
 {
     public class PartnerControllerTest : IDisposable
     {
+        private static readonly int NOT_FOUND_ID = -4;
+
         private readonly IContextFactory<AuthenticationContext> _contextFactory;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IPartnerRepository _partnerRepository;
 
         // setup
         public PartnerControllerTest()
         {
             _contextFactory = new SqliteContextFactory<AuthenticationContext>();
-            AuthenticationContext context = _contextFactory.CreateContext();
-            _unitOfWork = new UnitOfWork(_contextFactory, new PartnerRepository(context));
+            var context = _contextFactory.CreateContext();
+            _unitOfWork = new UnitOfWork(context);
+            _partnerRepository = new PartnerRepository(context);
+            _partnerRepository.Insert(new Partner() { Name = "Partner Name", Description = "Partner Description" });
+            _unitOfWork.Deadline();
         }
 
         // teardown
         public void Dispose()
         {
             // Dispose here
-            if (_contextFactory is IDisposable factory)
-            {
-                factory.Dispose();
-            }
+            if (_unitOfWork is IDisposable unitOfWork) unitOfWork.Dispose();
+            if (_contextFactory is IDisposable factory) factory.Dispose();
         }
 
         [Fact]
         public async Task TestCreatePartner()
         {
             // Arrange and action
-            var controller = new PartnersController(_unitOfWork);
+            var controller = new PartnersController(_unitOfWork, _partnerRepository);
             var result = await controller.PostPartner(new PartnerRequest() { Name = "New Partner", Description = "New Partner Description" });
             // Assert
             Assert.NotNull(result);
             var viewResult = Assert.IsType<CreatedAtActionResult>(result);
             Assert.Equal(StatusCodes.Status201Created, viewResult.StatusCode);
             var partner = Assert.IsType<Partner>(viewResult.Value);
+            Assert.Equal(2, partner.Id);
             Assert.Equal("New Partner", partner.Name);
             Assert.Equal("New Partner Description", partner.Description);
+            Assert.Null(partner.ModifiedDate);
         }
 
         [Fact]
-        public async Task TestExistPartner()
+        public async Task TestCreateExistPartner()
         {
             // Arrange and action
-            var controller = new PartnersController(_unitOfWork);
-            var result = await controller.PostPartner(new PartnerRequest() { Name = "Exist Partner", Description = "Exist Partner Description" });
+            var controller = new PartnersController(_unitOfWork, _partnerRepository);
+            var result = await controller.PostPartner(new PartnerRequest() { Name = "Partner Name", Description = "Exist Partner Description" });
             // Assert
-            Assert.NotNull(result);
-            var controller2 = new PartnersController(_unitOfWork);
-            var result2 = await controller2.PostPartner(new PartnerRequest() { Name = "Exist Partner", Description = "Exist Partner Description" });
-            var viewResult = Assert.IsType<ConflictObjectResult>(result2);
+            var viewResult = Assert.IsType<ConflictObjectResult>(result);
             Assert.Equal(StatusCodes.Status409Conflict, viewResult.StatusCode);
             var errorMsg = Assert.IsType<string>(viewResult.Value);
-            Assert.Equal("Partner Exist Partner is already in use.", errorMsg);
+            Assert.Equal("Partner Partner Name is already in use.", errorMsg);
         }
 
+        [Fact]
+        public void TestGetPartnerById()
+        {
+            // Arrange and action
+            var controller = new PartnersController(_unitOfWork, _partnerRepository);
+            var result = controller.GetPartner(1);
+            // Assert
+            Assert.NotNull(result);
+            var viewResult = Assert.IsType<OkObjectResult>(result);
+            Assert.Equal(StatusCodes.Status200OK, viewResult.StatusCode);
+            var partner = Assert.IsType<Partner>(viewResult.Value);
+            Assert.Equal(1, partner.Id);
+            Assert.Equal("Partner Name", partner.Name);
+            Assert.Equal("Partner Description", partner.Description);
+        }
 
         [Fact]
-        public async Task Test3Async()
+        public void TestGetNotFoundPartnerById()
         {
-            // Arrange
-            var controller = new PartnersController(_unitOfWork);
-
-            // Act
-            var result = await controller.PostPartner(new PartnerRequest() { Name = "Hello" });
+            // Arrange and action
+            var controller = new PartnersController(_unitOfWork, _partnerRepository);
+            var result = controller.GetPartner(NOT_FOUND_ID);
             // Assert
-            var viewResult = Assert.IsType<CreatedAtActionResult>(result);
+            Assert.NotNull(result);
+            var viewResult = Assert.IsType<NotFoundResult>(result);
+            Assert.Equal(StatusCodes.Status404NotFound, viewResult.StatusCode);
+        }
 
-            Assert.Equal(StatusCodes.Status201Created, viewResult.StatusCode);
-
-            // Act
-            var result2 = controller.GetPartner(1);
+        [Fact]
+        public void TestGetAllPartners()
+        {
+            // Arrange and action
+            var controller = new PartnersController(_unitOfWork, _partnerRepository);
+            _partnerRepository.Insert(new Partner() { Name = "Second Partner", Description = "Second Partner Description" });
+            _unitOfWork.Deadline();
+            var result = controller.GetPartners();
             // Assert
-            var viewResult2 = Assert.IsType<OkObjectResult>(result2);
-            Assert.Equal(StatusCodes.Status200OK, viewResult2.StatusCode);
+            Assert.NotNull(result);
+            var viewResult = Assert.IsType<OkObjectResult>(result);
+            Assert.Equal(StatusCodes.Status200OK, viewResult.StatusCode);
+            var partners = Assert.IsAssignableFrom<IEnumerable<Partner>>(viewResult.Value);
+            Assert.NotNull(partners);
+            Assert.Equal(2, partners.Count());
+            var partner = partners.Last();
+            Assert.Equal(2, partner.Id);
+            Assert.Equal("Second Partner", partner.Name);
+            Assert.Equal("Second Partner Description", partner.Description);
+        }
+
+        [Fact]
+        public async Task TestUpdatePartner()
+        {
+            // Arrange and action
+            var controller = new PartnersController(_unitOfWork, _partnerRepository);
+            var partner = new Partner() { Name = "Second Partner", Description = "Second Partner Description" };
+            _partnerRepository.Insert(partner);
+            _unitOfWork.Deadline();
+
+            var result = await controller.PutPartner(partner.Id, new PartnerRequest() { Name = "Updated Partner", Description = "Updated Description" });
+            // Assert
+            Assert.NotNull(result);
+            var viewResult = Assert.IsType<NoContentResult>(result);
+            Assert.Equal(StatusCodes.Status204NoContent, viewResult.StatusCode);
+            var updatedPartner = _partnerRepository.GetByID(partner.Id);
+            Assert.Equal(partner.Id, updatedPartner?.Id);
+            Assert.Equal("Updated Partner", updatedPartner?.Name);
+            Assert.Equal("Updated Description", updatedPartner?.Description);
+            Assert.NotNull(updatedPartner?.ModifiedDate);
+        }
+
+        [Fact]
+        public async Task TestUpdateConflictPartner()
+        {
+            // Arrange and action
+            var controller = new PartnersController(_unitOfWork, _partnerRepository);
+            var partner = new Partner() { Name = "Second Partner", Description = "Second Partner Description" };
+            _partnerRepository.Insert(partner);
+            _unitOfWork.Deadline();
+            var result = await controller.PutPartner(partner.Id, new PartnerRequest() { Name = "Partner Name", Description = "Existed Partner Description" });
+            
+            // Assert
+            var viewResult = Assert.IsType<ConflictObjectResult>(result);
+            Assert.Equal(StatusCodes.Status409Conflict, viewResult.StatusCode);
+            var errorMsg = Assert.IsType<string>(viewResult.Value);
+            Assert.Equal("Partner Partner Name is already in use.", errorMsg);
+        }
+
+        [Fact]
+        public async Task TestUpdateNotFoundPartner()
+        {
+            // Arrange and action
+            var controller = new PartnersController(_unitOfWork, _partnerRepository);
+            var result = await controller.PutPartner(NOT_FOUND_ID, new PartnerRequest() { Name = "NotFound Partner", Description = "NotFound Partner Description" });
+
+            // Assert
+            Assert.NotNull(result);
+            var viewResult = Assert.IsType<NotFoundResult>(result);
+            Assert.Equal(StatusCodes.Status404NotFound, viewResult.StatusCode);
+        }
+
+        [Fact]
+        public async Task TestDeletePartner()
+        {
+            // Arrange and action
+            var controller = new PartnersController(_unitOfWork, _partnerRepository);
+            var partner = new Partner() { Name = "Second Partner", Description = "Second Partner Description" };
+            _partnerRepository.Insert(partner);
+            _unitOfWork.Deadline();
+            var result = await controller.DeletePartner(partner.Id);
+
+            // Assert
+            var viewResult = Assert.IsType<NoContentResult>(result);
+            Assert.Equal(StatusCodes.Status204NoContent, viewResult.StatusCode);
+            var deletedPartner = _partnerRepository.GetByID(partner.Id);
+            Assert.Null(deletedPartner);
+        }
+
+        [Fact]
+        public async Task TestDeleteNotFoundPartner()
+        {
+            // Arrange and action
+            var controller = new PartnersController(_unitOfWork, _partnerRepository);
+            var result = await controller.DeletePartner(NOT_FOUND_ID);
+
+            // Assert
+            Assert.NotNull(result);
+            var viewResult = Assert.IsType<NotFoundResult>(result);
+            Assert.Equal(StatusCodes.Status404NotFound, viewResult.StatusCode);
         }
     }
 }

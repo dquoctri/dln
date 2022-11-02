@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Net.Mime;
 using Authentication.Entity;
 using Authentication.Api.Services;
+using Authentication.Repository;
 
 namespace Authentication.Api.Controllers
 {
@@ -12,10 +13,12 @@ namespace Authentication.Api.Controllers
     public class OrganisationsController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IOrganisationRepository _organisationRepository;
 
-        public OrganisationsController(IUnitOfWork unitOfWork)
+        public OrganisationsController(IUnitOfWork unitOfWork, IOrganisationRepository organisationRepository)
         {
             _unitOfWork = unitOfWork;
+            _organisationRepository = organisationRepository;
         }
 
         // GET: api/Organisations
@@ -23,7 +26,7 @@ namespace Authentication.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult GetOrganisations()
         {
-            return Ok(_unitOfWork.Organisations.Get());
+            return Ok(_organisationRepository.Get());
         }
 
         // GET: api/Organisations/5
@@ -33,7 +36,7 @@ namespace Authentication.Api.Controllers
         [ProducesDefaultResponseType]
         public IActionResult GetOrganisation(long id)
         {
-            var organisation = _unitOfWork.Organisations.GetByID(id);
+            var organisation = _organisationRepository.GetByID(id);
 
             if (organisation == null)
             {
@@ -57,7 +60,7 @@ namespace Authentication.Api.Controllers
             {
                 return BadRequest();
             }
-            _unitOfWork.Organisations.Update(organisation);
+            _organisationRepository.Update(organisation);
             try
             {
                 await _unitOfWork.DeadlineAsync();
@@ -85,7 +88,7 @@ namespace Authentication.Api.Controllers
         [ProducesDefaultResponseType]
         public async Task<IActionResult> PostOrganisation(Organizer organisation)
         {
-            _unitOfWork.Organisations.Insert(organisation);
+            _organisationRepository.Insert(organisation);
             await _unitOfWork.DeadlineAsync();
 
             return CreatedAtAction("GetOrganisation", new { id = organisation.Id }, organisation);
@@ -98,13 +101,13 @@ namespace Authentication.Api.Controllers
         [ProducesDefaultResponseType]
         public async Task<IActionResult> DeleteOrganisation(long id)
         {
-            var organisation = _unitOfWork.Organisations.GetByID(id);
+            var organisation = _organisationRepository.GetByID(id);
             if (organisation == null)
             {
                 return NotFound();
             }
 
-            _unitOfWork.Organisations.Delete(organisation);
+            _organisationRepository.Delete(organisation);
             await _unitOfWork.DeadlineAsync();
 
             return NoContent();
@@ -134,7 +137,7 @@ namespace Authentication.Api.Controllers
 
         private bool OrganisationExists(long id)
         {
-            var organisation = _unitOfWork.Organisations.GetByID(id);
+            var organisation = _organisationRepository.GetByID(id);
             return organisation != null;
         }
     }

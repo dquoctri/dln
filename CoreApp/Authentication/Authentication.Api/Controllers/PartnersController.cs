@@ -5,6 +5,7 @@ using Authentication.Entity;
 using Authentication.Api.Services;
 using Authentication.Api.Models.Partners;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Authentication.Repository;
 
 namespace Authentication.Api.Controllers
 {
@@ -13,10 +14,12 @@ namespace Authentication.Api.Controllers
     public class PartnersController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IPartnerRepository _partnerRepository;
 
-        public PartnersController(IUnitOfWork unitOfWork)
+        public PartnersController(IUnitOfWork unitOfWork, IPartnerRepository partnerRepository)
         {
             _unitOfWork = unitOfWork;
+            _partnerRepository = partnerRepository;
         }
 
         // GET: api/Partners
@@ -24,7 +27,7 @@ namespace Authentication.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult GetPartners()
         {
-            return Ok(_unitOfWork.Partners.Get());
+            return Ok(_partnerRepository.Get());
         }
 
         // GET: api/Partners/5
@@ -34,13 +37,8 @@ namespace Authentication.Api.Controllers
         [ProducesDefaultResponseType]
         public IActionResult GetPartner(int id)
         {
-            var partner = _unitOfWork.Partners.GetByID(id);
-
-            if (partner == null)
-            {
-                return NotFound();
-            }
-
+            var partner = _partnerRepository.GetByID(id);
+            if (partner == null) return NotFound();
             return Ok(partner);
         }
 
@@ -51,30 +49,19 @@ namespace Authentication.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> PutPartner(int id, Partner partner)
+        public async Task<IActionResult> PutPartner(int id, PartnerRequest partnerRequest)
         {
-            if (id != partner.Id)
+            var partner = _partnerRepository.GetByID(id);
+            if (partner == null) return NotFound();
+            if (partner.Name != partnerRequest.Name && _partnerRepository.IsExisted(partnerRequest.Name.Trim()))
             {
-                return BadRequest();
+                return Conflict($"Partner {partnerRequest.Name.Trim()} is already in use.");
             }
-            _unitOfWork.Partners.Update(partner);
-
-            try
-            {
-                await _unitOfWork.DeadlineAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PartnerExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
+            partner.Name = partnerRequest.Name.Trim();
+            partner.Description = partnerRequest.Description?.Trim();
+            partner.ModifiedDate = DateTime.UtcNow;
+            _partnerRepository.Update(partner);
+            await _unitOfWork.DeadlineAsync();
             return NoContent();
         }
 
@@ -92,12 +79,13 @@ namespace Authentication.Api.Controllers
         [ProducesDefaultResponseType]
         public async Task<IActionResult> PostPartner(PartnerRequest partnerRequest)
         {
-            if (_unitOfWork.Partners.IsExisted(partnerRequest.Name.Trim()))
+            var partnerName = partnerRequest.Name.Trim();
+            if (_partnerRepository.IsExisted(partnerName))
             {
-                return Conflict($"Partner {partnerRequest.Name.Trim()} is already in use.");
+                return Conflict($"Partner {partnerName} is already in use.");
             }
             var _partner = partnerRequest.ToPartner();
-            _unitOfWork.Partners.Insert(_partner);
+            _partnerRepository.Insert(_partner);
             await _unitOfWork.DeadlineAsync();
             return CreatedAtAction("PostPartner", new { Id = _partner.Id }, _partner);
         }
@@ -109,15 +97,11 @@ namespace Authentication.Api.Controllers
         [ProducesDefaultResponseType]
         public async Task<IActionResult> DeletePartner(int id)
         {
-            var partner = _unitOfWork.Partners.GetByID(id);
-            if (partner == null)
-            {
-                return NotFound();
-            }
-
-            _unitOfWork.Partners.Delete(partner);
+            var partner = _partnerRepository.GetByID(id);
+            if (partner == null) return NotFound();
+            // TODO: should use soft delete instead of hard delete
+            _partnerRepository.Delete(partner);
             await _unitOfWork.DeadlineAsync();
-
             return NoContent();
         }
 
@@ -142,11 +126,5 @@ namespace Authentication.Api.Controllers
         [ApiExplorerSettings(IgnoreApi = true)]
         [Route("/error")]
         public IActionResult HandleError() => Problem();
-
-        private bool PartnerExists(int id)
-        {
-            var partner = _unitOfWork.Partners.GetByID(id);
-            return partner != null;
-        }
     }
 }
