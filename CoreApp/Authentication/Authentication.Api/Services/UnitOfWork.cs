@@ -1,13 +1,12 @@
-﻿using Authentication.Context;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace Authentication.Api.Services
 {
-    public class UnitOfWork : IUnitOfWork, IDisposable
+    public class UnitOfWork<T> : IUnitOfWork, IDisposable where T : DbContext, new()
     {
         private readonly DbContext _context;
   
-        public UnitOfWork(AuthenticationContext context)
+        public UnitOfWork(T context)
         {
             _context = context;
         }

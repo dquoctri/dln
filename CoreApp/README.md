@@ -22,6 +22,6 @@ dotnet ef database update 20180904195021_InitialCreate --connection your_connect
 Scaffold-DbContext "Server=localhost,51433;Database=dln_auth;User Id=sa;Password=StrongP@ssword;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models
 
 
-
+dotnet ef migrations add UpdatePartner --project Authentication\Authentication.Context
 
 dotnet ef migrations add CreateTimeSeriesDataTable --project Authentication\Authentication.Context

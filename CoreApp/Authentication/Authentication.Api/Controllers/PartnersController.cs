@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Authentication.Entity;
 using Authentication.Api.Services;
 using Authentication.Api.Models.Partners;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Authentication.Repository;
 
 namespace Authentication.Api.Controllers

@@ -23,7 +23,7 @@ namespace Authentication.Tests.Controllers
         {
             _contextFactory = new SqliteContextFactory<AuthenticationContext>();
             var context = _contextFactory.CreateContext();
-            _unitOfWork = new UnitOfWork(context);
+            _unitOfWork = new UnitOfWork<AuthenticationContext>(context);
             _partnerRepository = new PartnerRepository(context);
             _partnerRepository.Insert(new Partner() { Name = "Partner Name", Description = "Partner Description" });
             _unitOfWork.Deadline();

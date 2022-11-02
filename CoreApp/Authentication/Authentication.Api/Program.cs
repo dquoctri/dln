@@ -7,6 +7,8 @@ using Authentication.Context;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Repository.Common;
 using Authentication.Repository;
+using Context.Common;
+using Microsoft.EntityFrameworkCore.Internal;
 
 var builder = WebApplication.CreateBuilder(args);
 var secretOptions = builder.Configuration.GetSection(SecretOptions.CONFIG_KEY);
@@ -25,7 +27,7 @@ builder.Services.AddTransient<IPartnerRepository, PartnerRepository>();
 builder.Services.AddTransient<IOrganisationRepository, OrganisationRepository>();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<IAccountRepository, AccountRepository>();
-builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
+builder.Services.AddTransient<IUnitOfWork, UnitOfWork<AuthenticationContext>>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddTransient<SecretOptions>();
 
