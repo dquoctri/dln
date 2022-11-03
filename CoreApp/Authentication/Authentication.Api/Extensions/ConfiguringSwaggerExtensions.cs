@@ -1,5 +1,5 @@
-﻿using Microsoft.Extensions.Options;
-using Microsoft.OpenApi.Models;
+﻿using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Reflection;
 
 namespace Authentication.Api.Extensions
@@ -34,12 +34,44 @@ namespace Authentication.Api.Extensions
                         new string[]{}
                     }
                 });
+                option.DocumentFilter<LowercaseDocumentFilter>();
+
                 var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var path = Path.Combine(AppContext.BaseDirectory, xmlFilename);
                 if (File.Exists(path))
                     option.IncludeXmlComments(path);
             });
             return services;
+        }
+    }
+
+    public class LowercaseDocumentFilter : IDocumentFilter
+    {
+        public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
+        {
+            var paths = swaggerDoc.Paths;
+
+            var newPaths = new Dictionary<string, OpenApiPathItem>();
+            var removeKeys = new List<string>();
+            foreach (var path in paths) 
+            {
+                var newKey = path.Key.ToLower();
+                if (newKey != path.Key)
+                {
+                    removeKeys.Add(path.Key);
+                    newPaths.Add(newKey, path.Value);
+                }
+            }
+
+            foreach (var path in newPaths)
+            {
+                swaggerDoc.Paths.Add(path.Key, path.Value);
+            }
+
+            foreach (var key in removeKeys)
+            {
+                swaggerDoc.Paths.Remove(key);
+            }
         }
     }
 }

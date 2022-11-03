@@ -17,7 +17,7 @@ namespace Repository.Common
             Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
             string includeProperties = "")
         {
-            IQueryable<T> query = _dbContext.Set<T>();
+            IQueryable<T> query = _dbContext.Set<T>().AsNoTracking();
 
             if (filter != null)
             {
@@ -61,6 +61,7 @@ namespace Repository.Common
 
         public virtual void Delete(T entityToDelete)
         {
+            // TODO: shuold checking behavior
             if (_dbContext.Entry(entityToDelete).State == EntityState.Detached)
             {
                 _dbContext.Set<T>().Attach(entityToDelete);

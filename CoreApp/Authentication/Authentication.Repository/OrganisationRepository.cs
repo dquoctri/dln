@@ -1,5 +1,5 @@
-﻿using Authentication.Context;
-using Authentication.Entity;
+﻿using Authentication.Entity;
+using Microsoft.EntityFrameworkCore;
 using Repository.Common;
 
 namespace Authentication.Repository
@@ -10,7 +10,7 @@ namespace Authentication.Repository
 
     public class OrganisationRepository : Repository<Organizer>, IOrganisationRepository
     {
-        public OrganisationRepository(AuthenticationContext dbContext) : base(dbContext)
+        public OrganisationRepository(DbContext dbContext) : base(dbContext)
         {
         }
     }

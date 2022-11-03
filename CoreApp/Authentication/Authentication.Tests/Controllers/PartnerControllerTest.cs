@@ -4,7 +4,6 @@ using Authentication.Context;
 using Authentication.Entity;
 using Authentication.Repository;
 using Context.Common;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Repository.Common;
 
@@ -46,9 +45,7 @@ namespace Authentication.Tests.Controllers
             // Assert
             Assert.NotNull(result);
             var viewResult = Assert.IsType<CreatedAtActionResult>(result);
-            Assert.Equal(StatusCodes.Status201Created, viewResult.StatusCode);
             var partner = Assert.IsType<Partner>(viewResult.Value);
-            Assert.Equal(2, partner.Id);
             Assert.Equal("New Partner", partner.Name);
             Assert.Equal("New Partner Description", partner.Description);
             Assert.Null(partner.ModifiedDate);
@@ -62,7 +59,6 @@ namespace Authentication.Tests.Controllers
             var result = await controller.PostPartner(new PartnerRequest() { Name = "Partner Name", Description = "Exist Partner Description" });
             // Assert
             var viewResult = Assert.IsType<ConflictObjectResult>(result);
-            Assert.Equal(StatusCodes.Status409Conflict, viewResult.StatusCode);
             var errorMsg = Assert.IsType<string>(viewResult.Value);
             Assert.Equal("Partner Partner Name is already in use.", errorMsg);
         }
@@ -76,7 +72,6 @@ namespace Authentication.Tests.Controllers
             // Assert
             Assert.NotNull(result);
             var viewResult = Assert.IsType<OkObjectResult>(result);
-            Assert.Equal(StatusCodes.Status200OK, viewResult.StatusCode);
             var partner = Assert.IsType<Partner>(viewResult.Value);
             Assert.Equal(1, partner.Id);
             Assert.Equal("Partner Name", partner.Name);
@@ -91,8 +86,7 @@ namespace Authentication.Tests.Controllers
             var result = controller.GetPartner(NOT_FOUND_ID);
             // Assert
             Assert.NotNull(result);
-            var viewResult = Assert.IsType<NotFoundResult>(result);
-            Assert.Equal(StatusCodes.Status404NotFound, viewResult.StatusCode);
+            Assert.IsType<NotFoundResult>(result);
         }
 
         [Fact]
@@ -106,12 +100,10 @@ namespace Authentication.Tests.Controllers
             // Assert
             Assert.NotNull(result);
             var viewResult = Assert.IsType<OkObjectResult>(result);
-            Assert.Equal(StatusCodes.Status200OK, viewResult.StatusCode);
             var partners = Assert.IsAssignableFrom<IEnumerable<Partner>>(viewResult.Value);
             Assert.NotNull(partners);
             Assert.Equal(2, partners.Count());
             var partner = partners.Last();
-            Assert.Equal(2, partner.Id);
             Assert.Equal("Second Partner", partner.Name);
             Assert.Equal("Second Partner Description", partner.Description);
         }
@@ -128,8 +120,7 @@ namespace Authentication.Tests.Controllers
             var result = await controller.PutPartner(partner.Id, new PartnerRequest() { Name = "Updated Partner", Description = "Updated Description" });
             // Assert
             Assert.NotNull(result);
-            var viewResult = Assert.IsType<NoContentResult>(result);
-            Assert.Equal(StatusCodes.Status204NoContent, viewResult.StatusCode);
+            Assert.IsType<NoContentResult>(result);
             var updatedPartner = _partnerRepository.GetByID(partner.Id);
             Assert.Equal(partner.Id, updatedPartner?.Id);
             Assert.Equal("Updated Partner", updatedPartner?.Name);
@@ -149,7 +140,6 @@ namespace Authentication.Tests.Controllers
             
             // Assert
             var viewResult = Assert.IsType<ConflictObjectResult>(result);
-            Assert.Equal(StatusCodes.Status409Conflict, viewResult.StatusCode);
             var errorMsg = Assert.IsType<string>(viewResult.Value);
             Assert.Equal("Partner Partner Name is already in use.", errorMsg);
         }
@@ -163,8 +153,7 @@ namespace Authentication.Tests.Controllers
 
             // Assert
             Assert.NotNull(result);
-            var viewResult = Assert.IsType<NotFoundResult>(result);
-            Assert.Equal(StatusCodes.Status404NotFound, viewResult.StatusCode);
+            Assert.IsType<NotFoundResult>(result);
         }
 
         [Fact]
@@ -178,8 +167,7 @@ namespace Authentication.Tests.Controllers
             var result = await controller.DeletePartner(partner.Id);
 
             // Assert
-            var viewResult = Assert.IsType<NoContentResult>(result);
-            Assert.Equal(StatusCodes.Status204NoContent, viewResult.StatusCode);
+            Assert.IsType<NoContentResult>(result);
             var deletedPartner = _partnerRepository.GetByID(partner.Id);
             Assert.Null(deletedPartner);
         }
@@ -193,8 +181,7 @@ namespace Authentication.Tests.Controllers
 
             // Assert
             Assert.NotNull(result);
-            var viewResult = Assert.IsType<NotFoundResult>(result);
-            Assert.Equal(StatusCodes.Status404NotFound, viewResult.StatusCode);
+            Assert.IsType<NotFoundResult>(result);
         }
     }
 }

@@ -7,40 +7,35 @@ using Authentication.Context;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Repository.Common;
 using Authentication.Repository;
-using Context.Common;
-using Microsoft.EntityFrameworkCore.Internal;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Configuration
+    .AddJsonFile("appsettings.json")
+    .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json", optional: true);
+
 var secretOptions = builder.Configuration.GetSection(SecretOptions.CONFIG_KEY);
 var serect = secretOptions.Get<SecretOptions>();
 builder.Services.Configure<SecretOptions>(secretOptions);
 
-//builder.Configuration
-//    .AddJsonFile("appsettings.json")
-//    .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json", optional: true);
+builder.Services.AddDbContext<AuthenticationContext>(
+    options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
+                x => x.MigrationsHistoryTable(HistoryRepository.DefaultTableName, AuthenticationContext.SCHEMA).CommandTimeout(30))
+    .LogTo(Console.WriteLine));
 
-//builder.Services.AddDefaultDbContext(builder.Configuration.GetConnectionString("DefaultConnection"));
-//// Add services to the container.
-#region Repositories
+// Add services to the container.
+#region Services
+builder.Services.AddScoped<SecretOptions>();
+builder.Services.AddScoped<DbContext, AuthenticationContext>();
 builder.Services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddTransient<IPartnerRepository, PartnerRepository>();
 builder.Services.AddTransient<IOrganisationRepository, OrganisationRepository>();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<IAccountRepository, AccountRepository>();
-builder.Services.AddTransient<DbContext, AuthenticationContext>();
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<ITokenService, TokenService>();
-builder.Services.AddTransient<SecretOptions>();
-
 #endregion
 
 //builder.Services.AddAsymmetricAuthentication();
-
-
-//builder.Services.AddDefaultDbContext(builder.Configuration.GetConnectionString("DefaultConnection"));
-builder.Services.AddDbContext<AuthenticationContext>(
-    options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
-                x => x.MigrationsHistoryTable(HistoryRepository.DefaultTableName, AuthenticationContext.SCHEMA).CommandTimeout(30)));
 
 builder.Services.AddRefreshAuthentication(serect);
 

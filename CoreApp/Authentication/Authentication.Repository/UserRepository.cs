@@ -1,5 +1,5 @@
-﻿using Authentication.Context;
-using Authentication.Entity;
+﻿using Authentication.Entity;
+using Microsoft.EntityFrameworkCore;
 using Repository.Common;
 
 namespace Authentication.Repository
@@ -11,7 +11,7 @@ namespace Authentication.Repository
 
     public class UserRepository : Repository<User>, IUserRepository
     {
-        public UserRepository(AuthenticationContext context) : base(context)
+        public UserRepository(DbContext context) : base(context)
         {
 
         }

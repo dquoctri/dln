@@ -1,5 +1,5 @@
-﻿using Authentication.Context;
-using Authentication.Entity;
+﻿using Authentication.Entity;
+using Microsoft.EntityFrameworkCore;
 using Repository.Common;
 
 namespace Authentication.Repository
@@ -11,7 +11,7 @@ namespace Authentication.Repository
 
     public class AccountRepository : Repository<Account>, IAccountRepository
     {
-        public AccountRepository(AuthenticationContext dbContext) : base(dbContext) {}
+        public AccountRepository(DbContext dbContext) : base(dbContext) {}
 
         public Account? GetAccountByUsername(string username)
         {

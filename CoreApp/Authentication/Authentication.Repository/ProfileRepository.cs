@@ -1,11 +1,6 @@
-﻿using Authentication.Context;
-using Authentication.Entity;
+﻿using Authentication.Entity;
+using Microsoft.EntityFrameworkCore;
 using Repository.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Authentication.Repository
 {
@@ -15,7 +10,7 @@ namespace Authentication.Repository
 
     public class ProfileRepository : Repository<Profile>, IProfileRepository
     {
-        public ProfileRepository(AuthenticationContext dbContext) : base(dbContext)
+        public ProfileRepository(DbContext dbContext) : base(dbContext)
         {
         }
     }

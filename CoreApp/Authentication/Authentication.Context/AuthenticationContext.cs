@@ -28,6 +28,7 @@ namespace Authentication.Context
                 var cs = $"Server=localhost,51433;Database=dln_auth;User Id=sa;Password=StrongP@ssword;";
                 optionsBuilder.UseSqlServer(cs, x => x.MigrationsHistoryTable(HistoryRepository.DefaultTableName, SCHEMA));
             }
+            //optionsBuilder.LogTo(Console.WriteLine);
             base.OnConfiguring(optionsBuilder);
         }
 

@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Common\Repository.Common\Repository.Common.csproj" />
-    <ProjectReference Include="..\Authentication.Context\Authentication.Context.csproj" />
     <ProjectReference Include="..\Authentication.Entity\Authentication.Entity.csproj" />
   </ItemGroup>
 

@@ -20,17 +20,26 @@ namespace Authentication.Api.Controllers
             _partnerRepository = partnerRepository;
         }
 
+        /// <summary>
+        /// Get list of partners //Should limit number of partners
+        /// </summary>
+        /// <returns>a list of partners</returns>
         // GET: api/Partners
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<Partner>), StatusCodes.Status200OK)]
         public IActionResult GetPartners()
         {
             return Ok(_partnerRepository.Get());
         }
 
+        /// <summary>
+        /// Get a partner by identity
+        /// </summary>
+        /// <param name="id">The primary key of partner</param>
+        /// <returns>a partner</returns>
         // GET: api/Partners/5
         [HttpGet("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Partner), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
         public IActionResult GetPartner(int id)
@@ -40,6 +49,12 @@ namespace Authentication.Api.Controllers
             return Ok(partner);
         }
 
+        /// <summary>
+        /// Update an existing partner
+        /// </summary>
+        /// <param name="id">The primary key of partner</param>
+        /// <param name="partnerRequest">Data transfer object to update partner</param>
+        /// <returns>no content</returns>
         // PUT: api/Partners/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
@@ -64,15 +79,15 @@ namespace Authentication.Api.Controllers
         }
 
         /// <summary>
-        /// Create partner by name
+        /// Create new partner with a identify name
         /// </summary>
-        /// <param name="partnerRequest"></param>
-        /// <returns>created partner</returns>
+        /// <param name="partnerRequest">Data transfer object to create partner</param>
+        /// <returns>Created partner with new Id</returns>
         // POST: api/Partners
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         [ProducesResponseType(typeof(Partner), StatusCodes.Status201Created)]
-        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
         [ProducesDefaultResponseType]
         public async Task<IActionResult> PostPartner(PartnerRequest partnerRequest)
@@ -82,12 +97,17 @@ namespace Authentication.Api.Controllers
             {
                 return Conflict($"Partner {partnerName} is already in use.");
             }
-            var _partner = partnerRequest.ToPartner();
-            _partnerRepository.Insert(_partner);
+            var partner = partnerRequest.ToPartner();
+            _partnerRepository.Insert(partner);
             await _unitOfWork.DeadlineAsync();
-            return CreatedAtAction("PostPartner", new { Id = _partner.Id }, _partner);
+            return CreatedAtAction("PostPartner", new { Id = partner.Id }, partner);
         }
 
+        /// <summary>
+        /// Soft delete an existing partner
+        /// </summary>
+        /// <param name="id">The primary key of partner</param>
+        /// <returns>no content</returns>
         // DELETE: api/Partners/5
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]

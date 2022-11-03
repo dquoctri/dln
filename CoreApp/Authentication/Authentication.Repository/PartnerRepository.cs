@@ -1,5 +1,5 @@
-﻿using Authentication.Context;
-using Authentication.Entity;
+﻿using Authentication.Entity;
+using Microsoft.EntityFrameworkCore;
 using Repository.Common;
 
 namespace Authentication.Repository
@@ -12,7 +12,7 @@ namespace Authentication.Repository
 
     public class PartnerRepository : Repository<Partner>, IPartnerRepository
     {
-        public PartnerRepository(AuthenticationContext dbContext) : base(dbContext)
+        public PartnerRepository(DbContext dbContext) : base(dbContext)
         {
         }
 
