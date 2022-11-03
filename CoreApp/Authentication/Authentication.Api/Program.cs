@@ -27,7 +27,8 @@ builder.Services.AddTransient<IPartnerRepository, PartnerRepository>();
 builder.Services.AddTransient<IOrganisationRepository, OrganisationRepository>();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<IAccountRepository, AccountRepository>();
-builder.Services.AddTransient<IUnitOfWork, UnitOfWork<AuthenticationContext>>();
+builder.Services.AddTransient<DbContext, AuthenticationContext>();
+builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddTransient<SecretOptions>();
 
@@ -39,7 +40,7 @@ builder.Services.AddTransient<SecretOptions>();
 //builder.Services.AddDefaultDbContext(builder.Configuration.GetConnectionString("DefaultConnection"));
 builder.Services.AddDbContext<AuthenticationContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
-                x => x.MigrationsHistoryTable(HistoryRepository.DefaultTableName, AuthenticationContext.SCHEMA)));
+                x => x.MigrationsHistoryTable(HistoryRepository.DefaultTableName, AuthenticationContext.SCHEMA).CommandTimeout(30)));
 
 builder.Services.AddRefreshAuthentication(serect);
 

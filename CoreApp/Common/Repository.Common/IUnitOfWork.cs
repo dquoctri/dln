@@ -1,6 +1,4 @@
-﻿using Authentication.Repository;
-
-namespace Authentication.Api.Services
+﻿namespace Repository.Common
 {
     public interface IUnitOfWork
     {

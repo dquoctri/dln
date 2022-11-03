@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Authentication.Api.Services;
 using Authentication.Entity;
 using Authentication.Repository;
+using Repository.Common;
 
 namespace Authentication.Api.Controllers
 {

@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Authentication.Entity;
-using Authentication.Api.Services;
 using Authentication.Api.Models.Partners;
 using Authentication.Repository;
+using Repository.Common;
 
 namespace Authentication.Api.Controllers
 {

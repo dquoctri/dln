@@ -1,12 +1,12 @@
 ﻿using Authentication.Api.Controllers;
 using Authentication.Api.Models.Partners;
-using Authentication.Api.Services;
 using Authentication.Context;
 using Authentication.Entity;
 using Authentication.Repository;
 using Context.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Repository.Common;
 
 namespace Authentication.Tests.Controllers
 {
@@ -23,7 +23,7 @@ namespace Authentication.Tests.Controllers
         {
             _contextFactory = new SqliteContextFactory<AuthenticationContext>();
             var context = _contextFactory.CreateContext();
-            _unitOfWork = new UnitOfWork<AuthenticationContext>(context);
+            _unitOfWork = new UnitOfWork(context);
             _partnerRepository = new PartnerRepository(context);
             _partnerRepository.Insert(new Partner() { Name = "Partner Name", Description = "Partner Description" });
             _unitOfWork.Deadline();

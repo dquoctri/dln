@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace Authentication.Api.Services
+namespace Repository.Common
 {
-    public class UnitOfWork<T> : IUnitOfWork, IDisposable where T : DbContext, new()
+    public class UnitOfWork : IUnitOfWork, IDisposable
     {
         private readonly DbContext _context;
   
-        public UnitOfWork(T context)
+        public UnitOfWork(DbContext context)
         {
             _context = context;
         }

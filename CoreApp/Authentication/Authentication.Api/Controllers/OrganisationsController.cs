@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net.Mime;
 using Authentication.Entity;
-using Authentication.Api.Services;
 using Authentication.Repository;
+using Repository.Common;
 
 namespace Authentication.Api.Controllers
 {
