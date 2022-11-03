@@ -1,4 +1,5 @@
-﻿using Microsoft.OpenApi.Models;
+﻿using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Reflection;
 
@@ -34,7 +35,8 @@ namespace Authentication.Api.Extensions
                         new string[]{}
                     }
                 });
-                option.DocumentFilter<LowercaseDocumentFilter>();
+                
+                //option.DocumentFilter<LowercaseDocumentFilter>();
 
                 var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var path = Path.Combine(AppContext.BaseDirectory, xmlFilename);
@@ -50,7 +52,6 @@ namespace Authentication.Api.Extensions
         public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
         {
             var paths = swaggerDoc.Paths;
-
             var newPaths = new Dictionary<string, OpenApiPathItem>();
             var removeKeys = new List<string>();
             foreach (var path in paths) 
@@ -71,6 +72,20 @@ namespace Authentication.Api.Extensions
             foreach (var key in removeKeys)
             {
                 swaggerDoc.Paths.Remove(key);
+            }
+        }
+    }
+
+    public class EnumSchemaFilter : ISchemaFilter
+    {
+        public void Apply(OpenApiSchema model, SchemaFilterContext context)
+        {
+            if (context.Type.IsEnum)
+            {
+                model.Enum.Clear();
+                Enum.GetNames(context.Type)
+                    .ToList()
+                    .ForEach(name => model.Enum.Add(new OpenApiString($"{Convert.ToInt64(Enum.Parse(context.Type, name))} = {name}")));
             }
         }
     }

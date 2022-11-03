@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace Authentication.Entity
 {
@@ -15,15 +16,18 @@ namespace Authentication.Entity
         public string Name { get; set; } = null!;
 
         [Column(TypeName = "nvarchar(24)")]
+        [EnumDataType(typeof(OrganizerType))]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public OrganizerType Type { get; set; } = OrganizerType.NORMAL;
         public string? Description { get; set; }
 
-        [DefaultValue("CURRENT_TIMESTAMP")]
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
         public DateTime? ModifiedDate { get; set; }
 
         [Column(TypeName = "nvarchar(24)")]
+        [EnumDataType(typeof(OrganizerStatus))]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public OrganizerStatus Status { get; set; } = OrganizerStatus.ACTIVE;
 
         public int? ProfileId { get; set; }
@@ -42,9 +46,9 @@ namespace Authentication.Entity
 
     public enum OrganizerType
     {
-        [Description("System")] SYSTEM,
+        [Description("Normal")] NORMAL,
         [Description("Partner")] PARTNER,
-        [Description("Normal")] NORMAL
+        [Description("System")] SYSTEM,
     }
 
     public enum PackageStatus : short

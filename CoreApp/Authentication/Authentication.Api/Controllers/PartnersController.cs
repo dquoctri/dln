@@ -24,8 +24,17 @@ namespace Authentication.Api.Controllers
         /// Get list of partners //Should limit number of partners
         /// </summary>
         /// <returns>a list of partners</returns>
+        /// <tags>
+        /// <tag>Response</tag>
+        /// </tags>
         // GET: api/Partners
         [HttpGet]
+        //[SwaggerOperation(
+        //    Summary = "Creates a new product",
+        //    Description = "Requires admin privileges",
+        //    OperationId = "CreateProduct",
+        //    Tags = new[] { "Purchase", "Products" }
+        //)]
         [ProducesResponseType(typeof(IEnumerable<Partner>), StatusCodes.Status200OK)]
         public IActionResult GetPartners()
         {
