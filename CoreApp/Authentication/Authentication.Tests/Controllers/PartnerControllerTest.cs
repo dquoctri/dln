@@ -6,6 +6,7 @@ using Authentication.Repository;
 using Context.Common;
 using Microsoft.AspNetCore.Mvc;
 using Repository.Common;
+using Xunit;
 
 namespace Authentication.Tests.Controllers
 {
@@ -21,6 +22,7 @@ namespace Authentication.Tests.Controllers
         public PartnerControllerTest()
         {
             _contextFactory = new SqliteContextFactory<AuthenticationContext>();
+            _contextFactory = new InMemoryContextFactory<AuthenticationContext>();
             var context = _contextFactory.CreateContext();
             _unitOfWork = new UnitOfWork(context);
             _partnerRepository = new PartnerRepository(context);

@@ -33,10 +33,22 @@ namespace Context.Common
             }
         }
 
+        private bool disposed = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this.disposed && disposing)
+            {
+                EnsureDeleted();
+                _connection.Dispose();
+            }
+            this.disposed = true;
+        }
+
         public void Dispose()
         {
-            EnsureDeleted();
-            _connection.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }
