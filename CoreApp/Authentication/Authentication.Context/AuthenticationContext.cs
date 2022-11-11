@@ -25,6 +25,7 @@ namespace Authentication.Context
         {
             if (!optionsBuilder.IsConfigured)
             {
+                //local database for rendering mirgation
                 var cs = $"Server=localhost,51433;Database=dln_auth;User Id=sa;Password=StrongP@ssword;";
                 optionsBuilder.UseSqlServer(cs, x => x.MigrationsHistoryTable(HistoryRepository.DefaultTableName, SCHEMA));
             }
@@ -39,7 +40,7 @@ namespace Authentication.Context
                     c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
                     c => (ISet<UserRole>)c.ToHashSet());
 
-            var valueConversion = new EnumCollectionJsonValueConverter<UserRole>();
+            var valueConversion = EnumCollectionJsonValueConverter3<UserRole>.CreateConverter();
 
             modelBuilder.HasDefaultSchema(SCHEMA);
             modelBuilder.Entity<Profile>()

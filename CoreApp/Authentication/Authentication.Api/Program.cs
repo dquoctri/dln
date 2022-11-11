@@ -33,7 +33,7 @@ builder.Services.AddDbContext<AuthenticationContext>(options =>
 // Add services to the container.
 #region Services
 builder.Services.AddSingleton<SecretOptions>();
-builder.Services.AddTransient<DbContext, AuthenticationContext>();
+builder.Services.AddScoped<DbContext, AuthenticationContext>();
 builder.Services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddTransient<IPartnerRepository, PartnerRepository>();
 builder.Services.AddTransient<IOrganisationRepository, OrganisationRepository>();
