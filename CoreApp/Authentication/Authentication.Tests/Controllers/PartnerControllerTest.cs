@@ -3,6 +3,7 @@ using Authentication.Api.Models.Partners;
 using Authentication.Context;
 using Authentication.Entity;
 using Authentication.Repository;
+using Authentication.Repository.Architectures;
 using Context.Common;
 using Microsoft.AspNetCore.Mvc;
 using Repository.Common;

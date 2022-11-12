@@ -2,16 +2,11 @@
 using Microsoft.EntityFrameworkCore;
 using Repository.Common;
 
-namespace Authentication.Repository
+namespace Authentication.Repository.Architectures
 {
-    public interface IAccountRepository : ICrudRepository<Account>
-    {
-        public Account? GetAccountByUsername(string username);
-    }
-
     public class AccountRepository : CrudRepository<Account>, IAccountRepository
     {
-        public AccountRepository(DbContext dbContext) : base(dbContext) {}
+        public AccountRepository(DbContext dbContext) : base(dbContext) { }
 
         public Account? GetAccountByUsername(string username)
         {

@@ -6,9 +6,10 @@ using Authentication.Api.Services;
 using Authentication.Context;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Repository.Common;
-using Authentication.Repository;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using System.Text.Json.Serialization;
+using Authentication.Repository.Architectures;
+using Authentication.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration
@@ -35,7 +36,7 @@ builder.Services.AddDbContext<AuthenticationContext>(options =>
 builder.Services.AddSingleton<SecretOptions>();
 builder.Services.AddScoped<DbContext, AuthenticationContext>();
 builder.Services.AddTransient<IPartnerRepository, PartnerRepository>();
-builder.Services.AddTransient<IOrganisationRepository, OrganisationRepository>();
+builder.Services.AddTransient<IOrganizerRepository, OrganizerRepository>();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<IAccountRepository, AccountRepository>();
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();

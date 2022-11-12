@@ -3,50 +3,50 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net.Mime;
 using Authentication.Entity;
-using Authentication.Repository;
 using Repository.Common;
+using Authentication.Repository;
 
 namespace Authentication.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class OrganisationsController : ControllerBase
+    public class OrganizersController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IOrganisationRepository _organisationRepository;
+        private readonly IOrganizerRepository _organizerRepository;
 
-        public OrganisationsController(IUnitOfWork unitOfWork, IOrganisationRepository organisationRepository)
+        public OrganizersController(IUnitOfWork unitOfWork, IOrganizerRepository organizerRepository)
         {
             _unitOfWork = unitOfWork;
-            _organisationRepository = organisationRepository;
+            _organizerRepository = organizerRepository;
         }
 
-        // GET: api/Organisations
+        // GET: api/Organizers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult GetOrganisations()
+        public IActionResult GetOrganizers()
         {
-            return Ok(_organisationRepository.FindAll());
+            return Ok(_organizerRepository.FindAll());
         }
 
-        // GET: api/Organisations/5
+        // GET: api/Organizers/5
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
-        public IActionResult GetOrganisation(long id)
+        public IActionResult GetOrganizer(long id)
         {
-            var organisation = _organisationRepository.FindByID(id);
+            var organizer = _organizerRepository.FindByID(id);
 
-            if (organisation == null)
+            if (organizer == null)
             {
                 return NotFound();
             }
 
-            return Ok(organisation);
+            return Ok(organizer);
         }
 
-        // PUT: api/Organisations/5
+        // PUT: api/Organizers/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         [Consumes(MediaTypeNames.Application.Json)]
@@ -54,20 +54,20 @@ namespace Authentication.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> PutOrganisation(long id, Organizer organisation)
+        public async Task<IActionResult> PutOrganizer(long id, Organizer organizer)
         {
-            if (id != organisation.Id)
+            if (id != organizer.Id)
             {
                 return BadRequest();
             }
-            _organisationRepository.Update(organisation);
+            _organizerRepository.Update(organizer);
             try
             {
                 await _unitOfWork.DeadlineAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!OrganisationExists(id))
+                if (!OrganizerExists(id))
                 {
                     return NotFound();
                 }
@@ -80,34 +80,34 @@ namespace Authentication.Api.Controllers
             return NoContent();
         }
 
-        // POST: api/Organisations
+        // POST: api/Organizers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> PostOrganisation(Organizer organisation)
+        public async Task<IActionResult> PostOrganizers(Organizer organizer)
         {
-            _organisationRepository.Insert(organisation);
+            _organizerRepository.Insert(organizer);
             await _unitOfWork.DeadlineAsync();
 
-            return CreatedAtAction("GetOrganisation", new { id = organisation.Id }, organisation);
+            return CreatedAtAction("GetOrganizer", new { id = organizer.Id }, organizer);
         }
 
-        // DELETE: api/Organisations/5
+        // DELETE: api/Organizers/5
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> DeleteOrganisation(long id)
+        public async Task<IActionResult> DeleteOrganizer(long id)
         {
-            var organisation = _organisationRepository.FindByID(id);
-            if (organisation == null)
+            var organizer = _organizerRepository.FindByID(id);
+            if (organizer == null)
             {
                 return NotFound();
             }
 
-            _organisationRepository.Delete(organisation);
+            _organizerRepository.Delete(organizer);
             await _unitOfWork.DeadlineAsync();
 
             return NoContent();
@@ -135,10 +135,10 @@ namespace Authentication.Api.Controllers
         [Route("/error")]
         public IActionResult HandleError() => Problem();
 
-        private bool OrganisationExists(long id)
+        private bool OrganizerExists(long id)
         {
-            var organisation = _organisationRepository.FindByID(id);
-            return organisation != null;
+            var organizer = _organizerRepository.FindByID(id);
+            return organizer != null;
         }
     }
 }

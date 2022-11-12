@@ -2,12 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using Repository.Common;
 
-namespace Authentication.Repository
+namespace Authentication.Repository.Architectures
 {
-    public interface IProfileRepository : ICrudRepository<Profile>
-    {
-    }
-
     public class ProfileRepository : CrudRepository<Profile>, IProfileRepository
     {
         public ProfileRepository(DbContext dbContext) : base(dbContext)

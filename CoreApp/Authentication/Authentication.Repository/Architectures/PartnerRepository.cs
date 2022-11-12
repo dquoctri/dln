@@ -2,14 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using Repository.Common;
 
-namespace Authentication.Repository
+namespace Authentication.Repository.Architectures
 {
-    public interface IPartnerRepository : ICrudRepository<Partner>
-    {
-        public Partner? GetByName(string name);
-        public bool IsExisted(string name);
-    }
-
     public class PartnerRepository : CrudRepository<Partner>, IPartnerRepository
     {
         public PartnerRepository(DbContext dbContext) : base(dbContext)

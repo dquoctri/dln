@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Authentication.Entity;
 using Authentication.Api.Models.Partners;
-using Authentication.Repository;
 using Repository.Common;
+using Authentication.Repository;
 
 namespace Authentication.Api.Controllers
 {
