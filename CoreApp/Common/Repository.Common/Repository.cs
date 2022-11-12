@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 
 namespace Repository.Common
 {
-    public class Repository<T> : IRepository<T> where T : class, new()
+    public abstract class Repository<T> : IRepository<T> where T : class, new()
     {
         protected readonly DbContext _dbContext;
 
@@ -12,7 +12,7 @@ namespace Repository.Common
             _dbContext = dbContext;
         }
 
-        public virtual IEnumerable<T> Get(
+        public virtual IEnumerable<T> FindAll(
             Expression<Func<T, bool>>? filter = null,
             Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
             string includeProperties = "")
@@ -40,39 +40,9 @@ namespace Repository.Common
             }
         }
 
-        public virtual T? GetByID(params object?[]? keyValues)
+        public virtual T? FindByID(params object?[]? keyValues)
         {
             return _dbContext.Set<T>().Find(keyValues);
-        }
-
-        public virtual void Insert(T entity)
-        {
-            _dbContext.Set<T>().Add(entity);
-        }
-
-        public virtual void Delete(params object?[]? keyValues)
-        {
-            T? entity = _dbContext.Set<T>().Find(keyValues);
-            if (entity != null)
-            {
-                Delete(entity);
-            }
-        }
-
-        public virtual void Delete(T entityToDelete)
-        {
-            // TODO: shuold checking behavior
-            if (_dbContext.Entry(entityToDelete).State == EntityState.Detached)
-            {
-                _dbContext.Set<T>().Attach(entityToDelete);
-            }
-            _dbContext.Set<T>().Remove(entityToDelete);
-        }
-
-        public virtual void Update(T entity)
-        {
-            _dbContext.Set<T>().Attach(entity);
-            _dbContext.Entry(entity).State = EntityState.Modified;
         }
     }
 }

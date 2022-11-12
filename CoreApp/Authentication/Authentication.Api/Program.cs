@@ -21,7 +21,7 @@ builder.Services.Configure<SecretOptions>(secretOptions);
 
 builder.Services.AddDbContext<AuthenticationContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
+    options.UseSqlServer(builder.Configuration.GetConnectionString("ContainerConnection"),
             x => x.MigrationsHistoryTable(HistoryRepository.DefaultTableName, AuthenticationContext.SCHEMA).CommandTimeout(30));
     if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
     {
@@ -34,7 +34,6 @@ builder.Services.AddDbContext<AuthenticationContext>(options =>
 #region Services
 builder.Services.AddSingleton<SecretOptions>();
 builder.Services.AddScoped<DbContext, AuthenticationContext>();
-builder.Services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddTransient<IPartnerRepository, PartnerRepository>();
 builder.Services.AddTransient<IOrganisationRepository, OrganisationRepository>();
 builder.Services.AddTransient<IUserRepository, UserRepository>();

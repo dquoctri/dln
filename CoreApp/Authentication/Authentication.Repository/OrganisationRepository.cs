@@ -4,11 +4,11 @@ using Repository.Common;
 
 namespace Authentication.Repository
 {
-    public interface IOrganisationRepository : IRepository<Organizer>
+    public interface IOrganisationRepository : ICrudRepository<Organizer>
     {
     }
 
-    public class OrganisationRepository : Repository<Organizer>, IOrganisationRepository
+    public class OrganisationRepository : CrudRepository<Organizer>, IOrganisationRepository
     {
         public OrganisationRepository(DbContext dbContext) : base(dbContext)
         {

@@ -123,7 +123,7 @@ namespace Authentication.Tests.Controllers
             // Assert
             Assert.NotNull(result);
             Assert.IsType<NoContentResult>(result);
-            var updatedPartner = _partnerRepository.GetByID(partner.Id);
+            var updatedPartner = _partnerRepository.FindByID(partner.Id);
             Assert.Equal(partner.Id, updatedPartner?.Id);
             Assert.Equal("Updated Partner", updatedPartner?.Name);
             Assert.Equal("Updated Description", updatedPartner?.Description);
@@ -170,7 +170,7 @@ namespace Authentication.Tests.Controllers
 
             // Assert
             Assert.IsType<NoContentResult>(result);
-            var deletedPartner = _partnerRepository.GetByID(partner.Id);
+            var deletedPartner = _partnerRepository.FindByID(partner.Id);
             Assert.Null(deletedPartner);
         }
 

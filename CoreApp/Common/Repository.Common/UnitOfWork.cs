@@ -8,16 +8,18 @@ namespace Repository.Common
   
         public UnitOfWork(DbContext context)
         {
-            _context = context ?? throw new ArgumentException($"{typeof(DbContext)} is not a DbContext!");
+            _context = context ?? throw new ArgumentException($"{typeof(DbContext)} must not be null!");
         }
 
         public int Deadline()
         {
+            //TODO:: CreateDate and UpdateDate behavior 
             return _context.SaveChanges();
         }
 
         public async Task<int> DeadlineAsync()
         {
+            //TODO:: CreateDate and UpdateDate behavior 
             return await _context.SaveChangesAsync();
         }
 

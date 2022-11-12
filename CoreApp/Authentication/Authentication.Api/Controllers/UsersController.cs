@@ -23,7 +23,7 @@ namespace Authentication.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult GetUsers()
         {
-            return Ok(_userRepository.Get());
+            return Ok(_userRepository.FindAll());
         }
 
         // GET: api/Users/5
@@ -33,7 +33,7 @@ namespace Authentication.Api.Controllers
         [ProducesDefaultResponseType]
         public IActionResult GetUser(long id)
         {
-            var user = _userRepository.GetByID(id);
+            var user = _userRepository.FindByID(id);
 
             if (user == null)
             {
@@ -98,7 +98,7 @@ namespace Authentication.Api.Controllers
         [ProducesDefaultResponseType]
         public async Task<IActionResult> DeleteUser(long id)
         {
-            var user = _userRepository.GetByID(id);
+            var user = _userRepository.FindByID(id);
             if (user == null)
             {
                 return NotFound();
@@ -112,7 +112,7 @@ namespace Authentication.Api.Controllers
 
         private bool UserExists(long id)
         {
-            var user = _userRepository.GetByID(id);
+            var user = _userRepository.FindByID(id);
             return user != null;
         }
     }

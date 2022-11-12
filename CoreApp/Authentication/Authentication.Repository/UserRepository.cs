@@ -4,12 +4,12 @@ using Repository.Common;
 
 namespace Authentication.Repository
 {
-    public interface IUserRepository : IRepository<User>
+    public interface IUserRepository : ICrudRepository<User>
     {
 
     }
 
-    public class UserRepository : Repository<User>, IUserRepository
+    public class UserRepository : CrudRepository<User>, IUserRepository
     {
         public UserRepository(DbContext context) : base(context)
         {

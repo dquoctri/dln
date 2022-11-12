@@ -4,13 +4,13 @@ using Repository.Common;
 
 namespace Authentication.Repository
 {
-    public interface IPartnerRepository : IRepository<Partner>
+    public interface IPartnerRepository : ICrudRepository<Partner>
     {
         public Partner? GetByName(string name);
         public bool IsExisted(string name);
     }
 
-    public class PartnerRepository : Repository<Partner>, IPartnerRepository
+    public class PartnerRepository : CrudRepository<Partner>, IPartnerRepository
     {
         public PartnerRepository(DbContext dbContext) : base(dbContext)
         {

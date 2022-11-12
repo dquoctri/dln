@@ -26,7 +26,7 @@ namespace Authentication.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult GetOrganisations()
         {
-            return Ok(_organisationRepository.Get());
+            return Ok(_organisationRepository.FindAll());
         }
 
         // GET: api/Organisations/5
@@ -36,7 +36,7 @@ namespace Authentication.Api.Controllers
         [ProducesDefaultResponseType]
         public IActionResult GetOrganisation(long id)
         {
-            var organisation = _organisationRepository.GetByID(id);
+            var organisation = _organisationRepository.FindByID(id);
 
             if (organisation == null)
             {
@@ -101,7 +101,7 @@ namespace Authentication.Api.Controllers
         [ProducesDefaultResponseType]
         public async Task<IActionResult> DeleteOrganisation(long id)
         {
-            var organisation = _organisationRepository.GetByID(id);
+            var organisation = _organisationRepository.FindByID(id);
             if (organisation == null)
             {
                 return NotFound();
@@ -137,7 +137,7 @@ namespace Authentication.Api.Controllers
 
         private bool OrganisationExists(long id)
         {
-            var organisation = _organisationRepository.GetByID(id);
+            var organisation = _organisationRepository.FindByID(id);
             return organisation != null;
         }
     }

@@ -38,7 +38,7 @@ namespace Authentication.Api.Controllers
         [ProducesResponseType(typeof(IEnumerable<Partner>), StatusCodes.Status200OK)]
         public IActionResult GetPartners()
         {
-            return Ok(_partnerRepository.Get());
+            return Ok(_partnerRepository.FindAll());
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace Authentication.Api.Controllers
         [ProducesDefaultResponseType]
         public IActionResult GetPartner(int id)
         {
-            var partner = _partnerRepository.GetByID(id);
+            var partner = _partnerRepository.FindByID(id);
             if (partner == null) return NotFound();
             return Ok(partner);
         }
@@ -73,7 +73,7 @@ namespace Authentication.Api.Controllers
         [ProducesDefaultResponseType]
         public async Task<IActionResult> PutPartner(int id, PartnerRequest partnerRequest)
         {
-            var partner = _partnerRepository.GetByID(id);
+            var partner = _partnerRepository.FindByID(id);
             if (partner == null) return NotFound();
             if (partner.Name != partnerRequest.Name && _partnerRepository.IsExisted(partnerRequest.Name.Trim()))
             {
@@ -124,7 +124,7 @@ namespace Authentication.Api.Controllers
         [ProducesDefaultResponseType]
         public async Task<IActionResult> DeletePartner(int id)
         {
-            var partner = _partnerRepository.GetByID(id);
+            var partner = _partnerRepository.FindByID(id);
             if (partner == null) return NotFound();
             // TODO: should use soft delete instead of hard delete
             _partnerRepository.Delete(partner);
