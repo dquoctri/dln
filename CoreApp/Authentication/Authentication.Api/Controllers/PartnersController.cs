@@ -1,9 +1,13 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Authentication.Entity;
-using Authentication.Api.Models.Partners;
 using Repository.Common;
 using Authentication.Repository;
+using Authentication.Api.DTOs;
+using Microsoft.Extensions.Caching.Distributed;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
+using System.Text;
 
 namespace Authentication.Api.Controllers
 {
@@ -11,22 +15,17 @@ namespace Authentication.Api.Controllers
     [ApiController]
     public class PartnersController : ControllerBase
     {
+        private readonly IDistributedCache _cache;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IPartnerRepository _partnerRepository;
 
-        public PartnersController(IUnitOfWork unitOfWork, IPartnerRepository partnerRepository)
-        {
-            _unitOfWork = unitOfWork;
-            _partnerRepository = partnerRepository;
-        }
+        public PartnersController(IDistributedCache cache, IUnitOfWork unitOfWork, IPartnerRepository partnerRepository) =>
+            (_cache, _unitOfWork, _partnerRepository) = (cache, unitOfWork, partnerRepository);
 
         /// <summary>
         /// Get list of partners //Should limit number of partners
         /// </summary>
         /// <returns>a list of partners</returns>
-        /// <tags>
-        /// <tag>Response</tag>
-        /// </tags>
         // GET: api/Partners
         [HttpGet]
         //[SwaggerOperation(
@@ -38,6 +37,13 @@ namespace Authentication.Api.Controllers
         [ProducesResponseType(typeof(IEnumerable<Partner>), StatusCodes.Status200OK)]
         public IActionResult GetPartners()
         {
+            //var options = new DistributedCacheEntryOptions().SetAbsoluteExpiration(DateTime.Now.AddMinutes(10)).SetSlidingExpiration(TimeSpan.FromMinutes(2));
+            //_cache.Set("Hello", Encoding.UTF8.GetBytes("Hello"), options);
+            //byte[]? bytes = _cache.Get("Hello");
+            //if (bytes != null)
+            //{
+            //    var test = 1;
+            //}
             return Ok(_partnerRepository.FindAll());
         }
 
@@ -62,7 +68,7 @@ namespace Authentication.Api.Controllers
         /// Update an existing partner
         /// </summary>
         /// <param name="id">The primary key of partner</param>
-        /// <param name="partnerRequest">Data transfer object to update partner</param>
+        /// <param name="partnerDto">Data transfer object to update partner</param>
         /// <returns>no content</returns>
         // PUT: api/Partners/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -71,16 +77,17 @@ namespace Authentication.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> PutPartner(int id, PartnerRequest partnerRequest)
+        public async Task<IActionResult> PutPartner(int id, PartnerDTO partnerDto)
         {
             var partner = _partnerRepository.FindByID(id);
             if (partner == null) return NotFound();
-            if (partner.Name != partnerRequest.Name && _partnerRepository.IsExisted(partnerRequest.Name.Trim()))
+            var newPartner = partnerDto.ToPartner();
+            if (partner.Name != partnerDto.Name && _partnerRepository.IsExisted(newPartner.Name))
             {
-                return Conflict($"Partner {partnerRequest.Name.Trim()} is already in use.");
+                return Conflict($"Partner {newPartner.Name} is already in use.");
             }
-            partner.Name = partnerRequest.Name.Trim();
-            partner.Description = partnerRequest.Description?.Trim();
+            partner.Name = newPartner.Name;
+            partner.Description = newPartner.Description;
             partner.ModifiedDate = DateTime.UtcNow;
             _partnerRepository.Update(partner);
             await _unitOfWork.DeadlineAsync();
@@ -90,7 +97,7 @@ namespace Authentication.Api.Controllers
         /// <summary>
         /// Create new partner with a identify name
         /// </summary>
-        /// <param name="partnerRequest">Data transfer object to create partner</param>
+        /// <param name="partnerDto">Data transfer object to create partner</param>
         /// <returns>Created partner with new Id</returns>
         // POST: api/Partners
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -99,14 +106,13 @@ namespace Authentication.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> PostPartner(PartnerRequest partnerRequest)
+        public async Task<IActionResult> PostPartner(PartnerDTO partnerDto)
         {
-            var partnerName = partnerRequest.Name.Trim();
-            if (_partnerRepository.IsExisted(partnerName))
+            var partner = partnerDto.ToPartner();
+            if (_partnerRepository.IsExisted(partner.Name))
             {
-                return Conflict($"Partner {partnerName} is already in use.");
+                return Conflict($"Partner {partner.Name} is already in use.");
             }
-            var partner = partnerRequest.ToPartner();
             _partnerRepository.Insert(partner);
             await _unitOfWork.DeadlineAsync();
             return CreatedAtAction("PostPartner", new { Id = partner.Id }, partner);

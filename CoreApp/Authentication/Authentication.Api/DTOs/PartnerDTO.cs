@@ -1,21 +1,21 @@
 ﻿using Authentication.Entity;
 using System.ComponentModel.DataAnnotations;
 
-namespace Authentication.Api.Models.Partners
+namespace Authentication.Api.DTOs
 {
-    public class PartnerRequest
+    public class PartnerDTO
     {
         [Required(AllowEmptyStrings = false)]
-        public string Name { get; set; } = null!;
+        public string Name { get; set; } = string.Empty;
 
         public string? Description { get; set; }
 
         public Partner ToPartner()
         {
             return new Partner()
-            { 
+            {
                 Name = Name.Trim(),
-                Description = String.IsNullOrWhiteSpace(Description) ? null : Description.Trim()
+                Description = Description
             };
         }
     }

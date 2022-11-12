@@ -26,7 +26,7 @@ namespace Authentication.Context
             if (!optionsBuilder.IsConfigured)
             {
                 //local database for rendering mirgation
-                var cs = $"Server=localhost,51433;Database=dln_auth;User Id=sa;Password=StrongP@ssword;";
+                var cs = $"Server=localhost,51433;Database=dln_auth;User Id=sa;Password=StrongP@ssword;TrustServerCertificate=True;";
                 optionsBuilder.UseSqlServer(cs, x => x.MigrationsHistoryTable(HistoryRepository.DefaultTableName, SCHEMA));
             }
             //optionsBuilder.LogTo(Console.WriteLine);

@@ -22,7 +22,7 @@ builder.Services.Configure<SecretOptions>(secretOptions);
 
 builder.Services.AddDbContext<AuthenticationContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("ContainerConnection"),
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
             x => x.MigrationsHistoryTable(HistoryRepository.DefaultTableName, AuthenticationContext.SCHEMA).CommandTimeout(30));
     if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
     {
@@ -30,6 +30,13 @@ builder.Services.AddDbContext<AuthenticationContext>(options =>
     }
     
 }, ServiceLifetime.Transient);
+
+var a = builder.Configuration.GetConnectionString("RedisConnection");
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration.GetConnectionString("RedisConnection");
+    options.InstanceName = "AuthenticationCache";
+});
 
 // Add services to the container.
 #region Services

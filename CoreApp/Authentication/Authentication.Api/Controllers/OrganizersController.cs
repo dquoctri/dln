@@ -37,12 +37,7 @@ namespace Authentication.Api.Controllers
         public IActionResult GetOrganizer(long id)
         {
             var organizer = _organizerRepository.FindByID(id);
-
-            if (organizer == null)
-            {
-                return NotFound();
-            }
-
+            if (organizer == null) return NotFound();
             return Ok(organizer);
         }
 

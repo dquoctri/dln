@@ -1,0 +1,45 @@
+version: '3.9'
+
+services:
+  mssql_db:
+    container_name: mssql_container
+    image: ${MSSQL_IMAGE:-mcr.microsoft.com/mssql/server:latest}
+    ports:
+      - "${MSSQL_PORT:-1433}:1433"
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: ${MSSQL_PRODUCT_ID:-Developer}
+      SA_PASSWORD: "${MSSQL_SA_PASSWORD:-StrongP@ssword}"
+    volumes:
+      - mssqlsystem:/var/opt/mssql
+      - mssqluser:/var/opt/sqlserver
+    networks:
+      - dln_net
+    restart: unless-stopped
+  
+  redis_db:
+    container_name: redis_container
+    image: ${REDIS_IMAGE:-redis:latest}
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    environment:
+      REDIS_PASSWORD: "${REDIS_PASSWORD:-RedisP@ssword}"
+    command: redis-server --save 60 1 --loglevel warning --requirepass ${REDIS_PASSWORD:-RedisP@ssword}
+    volumes: 
+      - redis_data:/data
+    networks:
+      - dln_net
+    restart: unless-stopped
+
+networks:
+  dln_net: 
+    external: true
+    driver: bridge
+
+volumes:
+  mssqlsystem:
+    driver: local
+  mssqluser:
+    driver: local
+  redis_data: 
+    driver: local

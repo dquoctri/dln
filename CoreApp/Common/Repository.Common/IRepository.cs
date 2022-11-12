@@ -2,7 +2,7 @@
 
 namespace Repository.Common
 {
-    public interface IRepository<T> where T : class, new()
+    public interface IRepository<T> : IDisposable where T : class, new()
     {
         IEnumerable<T> FindAll(
             Expression<Func<T, bool>>? filter = null,
