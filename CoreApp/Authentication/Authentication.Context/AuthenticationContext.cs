@@ -1,5 +1,5 @@
-﻿using Authentication.Entity;
-using Authentication.Entity.Converters;
+﻿using Authentication.Model;
+using Authentication.Model.Converters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Migrations;

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using Authentication.Entity;
+using Authentication.Model;
 using Repository.Common;
 using Authentication.Repository;
 using Authentication.Api.DTOs;
@@ -39,11 +39,11 @@ namespace Authentication.Api.Controllers
         {
             //var options = new DistributedCacheEntryOptions().SetAbsoluteExpiration(DateTime.Now.AddMinutes(10)).SetSlidingExpiration(TimeSpan.FromMinutes(2));
             //_cache.Set("Hello", Encoding.UTF8.GetBytes("Hello"), options);
-            //byte[]? bytes = _cache.Get("Hello");
-            //if (bytes != null)
-            //{
-            //    var test = 1;
-            //}
+            byte[]? bytes = _cache.Get("Hello");
+            if (bytes != null)
+            {
+                var test = 1;
+            }
             return Ok(_partnerRepository.FindAll());
         }
 

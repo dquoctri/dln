@@ -1,6 +1,6 @@
 ﻿using Model.Common.Attributes;
 
-namespace Authentication.Entity.Attributes
+namespace Authentication.Model.Attributes
 {
     [System.AttributeUsage(System.AttributeTargets.Field, Inherited = false, AllowMultiple = false)]
     public sealed class OrganizerTypesAttribute : Attribute, IAttribute<OrganizerType[]>

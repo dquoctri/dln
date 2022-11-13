@@ -1,4 +1,4 @@
-﻿using Authentication.Entity;
+﻿using Authentication.Model;
 using Repository.Common;
 
 namespace Authentication.Repository

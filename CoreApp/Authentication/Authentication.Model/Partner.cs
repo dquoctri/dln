@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Authentication.Entity
+namespace Authentication.Model
 {
     [Index(nameof(Name), IsUnique = true)]
     public class Partner

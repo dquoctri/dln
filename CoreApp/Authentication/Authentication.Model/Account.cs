@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Authentication.Entity
+namespace Authentication.Model
 {
     [Index(nameof(Username), IsUnique = true)]
     public class Account

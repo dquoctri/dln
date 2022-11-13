@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using System.Linq.Expressions;
 
-namespace Authentication.Entity.Converters
+namespace Authentication.Model.Converters
 {
     public class EnumCollectionJsonValueConverter<T> : ValueConverter<ISet<T>, string> where T : Enum
     {

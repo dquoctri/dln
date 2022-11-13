@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
-namespace Authentication.Entity
+namespace Authentication.Model
 {
     [Index(nameof(PartnerId), nameof(Name), IsUnique = true)]
     public class Organizer

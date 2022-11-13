@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Authentication.Entity.Converters
+namespace Authentication.Model.Converters
 {
     public class CollectionValueComparer<T> : ValueComparer<ICollection<T>>
     {

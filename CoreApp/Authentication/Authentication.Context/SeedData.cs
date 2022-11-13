@@ -1,4 +1,4 @@
-﻿using Authentication.Entity;
+﻿using Authentication.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 

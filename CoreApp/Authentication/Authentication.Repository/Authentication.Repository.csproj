@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
@@ -8,7 +8,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Common\Repository.Common\Repository.Common.csproj" />
-    <ProjectReference Include="..\Authentication.Entity\Authentication.Entity.csproj" />
+    <ProjectReference Include="..\Authentication.Model\Authentication.Model.csproj" />
+    <ProjectReference Include="..\Authentication.Model\Authentication.Model.csproj" />
   </ItemGroup>
 
 </Project>

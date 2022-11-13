@@ -1,7 +1,7 @@
 ﻿using Authentication.Api.Controllers;
 using Authentication.Api.DTOs;
 using Authentication.Context;
-using Authentication.Entity;
+using Authentication.Model;
 using Authentication.Repository;
 using Authentication.Repository.Architectures;
 using Context.Common;
@@ -30,7 +30,7 @@ namespace Authentication.Tests.Controllers
         {
             _contextFactory = new SqliteContextFactory<AuthenticationContext>();
             //_contextFactory = new InMemoryContextFactory<AuthenticationContext>();
-            _cache = null;
+            _cache = null!;
             var context = _contextFactory.CreateContext();
             _unitOfWork = new UnitOfWork(context);
             _partnerRepository = new PartnerRepository(context);

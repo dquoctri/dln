@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net.Mime;
-using Authentication.Entity;
+using Authentication.Model;
 using Repository.Common;
 using Authentication.Repository;
 
@@ -34,7 +34,7 @@ namespace Authentication.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
-        public IActionResult GetOrganizer(long id)
+        public IActionResult GetOrganizer(int id)
         {
             var organizer = _organizerRepository.FindByID(id);
             if (organizer == null) return NotFound();
@@ -94,7 +94,7 @@ namespace Authentication.Api.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> DeleteOrganizer(long id)
+        public async Task<IActionResult> DeleteOrganizer(int id)
         {
             var organizer = _organizerRepository.FindByID(id);
             if (organizer == null)

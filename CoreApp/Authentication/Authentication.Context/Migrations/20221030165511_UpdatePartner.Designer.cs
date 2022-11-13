@@ -25,7 +25,7 @@ namespace Authentication.Context.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("Authentication.Entity.Account", b =>
+            modelBuilder.Entity("Authentication.Model.Account", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -59,7 +59,7 @@ namespace Authentication.Context.Migrations
                     b.ToTable("Accounts", "dln_auth");
                 });
 
-            modelBuilder.Entity("Authentication.Entity.Organizer", b =>
+            modelBuilder.Entity("Authentication.Model.Organizer", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -105,7 +105,7 @@ namespace Authentication.Context.Migrations
                     b.ToTable("Organizers", "dln_auth");
                 });
 
-            modelBuilder.Entity("Authentication.Entity.Partner", b =>
+            modelBuilder.Entity("Authentication.Model.Partner", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -133,7 +133,7 @@ namespace Authentication.Context.Migrations
                     b.ToTable("Partners", "dln_auth");
                 });
 
-            modelBuilder.Entity("Authentication.Entity.Profile", b =>
+            modelBuilder.Entity("Authentication.Model.Profile", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -157,7 +157,7 @@ namespace Authentication.Context.Migrations
                     b.ToTable("Profiles", "dln_auth");
                 });
 
-            modelBuilder.Entity("Authentication.Entity.User", b =>
+            modelBuilder.Entity("Authentication.Model.User", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -193,9 +193,9 @@ namespace Authentication.Context.Migrations
                     b.ToTable("Users", "dln_auth");
                 });
 
-            modelBuilder.Entity("Authentication.Entity.Account", b =>
+            modelBuilder.Entity("Authentication.Model.Account", b =>
                 {
-                    b.HasOne("Authentication.Entity.Organizer", "Organizer")
+                    b.HasOne("Authentication.Model.Organizer", "Organizer")
                         .WithMany()
                         .HasForeignKey("OrganizerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -204,15 +204,15 @@ namespace Authentication.Context.Migrations
                     b.Navigation("Organizer");
                 });
 
-            modelBuilder.Entity("Authentication.Entity.Organizer", b =>
+            modelBuilder.Entity("Authentication.Model.Organizer", b =>
                 {
-                    b.HasOne("Authentication.Entity.Partner", "Partner")
+                    b.HasOne("Authentication.Model.Partner", "Partner")
                         .WithMany("Organizers")
                         .HasForeignKey("PartnerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Authentication.Entity.Profile", "Profile")
+                    b.HasOne("Authentication.Model.Profile", "Profile")
                         .WithMany()
                         .HasForeignKey("ProfileId");
 
@@ -221,9 +221,9 @@ namespace Authentication.Context.Migrations
                     b.Navigation("Profile");
                 });
 
-            modelBuilder.Entity("Authentication.Entity.User", b =>
+            modelBuilder.Entity("Authentication.Model.User", b =>
                 {
-                    b.HasOne("Authentication.Entity.Organizer", "Organizer")
+                    b.HasOne("Authentication.Model.Organizer", "Organizer")
                         .WithMany("Users")
                         .HasForeignKey("OrganizerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -232,12 +232,12 @@ namespace Authentication.Context.Migrations
                     b.Navigation("Organizer");
                 });
 
-            modelBuilder.Entity("Authentication.Entity.Organizer", b =>
+            modelBuilder.Entity("Authentication.Model.Organizer", b =>
                 {
                     b.Navigation("Users");
                 });
 
-            modelBuilder.Entity("Authentication.Entity.Partner", b =>
+            modelBuilder.Entity("Authentication.Model.Partner", b =>
                 {
                     b.Navigation("Organizers");
                 });

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Authentication.Entity;
+using Authentication.Model;
 using Repository.Common;
 using Authentication.Repository;
 

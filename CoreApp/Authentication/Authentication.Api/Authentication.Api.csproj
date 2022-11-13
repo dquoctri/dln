@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Common\Context.Common\Context.Common.csproj" />
+    <ProjectReference Include="..\..\Common\Repository.Common\Repository.Common.csproj" />
     <ProjectReference Include="..\Authentication.Context\Authentication.Context.csproj" />
     <ProjectReference Include="..\Authentication.Repository\Authentication.Repository.csproj" />
   </ItemGroup>
