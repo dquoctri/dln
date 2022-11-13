@@ -1,6 +1,4 @@
 ﻿using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Caching.Memory;
-using Model.Common.Extensions;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;

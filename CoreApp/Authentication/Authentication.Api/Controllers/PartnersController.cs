@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
+﻿using Authentication.Api.DTOs;
 using Authentication.Model;
-using Repository.Common;
 using Authentication.Repository;
-using Authentication.Api.DTOs;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
+using Repository.Common;
+using System.Net.Mime;
 
 namespace Authentication.Api.Controllers
 {
@@ -27,7 +28,7 @@ namespace Authentication.Api.Controllers
         // GET: api/Partners
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<Partner>), StatusCodes.Status200OK)]
-        [ResponseCache(VaryByHeader = "Get-AllPartners", Duration = 30)]
+        [ResponseCache(VaryByHeader = "GetPartners", Duration = 60)]
         public IActionResult GetPartners()
         {
             var partners = _partnerRepository.FindAll();
@@ -44,11 +45,11 @@ namespace Authentication.Api.Controllers
         [ProducesResponseType(typeof(Partner), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetPartnerAsync(int id)
+        [ResponseCache(VaryByHeader = "GetPartner", Duration = 60)]
+        public IActionResult GetPartner(int id)
         {
             var partner = _partnerRepository.FindByID(id);
             if (partner == null) return NotFound();
-            //_ = _cache.SetAsync(GetPartnerCacheKey(id), partner);
             return Ok(partner);
         }
 
@@ -61,6 +62,7 @@ namespace Authentication.Api.Controllers
         // PUT: api/Partners/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -90,6 +92,7 @@ namespace Authentication.Api.Controllers
         // POST: api/Partners
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(Partner), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]

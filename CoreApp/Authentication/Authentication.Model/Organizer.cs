@@ -50,24 +50,4 @@ namespace Authentication.Model
         [Description("Partner")] PARTNER,
         [Description("System")] SYSTEM,
     }
-
-    public enum PackageStatus : short
-    {
-        New,
-        PendingValidation,
-        CheckedOut,
-        Approved,
-        Rejected,
-        PendingRender,
-        Rendered,
-        RenderFailed,
-        PendingPrint,
-        Printed,
-        PrintFailed,
-        Cancelled,
-        PendingDownload,
-        Downloaded,
-        DownloadError,
-        SystemUpdated,
-    }
 }

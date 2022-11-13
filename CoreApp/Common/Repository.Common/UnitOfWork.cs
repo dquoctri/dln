@@ -5,7 +5,7 @@ namespace Repository.Common
     public class UnitOfWork : IUnitOfWork
     {
         private readonly DbContext _context;
-  
+
         public UnitOfWork(DbContext context)
         {
             _context = context ?? throw new ArgumentException($"{typeof(DbContext)} must not be null!");

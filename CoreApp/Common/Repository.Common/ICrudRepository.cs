@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Repository.Common
+﻿namespace Repository.Common
 {
     public interface ICrudRepository<T> : IRepository<T> where T : class, new()
     {

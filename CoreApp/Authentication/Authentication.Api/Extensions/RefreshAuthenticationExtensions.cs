@@ -7,7 +7,7 @@ namespace Authentication.Api.Extensions
 {
     public static class RefreshAuthenticationExtensions
     {
-        public static IServiceCollection AddRefreshAuthentication(this IServiceCollection services, SecretOptions secret)
+        public static IServiceCollection AddRefreshAuthentication(this IServiceCollection services, SecretSettings secret)
         {
             var refreshSecretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret.RefreshSecretKey));
             var signingCredentials = new SigningCredentials(refreshSecretKey, SecurityAlgorithms.HmacSha512Signature);

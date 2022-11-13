@@ -2,16 +2,15 @@
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Cryptography;
-using System.Text;
 
 namespace Authentication.Api.Certificates
 {
     public class SigningAudienceCertificate : IDisposable
     {
         private readonly RSA rsa;
-        private readonly IOptions<SecretOptions> _secretOptions;
+        private readonly IOptions<SecretSettings> _secretOptions;
 
-        public SigningAudienceCertificate(IOptions<SecretOptions> secretOptions)
+        public SigningAudienceCertificate(IOptions<SecretSettings> secretOptions)
         {
             rsa = RSA.Create();
             _secretOptions = secretOptions;

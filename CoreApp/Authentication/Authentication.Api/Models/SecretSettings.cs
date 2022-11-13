@@ -1,6 +1,6 @@
 ﻿namespace Authentication.Api.Models
 {
-    public class SecretOptions
+    public class SecretSettings
     {
         public static readonly string CONFIG_KEY = "Secret";
 

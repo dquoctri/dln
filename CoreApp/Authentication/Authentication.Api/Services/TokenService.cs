@@ -1,24 +1,24 @@
-﻿using Authentication.Api.Models;
-using Authentication.Api.Certificates;
+﻿using Authentication.Api.Certificates;
+using Authentication.Api.Models;
+using Authentication.Model;
+using Authentication.Repository;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Repository.Common;
 using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using Authentication.Model;
-using Repository.Common;
-using Authentication.Repository;
 
 namespace Authentication.Api.Services
 {
     public class TokenService : ITokenService
     {
         private readonly SigningAudienceCertificate signingAudienceCertificate;
-        private readonly SecretOptions _secretOptions;
+        private readonly SecretSettings _secretOptions;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IAccountRepository _accountRepository;
 
-        public TokenService(IOptions<SecretOptions> secretOptions, IUnitOfWork unitOfWork, IAccountRepository accountRepository)
+        public TokenService(IOptions<SecretSettings> secretOptions, IUnitOfWork unitOfWork, IAccountRepository accountRepository)
         {
             signingAudienceCertificate = new SigningAudienceCertificate(secretOptions);
             _secretOptions = secretOptions.Value;
@@ -56,7 +56,7 @@ namespace Authentication.Api.Services
             return new RefreshToken(RefreshToken.DEFAULT_TOKEN_TYPE, refreshToken);
         }
 
-       
+
         private SecurityTokenDescriptor GetAccessTokenDescriptor(string userId)
         {
             var Roles = new[] { "User", "Admin" };
@@ -74,7 +74,7 @@ namespace Authentication.Api.Services
         }
 
         private SecurityTokenDescriptor GetRefreshTokenDescriptor(UserCredential user)
-        {   
+        {
             var claims = new List<Claim> { new Claim(ClaimTypes.NameIdentifier, user.Username),
                 new Claim(ClaimTypes.Name, user.Username) };
             claims.Add(new Claim("organization", user.Username));

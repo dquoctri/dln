@@ -45,7 +45,8 @@ namespace Authentication.Context
             }
             var partner = context.Partners.Where(p => "System".Equals(p.Name)).FirstOrDefault();
             // No partner found
-            if (partner == null) {
+            if (partner == null)
+            {
                 return;
             };
             context.Organizers.AddRange(

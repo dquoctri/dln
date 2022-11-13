@@ -35,7 +35,7 @@ namespace Authentication.Api.Extensions
                         new string[]{}
                     }
                 });
-                
+
                 //option.DocumentFilter<LowercaseDocumentFilter>();
 
                 var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
@@ -54,7 +54,7 @@ namespace Authentication.Api.Extensions
             var paths = swaggerDoc.Paths;
             var newPaths = new Dictionary<string, OpenApiPathItem>();
             var removeKeys = new List<string>();
-            foreach (var path in paths) 
+            foreach (var path in paths)
             {
                 var newKey = path.Key.ToLower();
                 if (newKey != path.Key)

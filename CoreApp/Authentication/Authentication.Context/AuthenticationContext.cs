@@ -35,10 +35,14 @@ namespace Authentication.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+#pragma warning disable CS8604 // Possible null reference argument for parameter 'second' in 'bool Enumerable.SequenceEqual<UserRole>(IEnumerable<UserRole> first, IEnumerable<UserRole> second)'.
+#pragma warning disable CS8604 // Possible null reference argument for parameter 'first' in 'bool Enumerable.SequenceEqual<UserRole>(IEnumerable<UserRole> first, IEnumerable<UserRole> second)'.
             var valueComparer = new ValueComparer<ISet<UserRole>>(
                     (c1, c2) => c1.SequenceEqual(c2),
                     c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
                     c => (ISet<UserRole>)c.ToHashSet());
+#pragma warning restore CS8604 // Possible null reference argument for parameter 'first' in 'bool Enumerable.SequenceEqual<UserRole>(IEnumerable<UserRole> first, IEnumerable<UserRole> second)'.
+#pragma warning restore CS8604 // Possible null reference argument for parameter 'second' in 'bool Enumerable.SequenceEqual<UserRole>(IEnumerable<UserRole> first, IEnumerable<UserRole> second)'.
 
             var valueConversion = EnumCollectionJsonValueConverter3<UserRole>.CreateConverter();
 

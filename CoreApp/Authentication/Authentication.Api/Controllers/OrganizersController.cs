@@ -1,10 +1,9 @@
-﻿using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Net.Mime;
-using Authentication.Model;
-using Repository.Common;
+﻿using Authentication.Api.DTOs;
 using Authentication.Repository;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
+using Repository.Common;
+using System.Net.Mime;
 
 namespace Authentication.Api.Controllers
 {
@@ -13,20 +12,24 @@ namespace Authentication.Api.Controllers
     public class OrganizersController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IPartnerRepository _partnerRepository;
         private readonly IOrganizerRepository _organizerRepository;
 
-        public OrganizersController(IUnitOfWork unitOfWork, IOrganizerRepository organizerRepository)
+        public OrganizersController(IUnitOfWork unitOfWork, IOrganizerRepository organizerRepository, IPartnerRepository partnerRepository)
         {
             _unitOfWork = unitOfWork;
             _organizerRepository = organizerRepository;
+            _partnerRepository = partnerRepository;
         }
 
         // GET: api/Organizers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ResponseCache(VaryByHeader = "GetOrganizers", Duration = 60)]
         public IActionResult GetOrganizers()
         {
-            return Ok(_organizerRepository.FindAll());
+            var organizers = _organizerRepository.FindAll();
+            return Ok(organizers);
         }
 
         // GET: api/Organizers/5
@@ -49,29 +52,20 @@ namespace Authentication.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> PutOrganizer(long id, Organizer organizer)
+        public async Task<IActionResult> PutOrganizer(int id, OrganizerDTO organizerDTO)
         {
-            if (id != organizer.Id)
+            var organizer = _organizerRepository.FindByID(id);
+            if (organizer == null) return NotFound();
+            var newOrganizer = organizerDTO.ToOrganizer();
+            if (organizer.Name != newOrganizer.Name && _organizerRepository.IsExistedName(organizer.PartnerId, newOrganizer.Name))
             {
-                return BadRequest();
+                return Conflict($"Organizer {newOrganizer.Name} is already in use.");
             }
+            organizer.Name = newOrganizer.Name;
+            organizer.Description = newOrganizer.Description;
+            organizer.ModifiedDate = DateTime.UtcNow;
             _organizerRepository.Update(organizer);
-            try
-            {
-                await _unitOfWork.DeadlineAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!OrganizerExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
+            await _unitOfWork.DeadlineAsync();
             return NoContent();
         }
 
@@ -80,12 +74,21 @@ namespace Authentication.Api.Controllers
         [HttpPost]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> PostOrganizers(Organizer organizer)
+        public async Task<IActionResult> PostOrganizer(OrganizerDTO organizerDTO)
         {
+            var organizer = organizerDTO.ToOrganizer();
+            var partner = _partnerRepository.FindByID(organizer.PartnerId);
+            if (partner == null) return NotFound($"Partner {organizer.PartnerId} is not found.");
+            if (_organizerRepository.IsExistedName(organizer.PartnerId, organizer.Name))
+            {
+                return Conflict($"Organizer {organizer.Name} is already in use.");
+            }
+
+            organizer.Partner = partner;
             _organizerRepository.Insert(organizer);
             await _unitOfWork.DeadlineAsync();
-
             return CreatedAtAction("GetOrganizer", new { id = organizer.Id }, organizer);
         }
 
@@ -97,11 +100,7 @@ namespace Authentication.Api.Controllers
         public async Task<IActionResult> DeleteOrganizer(int id)
         {
             var organizer = _organizerRepository.FindByID(id);
-            if (organizer == null)
-            {
-                return NotFound();
-            }
-
+            if (organizer == null) return NotFound();
             _organizerRepository.Delete(organizer);
             await _unitOfWork.DeadlineAsync();
 
@@ -129,11 +128,5 @@ namespace Authentication.Api.Controllers
         [ApiExplorerSettings(IgnoreApi = true)]
         [Route("/error")]
         public IActionResult HandleError() => Problem();
-
-        private bool OrganizerExists(long id)
-        {
-            var organizer = _organizerRepository.FindByID(id);
-            return organizer != null;
-        }
     }
 }

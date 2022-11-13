@@ -8,8 +8,12 @@ namespace Authentication.Model.Converters
     {
         public EnumCollectionJsonValueConverter() : base(
             v => JsonConvert.SerializeObject(v.Select(x => x.ToString())),
+#pragma warning disable CS8604 // Possible null reference argument for parameter 'source' in 'IEnumerable<T> Enumerable.Select<string, T>(IEnumerable<string> source, Func<string, T> selector)'.
+#pragma warning disable CS8603 // Possible null reference return.
             (v) => JsonConvert.DeserializeObject<ISet<string>>(v).Select(x => (T)Enum.Parse(typeof(T), x)) as ISet<T>)
-        { 
+#pragma warning restore CS8603 // Possible null reference return.
+#pragma warning restore CS8604 // Possible null reference argument for parameter 'source' in 'IEnumerable<T> Enumerable.Select<string, T>(IEnumerable<string> source, Func<string, T> selector)'.
+        {
         }
     }
 
