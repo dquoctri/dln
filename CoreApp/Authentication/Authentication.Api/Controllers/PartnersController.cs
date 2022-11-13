@@ -4,10 +4,6 @@ using Authentication.Model;
 using Repository.Common;
 using Authentication.Repository;
 using Authentication.Api.DTOs;
-using Microsoft.Extensions.Caching.Distributed;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
-using System.Text;
 
 namespace Authentication.Api.Controllers
 {
@@ -15,12 +11,14 @@ namespace Authentication.Api.Controllers
     [ApiController]
     public class PartnersController : ControllerBase
     {
-        private readonly IDistributedCache _cache;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IPartnerRepository _partnerRepository;
 
-        public PartnersController(IDistributedCache cache, IUnitOfWork unitOfWork, IPartnerRepository partnerRepository) =>
-            (_cache, _unitOfWork, _partnerRepository) = (cache, unitOfWork, partnerRepository);
+        public PartnersController(IUnitOfWork unitOfWork, IPartnerRepository partnerRepository)
+        {
+            _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+            _partnerRepository = partnerRepository ?? throw new ArgumentNullException(nameof(partnerRepository));
+        }
 
         /// <summary>
         /// Get list of partners //Should limit number of partners
@@ -28,23 +26,12 @@ namespace Authentication.Api.Controllers
         /// <returns>a list of partners</returns>
         // GET: api/Partners
         [HttpGet]
-        //[SwaggerOperation(
-        //    Summary = "Creates a new product",
-        //    Description = "Requires admin privileges",
-        //    OperationId = "CreateProduct",
-        //    Tags = new[] { "Purchase", "Products" }
-        //)]
         [ProducesResponseType(typeof(IEnumerable<Partner>), StatusCodes.Status200OK)]
+        [ResponseCache(VaryByHeader = "Get-AllPartners", Duration = 30)]
         public IActionResult GetPartners()
         {
-            //var options = new DistributedCacheEntryOptions().SetAbsoluteExpiration(DateTime.Now.AddMinutes(10)).SetSlidingExpiration(TimeSpan.FromMinutes(2));
-            //_cache.Set("Hello", Encoding.UTF8.GetBytes("Hello"), options);
-            byte[]? bytes = _cache.Get("Hello");
-            if (bytes != null)
-            {
-                var test = 1;
-            }
-            return Ok(_partnerRepository.FindAll());
+            var partners = _partnerRepository.FindAll();
+            return Ok(partners);
         }
 
         /// <summary>
@@ -57,10 +44,11 @@ namespace Authentication.Api.Controllers
         [ProducesResponseType(typeof(Partner), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
-        public IActionResult GetPartner(int id)
+        public async Task<IActionResult> GetPartnerAsync(int id)
         {
             var partner = _partnerRepository.FindByID(id);
             if (partner == null) return NotFound();
+            //_ = _cache.SetAsync(GetPartnerCacheKey(id), partner);
             return Ok(partner);
         }
 

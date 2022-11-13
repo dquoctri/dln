@@ -7,33 +7,35 @@ using Authentication.Repository.Architectures;
 using Context.Common;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
 using Repository.Common;
 using Xunit;
 
 namespace Authentication.Tests.Controllers
 {
-    public class PartnerControllerTest : IDisposable
+    public class PartnersControllerTest : IDisposable
     {
         private static readonly int NON_EXISTING_ID = 0;
 
-        private readonly IDistributedCache _cache;
         private readonly IContextFactory<AuthenticationContext> _contextFactory;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IPartnerRepository _partnerRepository;
+        private readonly PartnersController _controller;
 
         #region SeedData
         private Partner partner1;
         #endregion
 
         // setup
-        public PartnerControllerTest()
+        public PartnersControllerTest()
         {
             _contextFactory = new SqliteContextFactory<AuthenticationContext>();
             //_contextFactory = new InMemoryContextFactory<AuthenticationContext>();
-            _cache = null!;
             var context = _contextFactory.CreateContext();
             _unitOfWork = new UnitOfWork(context);
             _partnerRepository = new PartnerRepository(context);
+            _controller = new PartnersController(_unitOfWork, _partnerRepository);
             partner1 = new Partner() { Name = "Partner Name", Description = "Partner Description" };
             _partnerRepository.Insert(partner1);
             _unitOfWork.Deadline();
@@ -48,11 +50,10 @@ namespace Authentication.Tests.Controllers
         }
 
         [Fact]
-        public async Task Create_Partner_ReturnsNewPartner()
+        public async Task Create_Partner_ReturnsNewPartnerAsync()
         {
             // Arrange and action
-            var controller = new PartnersController(_cache, _unitOfWork, _partnerRepository);
-            var result = await controller.PostPartner(new PartnerDTO() { Name = "New Partner", Description = "New Partner Description" });
+            var result = await _controller.PostPartner(new PartnerDTO() { Name = "New Partner", Description = "New Partner Description" });
             // Assert
             Assert.NotNull(result);
             var viewResult = Assert.IsType<CreatedAtActionResult>(result);
@@ -63,11 +64,10 @@ namespace Authentication.Tests.Controllers
         }
 
         [Fact]
-        public async Task Create_Partner_ExistedName_ReturnsConflict()
+        public async Task Create_Partner_ExistedName_ReturnsConflictAsync()
         {
             // Arrange and action
-            var controller = new PartnersController(_cache, _unitOfWork, _partnerRepository);
-            var result = await controller.PostPartner(new PartnerDTO() { Name = partner1.Name, Description = "Exist Partner Description" });
+            var result = await _controller.PostPartner(new PartnerDTO() { Name = partner1.Name, Description = "Exist Partner Description" });
             // Assert
             var viewResult = Assert.IsType<ConflictObjectResult>(result);
             var errorMsg = Assert.IsType<string>(viewResult.Value);
@@ -75,11 +75,10 @@ namespace Authentication.Tests.Controllers
         }
 
         [Fact]
-        public void Get_Partner_ExistedId_ReturnsExistedParter()
+        public async Task Get_Partner_ExistedId_ReturnsExistedPartnerAsync()
         {
             // Arrange and action
-            var controller = new PartnersController(_cache, _unitOfWork, _partnerRepository);
-            var result = controller.GetPartner(1);
+            var result = await _controller.GetPartnerAsync(1);
             // Assert
             Assert.NotNull(result);
             var viewResult = Assert.IsType<OkObjectResult>(result);
@@ -90,24 +89,22 @@ namespace Authentication.Tests.Controllers
         }
 
         [Fact]
-        public void Get_Partner_NonExistingId_ReturnsNotFound()
+        public async Task Get_Partner_NonExistingId_ReturnsNotFoundAsync()
         {
             // Arrange and action
-            var controller = new PartnersController(_cache, _unitOfWork, _partnerRepository);
-            var result = controller.GetPartner(NON_EXISTING_ID);
+            var result = await _controller.GetPartnerAsync(NON_EXISTING_ID);
             // Assert
             Assert.NotNull(result);
             Assert.IsType<NotFoundResult>(result);
         }
 
         [Fact]
-        public void Get_Partners_ReturnsAllPartners()
+        public async Task Get_Partners_ReturnsAllPartnersAsync()
         {
             // Arrange and action
-            var controller = new PartnersController(_cache, _unitOfWork, _partnerRepository);
             _partnerRepository.Insert(new Partner() { Name = "Second Partner", Description = "Second Partner Description" });
             _unitOfWork.Deadline();
-            var result = controller.GetPartners();
+            var result = _controller.GetPartners();
             // Assert
             Assert.NotNull(result);
             var viewResult = Assert.IsType<OkObjectResult>(result);
@@ -120,15 +117,14 @@ namespace Authentication.Tests.Controllers
         }
 
         [Fact]
-        public async Task Update_Partner_ReturnsNoContent()
+        public async Task Update_Partner_ReturnsNoContentAsync()
         {
             // Arrange and action
-            var controller = new PartnersController(_cache, _unitOfWork, _partnerRepository);
             var partner = new Partner() { Name = "Second Partner", Description = "Second Partner Description" };
             _partnerRepository.Insert(partner);
             _unitOfWork.Deadline();
 
-            var result = await controller.PutPartner(partner.Id, new PartnerDTO() { Name = "Updated Partner", Description = "Updated Description" });
+            var result = await _controller.PutPartner(partner.Id, new PartnerDTO() { Name = "Updated Partner", Description = "Updated Description" });
             // Assert
             Assert.NotNull(result);
             Assert.IsType<NoContentResult>(result);
@@ -140,14 +136,13 @@ namespace Authentication.Tests.Controllers
         }
 
         [Fact]
-        public async Task Update_Partner_ExistedName_ReturnsConflict()
+        public async Task Update_Partner_ExistedName_ReturnsConflictAsync()
         {
             // Arrange and action
-            var controller = new PartnersController(_cache, _unitOfWork, _partnerRepository);
             var partner = new Partner() { Name = "Second Partner", Description = "Second Partner Description" };
             _partnerRepository.Insert(partner);
             _unitOfWork.Deadline();
-            var result = await controller.PutPartner(partner.Id, new PartnerDTO() { Name = partner1.Name, Description = "Existed Partner Description" });
+            var result = await _controller.PutPartner(partner.Id, new PartnerDTO() { Name = partner1.Name, Description = "Existed Partner Description" });
             
             // Assert
             var viewResult = Assert.IsType<ConflictObjectResult>(result);
@@ -156,26 +151,23 @@ namespace Authentication.Tests.Controllers
         }
 
         [Fact]
-        public async Task Update_Partner_NonExistingId_ReturnsNotFound()
+        public async Task Update_Partner_NonExistingId_ReturnsNotFoundAsync()
         {
             // Arrange and action
-            var controller = new PartnersController(_cache, _unitOfWork, _partnerRepository);
-            var result = await controller.PutPartner(NON_EXISTING_ID, new PartnerDTO() { Name = "NotFound Partner", Description = "NotFound Partner Description" });
-
+            var result = await _controller.PutPartner(NON_EXISTING_ID, new PartnerDTO() { Name = "NotFound Partner", Description = "NotFound Partner Description" });
             // Assert
             Assert.NotNull(result);
             Assert.IsType<NotFoundResult>(result);
         }
 
         [Fact]
-        public async Task Delete_Partner_ReturnsNoContent()
+        public async Task Delete_Partner_ReturnsNoContentAsync()
         {
             // Arrange and action
-            var controller = new PartnersController(_cache, _unitOfWork, _partnerRepository);
             var partner = new Partner() { Name = "Second Partner", Description = "Second Partner Description" };
             _partnerRepository.Insert(partner);
             _unitOfWork.Deadline();
-            var result = await controller.DeletePartner(partner.Id);
+            var result = await _controller.DeletePartner(partner.Id);
 
             // Assert
             Assert.IsType<NoContentResult>(result);
@@ -184,11 +176,10 @@ namespace Authentication.Tests.Controllers
         }
 
         [Fact]
-        public async Task Delete_Partner_NonExistingId_ReturnsNotFound()
+        public async Task Delete_Partner_NonExistingId_ReturnsNotFoundAsync()
         {
             // Arrange and action
-            var controller = new PartnersController(_cache, _unitOfWork, _partnerRepository);
-            var result = await controller.DeletePartner(NON_EXISTING_ID);
+            var result = await _controller.DeletePartner(NON_EXISTING_ID);
 
             // Assert
             Assert.NotNull(result);

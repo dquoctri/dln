@@ -31,12 +31,13 @@ builder.Services.AddDbContext<AuthenticationContext>(options =>
     
 }, ServiceLifetime.Transient);
 
-var a = builder.Configuration.GetConnectionString("RedisConnection");
 builder.Services.AddStackExchangeRedisCache(options =>
 {
-    options.Configuration = builder.Configuration.GetConnectionString("RedisConnection");
+    options.Configuration = builder.Configuration.GetSection("Redis")["RedisConnection"];
     options.InstanceName = "AuthenticationCache";
 });
+//builder.Services.AddDistributedMemoryCache();
+
 
 // Add services to the container.
 #region Services
@@ -51,9 +52,7 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 #endregion
 
 //builder.Services.AddAsymmetricAuthentication();
-
 builder.Services.AddRefreshAuthentication(serect);
-
 builder.Services.AddAuthorization();
 
 builder.Services.AddControllers().AddJsonOptions(options =>
@@ -61,6 +60,8 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddConfiguringSwagger();
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddResponseCaching();
 
 var app = builder.Build();
 using (var scope = app.Services.CreateScope())
@@ -91,6 +92,7 @@ app.UseSwaggerUI(c =>
     
 });
 
+app.UseResponseCaching();
 app.UseAuthentication();
 app.UseAuthorization();
 
