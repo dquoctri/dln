@@ -66,8 +66,8 @@ namespace Authentication.Tests.Controllers
             Assert.NotNull(result);
             var viewResult = Assert.IsType<CreatedAtActionResult>(result);
             var organizer = Assert.IsType<Organizer>(viewResult.Value);
-            Assert.Equal("New Organizer", organizer.Name);
-            Assert.Equal("New Organizer Description", organizer.Description);
+            Assert.Equal(newOrganizer.Name, organizer.Name);
+            Assert.Equal(newOrganizer.Description, organizer.Description);
             Assert.Null(organizer.ModifiedDate);
         }
 
@@ -120,14 +120,14 @@ namespace Authentication.Tests.Controllers
         public void Get_Organizer_ExistedId_ReturnsExistedOrganizer()
         {
             // Arrange and action
-            var result = _controller.GetOrganizer(1);
+            var result = _controller.GetOrganizer(organizer1.Id);
             // Assert
             Assert.NotNull(result);
             var viewResult = Assert.IsType<OkObjectResult>(result);
             var organizer = Assert.IsType<Organizer>(viewResult.Value);
-            Assert.Equal(1, organizer.Id);
-            Assert.Equal("Organizer Name", organizer.Name);
-            Assert.Equal("Organizer Description", organizer.Description);
+            Assert.Equal(organizer1.Id, organizer.Id);
+            Assert.Equal(organizer1.Name, organizer.Name);
+            Assert.Equal(organizer1.Description, organizer.Description);
         }
 
         [Fact]
@@ -162,8 +162,8 @@ namespace Authentication.Tests.Controllers
             Assert.NotNull(organizers);
             Assert.Equal(2, organizers.Count());
             var organizer = organizers.Last();
-            Assert.Equal("Second Organizer", organizer.Name);
-            Assert.Equal("Second Organizer Description", organizer.Description);
+            Assert.Equal(secondOrganizer.Name, organizer.Name);
+            Assert.Equal(secondOrganizer.Description, organizer.Description);
         }
 
         [Fact]
@@ -190,12 +190,11 @@ namespace Authentication.Tests.Controllers
 
             // Assert
             Assert.NotNull(result);
-            Assert.IsType<NoContentResult>(result);
-            var updatedOrganizer = _organizerRepository.FindByID(secondOrganizer.Id);
-            Assert.Equal(secondOrganizer.Id, updatedOrganizer?.Id);
-            Assert.Equal("Updated Organizer", updatedOrganizer?.Name);
-            Assert.Equal("Updated Description", updatedOrganizer?.Description);
-            Assert.NotNull(updatedOrganizer?.ModifiedDate);
+            var viewResult = Assert.IsType<OkObjectResult>(result);
+            var organizer = Assert.IsType<Organizer>(viewResult.Value);
+            Assert.Equal(secondOrganizer.Id, organizer.Id);
+            Assert.Equal(organizerDTO.Name, organizer.Name);
+            Assert.Equal(organizerDTO.Description, organizer.Description);
         }
 
         [Fact]

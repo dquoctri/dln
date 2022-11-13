@@ -49,19 +49,19 @@ namespace Authentication.Tests.Controllers
         public async Task Create_Partner_ReturnsNewPartnerAsync()
         {
             // Arrange and action
-            PartnerDTO partnerDTO = new PartnerDTO()
+            PartnerDTO newPartner = new PartnerDTO()
             {
                 Name = "New Partner",
                 Description = "New Partner Description"
             };
 
-            var result = await _controller.PostPartner(partnerDTO);
+            var result = await _controller.PostPartner(newPartner);
             // Assert
             Assert.NotNull(result);
             var viewResult = Assert.IsType<CreatedAtActionResult>(result);
             var partner = Assert.IsType<Partner>(viewResult.Value);
-            Assert.Equal("New Partner", partner.Name);
-            Assert.Equal("New Partner Description", partner.Description);
+            Assert.Equal(newPartner.Name, partner.Name);
+            Assert.Equal(partner.Description, partner.Description);
             Assert.Null(partner.ModifiedDate);
         }
 
@@ -85,14 +85,14 @@ namespace Authentication.Tests.Controllers
         public void Get_Partner_ExistedId_ReturnsExistedPartner()
         {
             // Arrange and action
-            var result = _controller.GetPartner(1);
+            var result = _controller.GetPartner(partner1.Id);
             // Assert
             Assert.NotNull(result);
             var viewResult = Assert.IsType<OkObjectResult>(result);
             var partner = Assert.IsType<Partner>(viewResult.Value);
-            Assert.Equal(1, partner.Id);
-            Assert.Equal("Partner Name", partner.Name);
-            Assert.Equal("Partner Description", partner.Description);
+            Assert.Equal(partner1.Id, partner.Id);
+            Assert.Equal(partner1.Name, partner.Name);
+            Assert.Equal(partner1.Description, partner.Description);
         }
 
         [Fact]
@@ -124,36 +124,35 @@ namespace Authentication.Tests.Controllers
             Assert.NotNull(partners);
             Assert.Equal(2, partners.Count());
             var partner = partners.Last();
-            Assert.Equal("Second Partner", partner.Name);
-            Assert.Equal("Second Partner Description", partner.Description);
+            Assert.Equal(secondPartner.Name, partner.Name);
+            Assert.Equal(secondPartner.Description, partner.Description);
         }
 
         [Fact]
         public async Task Update_Partner_ReturnsNoContentAsync()
         {
             // Arrange and action
-            var partner = new Partner()
+            var secondPartner = new Partner()
             {
                 Name = "Second Partner",
                 Description = "Second Partner Description"
             };
-            _partnerRepository.Insert(partner);
+            _partnerRepository.Insert(secondPartner);
             _unitOfWork.Deadline();
             PartnerDTO partnerDTO = new PartnerDTO()
             {
                 Name = "Updated Partner",
                 Description = "Updated Description"
             };
-            var result = await _controller.PutPartner(partner.Id, partnerDTO);
+            var result = await _controller.PutPartner(secondPartner.Id, partnerDTO);
 
             // Assert
             Assert.NotNull(result);
-            Assert.IsType<NoContentResult>(result);
-            var updatedPartner = _partnerRepository.FindByID(partner.Id);
-            Assert.Equal(partner.Id, updatedPartner?.Id);
-            Assert.Equal("Updated Partner", updatedPartner?.Name);
-            Assert.Equal("Updated Description", updatedPartner?.Description);
-            Assert.NotNull(updatedPartner?.ModifiedDate);
+            var viewResult = Assert.IsType<OkObjectResult>(result);
+            var partner = Assert.IsType<Partner>(viewResult.Value);
+            Assert.Equal(secondPartner.Id, partner.Id);
+            Assert.Equal(partnerDTO.Name, partner.Name);
+            Assert.Equal(partnerDTO.Description, partner.Description);
         }
 
         [Fact]

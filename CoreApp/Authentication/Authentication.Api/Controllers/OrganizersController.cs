@@ -1,4 +1,5 @@
 ﻿using Authentication.Api.DTOs;
+using Authentication.Model;
 using Authentication.Repository;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
@@ -22,9 +23,13 @@ namespace Authentication.Api.Controllers
             _partnerRepository = partnerRepository;
         }
 
+        /// <summary>
+        /// Get list of organizers //Should limit number of organizers
+        /// </summary>
+        /// <returns>A list of organizers</returns>
         // GET: api/Organizers
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<Organizer>), StatusCodes.Status200OK)]
         [ResponseCache(VaryByHeader = "GetOrganizers", Duration = 60)]
         public IActionResult GetOrganizers()
         {
@@ -32,9 +37,14 @@ namespace Authentication.Api.Controllers
             return Ok(organizers);
         }
 
+        /// <summary>
+        /// Get an organizer by id
+        /// </summary>
+        /// <param name="id">Organizer key</param>
+        /// <returns>An organizer</returns>
         // GET: api/Organizers/5
         [HttpGet("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Organizer), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
         public IActionResult GetOrganizer(int id)
@@ -44,11 +54,17 @@ namespace Authentication.Api.Controllers
             return Ok(organizer);
         }
 
+        /// <summary>
+        /// Update an existing organizer
+        /// </summary>
+        /// <param name="id">Organizer key</param>
+        /// <param name="organizerDTO">Organizer payload</param>
+        /// <returns>Updated organizer</returns>
         // PUT: api/Organizers/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         [Consumes(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(Organizer), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
@@ -66,14 +82,20 @@ namespace Authentication.Api.Controllers
             organizer.ModifiedDate = DateTime.UtcNow;
             _organizerRepository.Update(organizer);
             await _unitOfWork.DeadlineAsync();
-            return NoContent();
+            return Ok(organizer);
         }
 
+        /// <summary>
+        /// Create new organizer
+        /// </summary>
+        /// <param name="organizerDTO">Organizer payload</param>
+        /// <returns>new organizer</returns>
         // POST: api/Organizers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
         public async Task<IActionResult> PostOrganizer(OrganizerDTO organizerDTO)
@@ -92,6 +114,11 @@ namespace Authentication.Api.Controllers
             return CreatedAtAction("GetOrganizer", new { id = organizer.Id }, organizer);
         }
 
+        /// <summary>
+        /// Delete organizer by id
+        /// </summary>
+        /// <param name="id">organizer key</param>
+        /// <returns>No Content</returns>
         // DELETE: api/Organizers/5
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]

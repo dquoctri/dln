@@ -36,10 +36,10 @@ namespace Authentication.Api.Controllers
         }
 
         /// <summary>
-        /// Get a partner by identity
+        /// Get a partner by id
         /// </summary>
         /// <param name="id">The primary key of partner</param>
-        /// <returns>a partner</returns>
+        /// <returns>A partner</returns>
         // GET: api/Partners/5
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(Partner), StatusCodes.Status200OK)]
@@ -63,7 +63,7 @@ namespace Authentication.Api.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         [Consumes(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(Partner), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
@@ -81,7 +81,7 @@ namespace Authentication.Api.Controllers
             partner.ModifiedDate = DateTime.UtcNow;
             _partnerRepository.Update(partner);
             await _unitOfWork.DeadlineAsync();
-            return NoContent();
+            return Ok(partner);
         }
 
         /// <summary>
