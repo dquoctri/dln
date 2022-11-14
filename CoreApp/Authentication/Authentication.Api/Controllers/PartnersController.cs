@@ -72,7 +72,7 @@ namespace Authentication.Api.Controllers
             var partner = _partnerRepository.FindByID(id);
             if (partner == null) return NotFound();
             var newPartner = partnerDto.ToPartner();
-            if (partner.Name != partnerDto.Name && _partnerRepository.IsExisted(newPartner.Name))
+            if (partner.Name != newPartner.Name && _partnerRepository.IsExistedName(newPartner.Name))
             {
                 return Conflict($"Partner {newPartner.Name} is already in use.");
             }
@@ -100,7 +100,7 @@ namespace Authentication.Api.Controllers
         public async Task<IActionResult> PostPartner(PartnerDTO partnerDto)
         {
             var partner = partnerDto.ToPartner();
-            if (_partnerRepository.IsExisted(partner.Name))
+            if (_partnerRepository.IsExistedName(partner.Name))
             {
                 return Conflict($"Partner {partner.Name} is already in use.");
             }

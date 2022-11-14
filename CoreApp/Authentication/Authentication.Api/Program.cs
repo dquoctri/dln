@@ -28,6 +28,7 @@ internal class Program
         {
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
                     x => x.MigrationsHistoryTable(HistoryRepository.DefaultTableName, AuthenticationContext.SCHEMA).CommandTimeout(30));
+            
             if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
             {
                 options.LogTo(Console.WriteLine);

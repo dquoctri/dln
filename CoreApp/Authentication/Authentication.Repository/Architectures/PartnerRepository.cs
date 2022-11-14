@@ -15,7 +15,7 @@ namespace Authentication.Repository.Architectures
             return _dbContext.Set<Partner>().Where(x => x.Name == name).FirstOrDefault();
         }
 
-        public bool IsExisted(string name)
+        public bool IsExistedName(string name)
         {
             return _dbContext.Set<Partner>().Any(x => x.Name.Equals(name));
         }

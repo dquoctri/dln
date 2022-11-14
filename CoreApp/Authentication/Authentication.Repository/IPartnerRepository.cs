@@ -6,6 +6,6 @@ namespace Authentication.Repository
     public interface IPartnerRepository : ICrudRepository<Partner>
     {
         public Partner? GetByName(string name);
-        public bool IsExisted(string name);
+        public bool IsExistedName(string name);
     }
 }

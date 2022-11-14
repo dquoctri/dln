@@ -9,5 +9,10 @@ namespace Authentication.Repository.Architectures
         public ProfileRepository(DbContext dbContext) : base(dbContext)
         {
         }
+
+        public bool IsExistedName(string name)
+        {
+            return _dbContext.Set<Profile>().Any(p => p.Name == name);
+        }
     }
 }

@@ -5,5 +5,6 @@ namespace Authentication.Repository
 {
     public interface IProfileRepository : ICrudRepository<Profile>
     {
+        bool IsExistedName(string name);
     }
 }
