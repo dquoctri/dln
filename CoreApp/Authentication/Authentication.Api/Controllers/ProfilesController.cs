@@ -22,14 +22,14 @@ namespace Authentication.Api.Controllers
         [HttpGet]
         public IActionResult GetProfiles()
         {
-            return Ok(_profileRepository.FindAll());
+            return Ok(_profileRepository.GetAll());
         }
 
         // GET: api/Profiles/5
         [HttpGet("{id}")]
         public IActionResult GetProfile(int id)
         {
-            var profile = _profileRepository.FindByID(id);
+            var profile = _profileRepository.GetByID(id);
             if (profile == null) return NotFound();
             return Ok(profile);
         }
@@ -39,7 +39,7 @@ namespace Authentication.Api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutProfile(int id, ProfileDTO profileDTO)
         {
-            var profile = _profileRepository.FindByID(id);
+            var profile = _profileRepository.GetByID(id);
             if (profile == null) return NotFound();
             var newProfile = profileDTO.ToProfile();
             if (profile.Name != newProfile.Name && _profileRepository.IsExistedName(newProfile.Name))
@@ -72,7 +72,7 @@ namespace Authentication.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProfile(int id)
         {
-            var profile = _profileRepository.FindByID(id);
+            var profile = _profileRepository.GetByID(id);
             if (profile == null) return NotFound();
             _profileRepository.Delete(profile);
             await _unitOfWork.DeadlineAsync();

@@ -208,7 +208,7 @@ namespace Authentication.Tests.Controllers
 
             // Assert
             Assert.IsType<NoContentResult>(result);
-            var deletedPartner = _partnerRepository.FindByID(partner.Id);
+            var deletedPartner = _partnerRepository.GetByID(partner.Id);
             Assert.Null(deletedPartner);
         }
 

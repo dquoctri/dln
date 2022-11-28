@@ -6,5 +6,6 @@ namespace Authentication.Repository
     public interface IOrganizerRepository : ICrudRepository<Organizer>
     {
         bool IsExistedName(int partnerId, string name);
+        Organizer? GetOrganizerByName(string name);
     }
 }

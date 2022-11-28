@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Authentication.Api.Models
+namespace Authentication.Api.DTOs
 {
     public class UserCredential
     {

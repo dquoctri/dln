@@ -2,13 +2,13 @@
 {
     public class SecretSettings
     {
-        public static readonly string CONFIG_KEY = "Secret";
+        public static readonly string CONFIG_SECTION_KEY = "Secret";
 
         public string Issuer { get; set; } = "Deadl!ne";
         public string Audience { get; set; } = "Deadl!ne";
-        public string PrivateKeyPath { get; set; } = string.Empty;
+        public string SecretKey { get; set; } = string.Empty;
+        public int ExpiryMinutes { get; set; }
+        public string AccessPrivateKeyPath { get; set; } = string.Empty;
         public int AccessExpiryMinutes { get; set; }
-        public string RefreshSecretKey { get; set; } = string.Empty;
-        public int RefreshExpiryMinutes { get; set; }
     }
 }

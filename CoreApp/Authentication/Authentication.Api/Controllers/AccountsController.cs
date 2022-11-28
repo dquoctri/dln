@@ -30,14 +30,14 @@ namespace Authentication.Api.Controllers
         [HttpGet]
         public IActionResult GetAccounts()
         {
-            return Ok(_accountRepository.FindAll());
+            return Ok(_accountRepository.GetAll());
         }
 
         // GET: api/Accounts/5
         [HttpGet("{id}")]
         public IActionResult GetAccount(Guid id)
         {
-            var account = _accountRepository.FindByID(id);
+            var account = _accountRepository.GetByID(id);
             if (account == null) { return NotFound(); }
             return Ok(account);
         }

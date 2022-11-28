@@ -1,4 +1,5 @@
-﻿using Authentication.Api.Models;
+﻿using Authentication.Api.DTOs;
+using Authentication.Api.Models;
 
 namespace Authentication.Api.Services
 {
@@ -7,6 +8,4 @@ namespace Authentication.Api.Services
         public AccessToken? CreateAccessToken(string? userId);
         public RefreshToken? CreateRefreshToken(UserCredential credential);
     }
-
-
 }

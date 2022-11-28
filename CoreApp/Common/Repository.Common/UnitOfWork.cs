@@ -8,7 +8,7 @@ namespace Repository.Common
 
         public UnitOfWork(DbContext context)
         {
-            _context = context ?? throw new ArgumentException($"{typeof(DbContext)} must not be null!");
+            _context = context ?? throw new ArgumentNullException($"{typeof(DbContext)} must not be null!");
         }
 
         public int Deadline()

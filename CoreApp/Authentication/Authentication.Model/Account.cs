@@ -17,11 +17,7 @@ namespace Authentication.Model
         public string PasswordHash { get; set; } = null!;
         [Required(AllowEmptyStrings = false)]
         public string Salt { get; set; } = null!;
-        private DateTime? LastLogin { get; set; }
-        public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
-        [NotMapped]
-        public string Text { get; set; } = null!;
         public int OrganizerId { get; set; }
-        public Organizer Organizer { get; set; } = null!;
+        public Organizer? Organizer { get; set; }
     }
 }

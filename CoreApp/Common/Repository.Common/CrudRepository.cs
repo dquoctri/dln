@@ -2,7 +2,7 @@
 
 namespace Repository.Common
 {
-    public abstract class CrudRepository<T> : Repository<T>, ICrudRepository<T> where T : class, new()
+    public abstract class CrudRepository<T> : ReadRepository<T>, ICrudRepository<T> where T : class, new()
     {
         protected CrudRepository(DbContext dbContext) : base(dbContext)
         {
@@ -13,18 +13,8 @@ namespace Repository.Common
             _dbContext.Set<T>().Add(entity);
         }
 
-        public virtual void Delete(params object?[]? keyValues)
-        {
-            T? entity = _dbContext.Set<T>().Find(keyValues);
-            if (entity != null)
-            {
-                Delete(entity);
-            }
-        }
-
         public virtual void Delete(T entityToDelete)
         {
-            // TODO: shuold checking behavior
             if (_dbContext.Entry(entityToDelete).State == EntityState.Detached)
             {
                 _dbContext.Set<T>().Attach(entityToDelete);

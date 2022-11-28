@@ -9,7 +9,7 @@ namespace Authentication.Api.Extensions
     {
         public static IServiceCollection AddRefreshAuthentication(this IServiceCollection services, SecretSettings secret)
         {
-            var refreshSecretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret.RefreshSecretKey));
+            var refreshSecretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret.SecretKey));
             var signingCredentials = new SigningCredentials(refreshSecretKey, SecurityAlgorithms.HmacSha512Signature);
             services.AddAuthentication(options =>
             {
@@ -26,19 +26,16 @@ namespace Authentication.Api.Extensions
                         ValidateAudience = true,
                         IssuerSigningKey = refreshSecretKey,
                         ValidateLifetime = true,
-                        LifetimeValidator = LifetimeValidator
+                        LifetimeValidator = (
+                            DateTime? notBefore,
+                            DateTime? expires,
+                            SecurityToken securityToken,
+                            TokenValidationParameters validationParameters
+                        ) => expires != null && expires > DateTime.UtcNow
                     };
                 });
 
             return services;
-        }
-
-        private static bool LifetimeValidator(DateTime? notBefore,
-            DateTime? expires,
-            SecurityToken securityToken,
-            TokenValidationParameters validationParameters)
-        {
-            return expires != null && expires > DateTime.UtcNow;
         }
     }
 }

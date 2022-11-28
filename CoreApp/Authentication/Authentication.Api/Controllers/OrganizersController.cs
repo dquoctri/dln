@@ -33,7 +33,7 @@ namespace Authentication.Api.Controllers
         [ResponseCache(VaryByHeader = "GetOrganizers", Duration = 60)]
         public IActionResult GetOrganizers()
         {
-            var organizers = _organizerRepository.FindAll();
+            var organizers = _organizerRepository.GetAll();
             return Ok(organizers);
         }
 
@@ -49,7 +49,7 @@ namespace Authentication.Api.Controllers
         [ProducesDefaultResponseType]
         public IActionResult GetOrganizer(int id)
         {
-            var organizer = _organizerRepository.FindByID(id);
+            var organizer = _organizerRepository.GetByID(id);
             if (organizer == null) return NotFound();
             return Ok(organizer);
         }
@@ -70,7 +70,7 @@ namespace Authentication.Api.Controllers
         [ProducesDefaultResponseType]
         public async Task<IActionResult> PutOrganizer(int id, OrganizerDTO organizerDTO)
         {
-            var organizer = _organizerRepository.FindByID(id);
+            var organizer = _organizerRepository.GetByID(id);
             if (organizer == null) return NotFound();
             var newOrganizer = organizerDTO.ToOrganizer();
             if (organizer.Name != newOrganizer.Name && _organizerRepository.IsExistedName(organizer.PartnerId, newOrganizer.Name))
@@ -101,7 +101,7 @@ namespace Authentication.Api.Controllers
         public async Task<IActionResult> PostOrganizer(OrganizerDTO organizerDTO)
         {
             var organizer = organizerDTO.ToOrganizer();
-            var partner = _partnerRepository.FindByID(organizer.PartnerId);
+            var partner = _partnerRepository.GetByID(organizer.PartnerId);
             if (partner == null) return NotFound($"Partner {organizer.PartnerId} is not found.");
             if (_organizerRepository.IsExistedName(organizer.PartnerId, organizer.Name))
             {
@@ -126,7 +126,7 @@ namespace Authentication.Api.Controllers
         [ProducesDefaultResponseType]
         public async Task<IActionResult> DeleteOrganizer(int id)
         {
-            var organizer = _organizerRepository.FindByID(id);
+            var organizer = _organizerRepository.GetByID(id);
             if (organizer == null) return NotFound();
             _organizerRepository.Delete(organizer);
             await _unitOfWork.DeadlineAsync();

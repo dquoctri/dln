@@ -1,6 +1,7 @@
 ﻿using Authentication.Api.Models;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Repository.Common;
 using System.Security.Cryptography;
 
 namespace Authentication.Api.Certificates
@@ -8,19 +9,19 @@ namespace Authentication.Api.Certificates
     public class SigningAudienceCertificate : IDisposable
     {
         private readonly RSA rsa;
-        private readonly IOptions<SecretSettings> _secretOptions;
+        private readonly SecretSettings _secretOptions;
 
         public SigningAudienceCertificate(IOptions<SecretSettings> secretOptions)
         {
             rsa = RSA.Create();
-            _secretOptions = secretOptions;
+            _secretOptions = secretOptions.Value ?? throw new ArgumentNullException(nameof(secretOptions));
         }
 
         public SigningCredentials GetAudienceSigningKey()
         {
             // public key for decrypting
-            string privateXmlKey = File.ReadAllText(_secretOptions.Value.PrivateKeyPath);
-            rsa.ImportFromPem(privateXmlKey.ToCharArray());
+            string privateKey = File.ReadAllText(_secretOptions.AccessPrivateKeyPath);
+            rsa.ImportFromPem(privateKey.ToCharArray());
             return new SigningCredentials(key: new RsaSecurityKey(rsa), algorithm: SecurityAlgorithms.RsaSha256);
         }
 

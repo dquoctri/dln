@@ -260,7 +260,7 @@ namespace Authentication.Tests.Controllers
 
             // Assert
             Assert.IsType<NoContentResult>(result);
-            var deletedOrganizer = _organizerRepository.FindByID(secondOrganizer.Id);
+            var deletedOrganizer = _organizerRepository.GetByID(secondOrganizer.Id);
             Assert.Null(deletedOrganizer);
         }
 

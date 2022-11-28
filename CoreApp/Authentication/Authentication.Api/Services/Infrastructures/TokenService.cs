@@ -1,4 +1,5 @@
 ﻿using Authentication.Api.Certificates;
+using Authentication.Api.DTOs;
 using Authentication.Api.Models;
 using Authentication.Model;
 using Authentication.Repository;
@@ -9,7 +10,7 @@ using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
-namespace Authentication.Api.Services
+namespace Authentication.Api.Services.Infrastructures
 {
     public class TokenService : ITokenService
     {
@@ -79,14 +80,14 @@ namespace Authentication.Api.Services
                 new Claim(ClaimTypes.Name, user.Username) };
             claims.Add(new Claim("organization", user.Username));
 
-            var refreshSecurityKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_secretOptions.RefreshSecretKey));
+            var refreshSecurityKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_secretOptions.SecretKey));
             var signingCredentials = new SigningCredentials(refreshSecurityKey, SecurityAlgorithms.HmacSha512Signature);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Issuer = _secretOptions.Issuer,
                 Audience = _secretOptions.Audience,
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddMinutes(_secretOptions.RefreshExpiryMinutes),
+                Expires = DateTime.UtcNow.AddMinutes(_secretOptions.ExpiryMinutes),
                 SigningCredentials = signingCredentials
             };
 

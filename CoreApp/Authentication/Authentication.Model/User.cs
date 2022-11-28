@@ -11,7 +11,9 @@ namespace Authentication.Model
         public string? EmailAddress { get; set; }
         public bool EmailVerified { get; set; }
         public DateTime CreatedDate { get; set; }
-        public long OrganisationId { get; set; }
-        public Organizer Organizer { get; set; } = null!;
+        public int OrganizerId { get; set; }
+        public Organizer? Organizer { get; set; }
+        public int ProfileId { get; set; }
+        public Profile? Profile { get; set; }
     }
 }

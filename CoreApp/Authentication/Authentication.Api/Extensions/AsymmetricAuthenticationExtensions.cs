@@ -23,19 +23,17 @@ namespace Authentication.Api.Extensions
                     ValidateIssuer = false,
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = issuerSigningKey,
-                    LifetimeValidator = LifetimeValidator
+                    ValidateLifetime = true,
+                    LifetimeValidator = (
+                        DateTime? notBefore,
+                        DateTime? expires,
+                        SecurityToken securityToken,
+                        TokenValidationParameters validationParameters
+                    ) => expires != null && expires > DateTime.UtcNow
                 };
             });
 
             return services;
-        }
-
-        private static bool LifetimeValidator(DateTime? notBefore,
-            DateTime? expires,
-            SecurityToken securityToken,
-            TokenValidationParameters validationParameters)
-        {
-            return expires != null && expires > DateTime.UtcNow;
         }
     }
 }
