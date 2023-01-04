@@ -12,7 +12,7 @@ namespace Authentication.Repository.Architectures
 
         public bool IsExistedName(string name)
         {
-            return _dbContext.Set<Profile>().Any(p => p.Name == name);
+            return _context.Set<Profile>().Any(p => p.Name == name);
         }
     }
 }

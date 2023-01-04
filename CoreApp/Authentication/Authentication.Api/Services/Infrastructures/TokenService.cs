@@ -27,22 +27,17 @@ namespace Authentication.Api.Services.Infrastructures
             _accountRepository = accountRepository;
         }
 
-        public AccessToken? CreateAccessToken(string? userId)
+        public AccessToken? CreateAccessToken(Guid? userId)
         {
-            if (userId != "dqtri")
-            {
-                return null;
-            }
-            Account? account = _accountRepository.GetAccountByUsername(userId);
+            Account? account = _accountRepository.GetByID(userId);
             if (account == null)
             {
                 return null;
             }
-
-            SecurityTokenDescriptor refreshTokenDescriptor = GetAccessTokenDescriptor(userId);
-            var refreshTokenHandler = new JwtSecurityTokenHandler();
-            SecurityToken refreshCecurityToken = refreshTokenHandler.CreateToken(refreshTokenDescriptor);
-            string accessToken = refreshTokenHandler.WriteToken(refreshCecurityToken);
+            SecurityTokenDescriptor accessTokenDescriptor = GetAccessTokenDescriptor(userId);
+            var accessTokenHandler = new JwtSecurityTokenHandler();
+            SecurityToken accessCecurityToken = accessTokenHandler.CreateToken(accessTokenDescriptor);
+            string accessToken = accessTokenHandler.WriteToken(accessCecurityToken);
             return new AccessToken(AccessToken.DEFAULT_TOKEN_TYPE, accessToken);
         }
 
@@ -57,22 +52,6 @@ namespace Authentication.Api.Services.Infrastructures
             return new RefreshToken(RefreshToken.DEFAULT_TOKEN_TYPE, refreshToken);
         }
 
-
-        private SecurityTokenDescriptor GetAccessTokenDescriptor(string userId)
-        {
-            var Roles = new[] { "User", "Admin" };
-            var claims = new List<Claim> { new Claim(ClaimTypes.NameIdentifier, userId) };
-            claims.AddRange(Roles.Select(role => new Claim(ClaimTypes.Role, role)));
-
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddMinutes(_secretOptions.AccessExpiryMinutes),
-                SigningCredentials = signingAudienceCertificate.GetAudienceSigningKey()
-            };
-
-            return tokenDescriptor;
-        }
 
         private SecurityTokenDescriptor GetRefreshTokenDescriptor(UserCredential user)
         {
@@ -89,6 +68,22 @@ namespace Authentication.Api.Services.Infrastructures
                 Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.UtcNow.AddMinutes(_secretOptions.ExpiryMinutes),
                 SigningCredentials = signingCredentials
+            };
+
+            return tokenDescriptor;
+        }
+
+        private SecurityTokenDescriptor GetAccessTokenDescriptor(Guid? userId)
+        {
+            var Roles = new[] { "User", "Admin" };
+            var claims = new List<Claim> { new Claim(ClaimTypes.NameIdentifier, userId?.ToString() ?? "") };
+            claims.AddRange(Roles.Select(role => new Claim(ClaimTypes.Role, role)));
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims),
+                Expires = DateTime.UtcNow.AddMinutes(_secretOptions.AccessExpiryMinutes),
+                SigningCredentials = signingAudienceCertificate.GetAudienceSigningKey()
             };
 
             return tokenDescriptor;

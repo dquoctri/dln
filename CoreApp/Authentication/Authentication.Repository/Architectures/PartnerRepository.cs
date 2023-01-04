@@ -12,12 +12,12 @@ namespace Authentication.Repository.Architectures
 
         public Partner? GetByName(string name)
         {
-            return _dbContext.Set<Partner>().Where(x => x.Name == name).FirstOrDefault();
+            return _context.Set<Partner>().Where(x => x.Name == name).FirstOrDefault();
         }
 
         public bool IsExistedName(string name)
         {
-            return _dbContext.Set<Partner>().Any(x => x.Name.Equals(name));
+            return _context.Set<Partner>().Any(x => x.Name.Equals(name));
         }
     }
 }

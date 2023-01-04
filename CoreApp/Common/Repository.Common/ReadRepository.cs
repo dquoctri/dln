@@ -1,25 +1,24 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
 
 namespace Repository.Common
 {
     public abstract class ReadRepository<T> : IReadRepository<T> where T : class, new()
     {
-        protected readonly DbContext _dbContext;
+        protected readonly DbContext _context;
 
-        public ReadRepository(DbContext dbContext)
+        public ReadRepository(DbContext context)
         {
-            _dbContext = dbContext;
+            _context = context ?? throw new ArgumentNullException($"{typeof(DbContext)} must not be null!");
         }
 
         public virtual IQueryable<T> GetAll()
         {
-            return _dbContext.Set<T>().AsNoTracking();
+            return _context.Set<T>().AsNoTracking();
         }
 
         public virtual T? GetByID(params object?[]? keyValues)
         {
-            return _dbContext.Set<T>().Find(keyValues);
+            return _context.Set<T>().Find(keyValues);
         }
 
         private bool disposed = false;
@@ -28,7 +27,7 @@ namespace Repository.Common
         {
             if (!this.disposed && disposing)
             {
-                _dbContext.Dispose();
+                _context.Dispose();
             }
             this.disposed = true;
         }

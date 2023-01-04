@@ -25,8 +25,8 @@ namespace Authentication.Api.Controllers
         private readonly IAccountRepository _accountRepository;
 
         public AuthenticationController(IUnitOfWork unitOfWork,
-            IUserRepository userRepository,
-            IOrganizerRepository organizerRepository,
+                                        IUserRepository userRepository,
+                                        IOrganizerRepository organizerRepository,
                                         IAccountRepository accountRepository,
                                         ITokenService service,
                                         IPasswordService passwordService)
@@ -78,12 +78,13 @@ namespace Authentication.Api.Controllers
         }
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        [Route("token")]
+        [Route("refresh")]
         [HttpPost]
-        public IActionResult Refresh()
+        public IActionResult RefreshAccessToken()
         {
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            AccessToken? token = _tokenService.CreateAccessToken(userId);
+            //AccessToken? token = _tokenService.CreateAccessToken(userId);
+            AccessToken? token = null;
             if (null == token) return Unauthorized();
             return Ok(token);
         }

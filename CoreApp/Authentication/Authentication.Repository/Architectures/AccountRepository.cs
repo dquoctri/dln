@@ -10,12 +10,12 @@ namespace Authentication.Repository.Architectures
 
         public Account? GetAccountByUsername(string username)
         {
-            return _dbContext.Set<Account>().FirstOrDefault(a => a.Username == username);
+            return _context.Set<Account>().FirstOrDefault(a => a.Username == username);
         }
 
         public bool IsExistedUsername(string username)
         {
-            return _dbContext.Set<Account>().Any(a => a.Username == username);
+            return _context.Set<Account>().Any(a => a.Username == username);
         }
     }
 }

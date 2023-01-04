@@ -2,7 +2,7 @@
 
 namespace Repository.Common
 {
-    public class UnitOfWork : IUnitOfWork
+    public class UnitOfWork : IUnitOfWork, IDisposable
     {
         private readonly DbContext _context;
 

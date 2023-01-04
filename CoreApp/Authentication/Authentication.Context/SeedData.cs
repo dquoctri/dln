@@ -11,7 +11,7 @@ namespace Authentication.Context
             using (var context = new AuthenticationContext(
                 serviceProvider.GetRequiredService<DbContextOptions<AuthenticationContext>>()))
             {
-                context.Database.Migrate();
+               context.Database.Migrate();
                 InitPartners(context);
                 InitOrganizers(context);
                 InitProfiles(context);

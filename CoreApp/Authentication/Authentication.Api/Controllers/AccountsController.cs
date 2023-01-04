@@ -30,7 +30,8 @@ namespace Authentication.Api.Controllers
         [HttpGet]
         public IActionResult GetAccounts()
         {
-            return Ok(_accountRepository.GetAll());
+            IQueryable<Account> accounts = _accountRepository.GetAll();
+            return Ok(accounts.ToList());
         }
 
         // GET: api/Accounts/5

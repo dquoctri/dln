@@ -1,4 +1,3 @@
-using Authentication.Api.Extensions;
 using Authentication.Api.Models;
 using Authentication.Api.Services;
 using Authentication.Api.Services.Infrastructures;
@@ -6,7 +5,6 @@ using Authentication.Context;
 using Authentication.Repository;
 using Authentication.Repository.Architectures;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.IdentityModel.Tokens;

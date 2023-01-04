@@ -10,22 +10,22 @@ namespace Repository.Common
 
         public virtual void Insert(T entity)
         {
-            _dbContext.Set<T>().Add(entity);
+            _context.Set<T>().Add(entity);
         }
 
-        public virtual void Delete(T entityToDelete)
+        public virtual void Delete(T entity)
         {
-            if (_dbContext.Entry(entityToDelete).State == EntityState.Detached)
+            if (_context.Entry(entity).State == EntityState.Detached)
             {
-                _dbContext.Set<T>().Attach(entityToDelete);
+                _context.Set<T>().Attach(entity);
             }
-            _dbContext.Set<T>().Remove(entityToDelete);
+            _context.Set<T>().Remove(entity);
         }
 
         public virtual void Update(T entity)
         {
-            _dbContext.Set<T>().Attach(entity);
-            _dbContext.Entry(entity).State = EntityState.Modified;
+            _context.Set<T>().Attach(entity);
+            _context.Entry(entity).State = EntityState.Modified;
         }
     }
 }
