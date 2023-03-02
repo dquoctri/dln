@@ -31,3 +31,5 @@ Scaffold-DbContext "Server=localhost,51433;Database=dln_auth;User Id=sa;Password
 dotnet ef migrations add UpdatePartner --project Authentication\Authentication.Context
 
 dotnet ef migrations add CreateTimeSeriesDataTable --project Authentication\Authentication.Context
+
+dotnet ef migrations add UpdateAccount --project Authentication\Authentication.Context

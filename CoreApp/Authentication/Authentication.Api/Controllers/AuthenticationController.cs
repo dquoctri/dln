@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Repository.Common;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -38,6 +39,40 @@ namespace Authentication.Api.Controllers
             _unitOfWork = unitOfWork;
             _organizerRepository = organizerRepository;
         }
+        private readonly IConfiguration _configuration;
+
+        public AuthController(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
+        [HttpPost("login2")]
+        public async Task<IActionResult> Login([FromBody] LoginRequest request)
+        {
+            // TODO: Validate the username and password against your user database
+            if (request.Username != "myusername" || request.Password != "mypassword")
+            {
+                return Unauthorized();
+            }
+
+            // Create the JWT token
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Secret"]);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+                    new Claim(ClaimTypes.Name, request.Username)
+                }),
+                Expires = DateTime.UtcNow.AddMinutes(int.Parse(_configuration["Jwt:ExpirationMinutes"])),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+
+            // Return the JWT token as a string
+            return Ok(new { Token = tokenHandler.WriteToken(token) });
+        }
+
 
         [AllowAnonymous]
         [Route("login")]
@@ -89,4 +124,10 @@ namespace Authentication.Api.Controllers
             return Ok(token);
         }
     }
+}
+
+public class LoginRequest
+{
+    public string Username { get; set; }
+    public string Password { get; set; }
 }

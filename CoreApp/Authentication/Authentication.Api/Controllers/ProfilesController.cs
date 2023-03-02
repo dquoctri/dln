@@ -18,6 +18,12 @@ namespace Authentication.Api.Controllers
             _profileRepository = profileRepository;
         }
 
+        /// <summary>
+        /// The function returns a list of all profiles in the database
+        /// </summary>
+        /// <returns>
+        /// The GetProfiles method returns a list of profiles.
+        /// </returns>
         // GET: api/Profiles
         [HttpGet]
         public IActionResult GetProfiles()
@@ -26,6 +32,13 @@ namespace Authentication.Api.Controllers
         }
 
         // GET: api/Profiles/5
+        /// <summary>
+        /// This function returns a profile based on the id passed in the url
+        /// </summary>
+        /// <param name="id">The id of the profile you want to get.</param>
+        /// <returns>
+        /// The profile object is being returned.
+        /// </returns>
         [HttpGet("{id}")]
         public IActionResult GetProfile(int id)
         {
@@ -72,6 +85,8 @@ namespace Authentication.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProfile(int id)
         {
+            IList<int> list = new List<int>();
+            ICollection<int> list2 = new LinkedList<int>();
             var profile = _profileRepository.GetByID(id);
             if (profile == null) return NotFound();
             _profileRepository.Delete(profile);

@@ -29,6 +29,29 @@ namespace Authentication.Api.Services.Infrastructures
             return hashed;
         }
 
+        public string HashPassword(string password, string salt)
+        {
+            byte[] saltBytes = Encoding.UTF8.GetBytes(salt);
+
+            byte[] hashBytes;
+            using (var pbkdf2 = new Rfc2898DeriveBytes(password, saltBytes, 10000, HashAlgorithmName.SHA256))
+            {
+                hashBytes = pbkdf2.GetBytes(32); // 32 bytes = 256 bits
+            }
+
+            return Convert.ToBase64String(hashBytes);
+        }
+
+        public byte[] GenerateSalt(int saltLength)
+        {
+            byte[] salt = new byte[saltLength];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(salt);
+            }
+            return salt;
+        }
+
         public bool Validate(string password, string salt, string hash)
         {
             return CreateHash(password, salt) == hash;
