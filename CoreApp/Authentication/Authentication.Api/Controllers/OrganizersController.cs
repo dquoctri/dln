@@ -79,7 +79,7 @@ namespace Authentication.Api.Controllers
             }
             organizer.Name = newOrganizer.Name;
             organizer.Description = newOrganizer.Description;
-            organizer.ModifiedDate = DateTime.UtcNow;
+            organizer.UpdateAt = DateTime.UtcNow;
             _organizerRepository.Update(organizer);
             await _unitOfWork.DeadlineAsync();
             return Ok(organizer);

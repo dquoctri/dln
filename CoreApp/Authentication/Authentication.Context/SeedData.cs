@@ -72,7 +72,7 @@ namespace Authentication.Context
             {
                 Name = "admin",
                 Description = "admin profile",
-                Roles = new HashSet<UserRole>() { UserRole.PARTNER_MANAGER, UserRole.ORGANIZER_MANAGER, UserRole.PROFILE_MANAGER, UserRole.USER_MANAGER }
+                Permissions = new HashSet<Permission>() { Permission.PARTNER_MANAGER, Permission.ORGANIZER_MANAGER, Permission.PROFILE_MANAGER, Permission.USER_MANAGER }
             });
 
             context.SaveChanges();
@@ -92,17 +92,17 @@ namespace Authentication.Context
                 return;
             };
             context.Accounts.AddRange(
-                new Account
+                new User
                 {
                     Username = "admin",
-                    PasswordHash = "123547",
+                    Hash = "123547",
                     Salt = "abc",
                     Organizer = organizer,
                 },
-                new Account
+                new User
                 {
                     Username = "user",
-                    PasswordHash = "123547",
+                    Hash = "123547",
                     Salt = "abc",
                     Organizer = organizer,
                 }

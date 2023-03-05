@@ -62,7 +62,7 @@ namespace Authentication.Tests.Controllers
             var partner = Assert.IsType<Partner>(viewResult.Value);
             Assert.Equal(newPartner.Name, partner.Name);
             Assert.Equal(partner.Description, partner.Description);
-            Assert.Null(partner.ModifiedDate);
+            Assert.Null(partner.UpdatedAt);
         }
 
         [Fact]

@@ -17,9 +17,9 @@ namespace Authentication.Api.Services.Infrastructures
         private readonly SigningAudienceCertificate signingAudienceCertificate;
         private readonly SecretSettings _secretOptions;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IAccountRepository _accountRepository;
+        private readonly IUserRepository _accountRepository;
 
-        public TokenService(IOptions<SecretSettings> secretOptions, IUnitOfWork unitOfWork, IAccountRepository accountRepository)
+        public TokenService(IOptions<SecretSettings> secretOptions, IUnitOfWork unitOfWork, IUserRepository accountRepository)
         {
             signingAudienceCertificate = new SigningAudienceCertificate(secretOptions);
             _secretOptions = secretOptions.Value;
@@ -29,7 +29,7 @@ namespace Authentication.Api.Services.Infrastructures
 
         public AccessToken? CreateAccessToken(Guid? userId)
         {
-            Account? account = _accountRepository.GetByID(userId);
+            User? account = _accountRepository.GetByID(userId);
             if (account == null)
             {
                 return null;
@@ -41,15 +41,15 @@ namespace Authentication.Api.Services.Infrastructures
             return new AccessToken(AccessToken.DEFAULT_TOKEN_TYPE, accessToken);
         }
 
-        public RefreshToken? CreateRefreshToken(UserCredential credential)
+        public Token? CreateToken(UserCredential credential)
         {
-            Account? account = _accountRepository.GetAccountByUsername(credential.Username);
+            User? account = _accountRepository.GetAccountByUsername(credential.Username);
 
             SecurityTokenDescriptor tokenDescriptor = GetRefreshTokenDescriptor(credential);
             var tokenHandler = new JwtSecurityTokenHandler();
             var securityToken = tokenHandler.CreateToken(tokenDescriptor);
             var refreshToken = tokenHandler.WriteToken(securityToken);
-            return new RefreshToken(RefreshToken.DEFAULT_TOKEN_TYPE, refreshToken);
+            return new Token(Token.DEFAULT_TOKEN_TYPE, refreshToken, refreshToken);
         }
 
 

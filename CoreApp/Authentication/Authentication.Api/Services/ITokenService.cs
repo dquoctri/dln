@@ -5,7 +5,7 @@ namespace Authentication.Api.Services
 {
     public interface ITokenService
     {
-        public RefreshToken? CreateRefreshToken(UserCredential credential);
+        public Token? CreateToken(UserCredential credential);
         public AccessToken? CreateAccessToken(Guid? userId);
     }
 }

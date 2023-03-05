@@ -22,16 +22,15 @@ namespace Authentication.Model
         public string? Description { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
-        public DateTime? ModifiedDate { get; set; }
+        public DateTime CreateAt { get; set; } = DateTime.UtcNow;
+        public DateTime? UpdateAt { get; set; }
 
         [Column(TypeName = "nvarchar(24)")]
         [EnumDataType(typeof(OrganizerStatus))]
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public OrganizerStatus Status { get; set; } = OrganizerStatus.ACTIVE;
-
-        public int? ProfileId { get; set; }
-        public Profile? Profile { get; set; }
+        //public int? ProfileId { get; set; }
+        //public Profile? Profile { get; set; }
         public int PartnerId { get; set; }
         public Partner Partner { get; set; } = null!;
         public ICollection<User> Users { get; set; } = new List<User>();

@@ -10,9 +10,9 @@ namespace Authentication.Api.DTOs
 
         public int OrganizerId { get; set; }
 
-        public Account ToAccount()
+        public User ToAccount()
         {
-            return new Account() {
+            return new User() {
                 Username = Username,
                 OrganizerId = OrganizerId
             };

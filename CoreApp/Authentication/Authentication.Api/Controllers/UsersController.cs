@@ -50,7 +50,7 @@ namespace Authentication.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> PutUser(long id, User user)
+        public async Task<IActionResult> PutUser(Guid id, User user)
         {
             if (id != user.Id)
             {
@@ -110,7 +110,7 @@ namespace Authentication.Api.Controllers
             return NoContent();
         }
 
-        private bool UserExists(long id)
+        private bool UserExists(Guid id)
         {
             var user = _userRepository.GetByID(id);
             return user != null;

@@ -1,5 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Model.Common;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Security;
 
 namespace Authentication.Model
 {
@@ -11,7 +14,15 @@ namespace Authentication.Model
         [Required(AllowEmptyStrings = false)]
         public string Name { get; set; } = null!;
         public string? Description { get; set; }
-        [Column(TypeName = "nvarchar(255)")]
-        public ISet<UserRole> Roles { get; set; } = new HashSet<UserRole>();
+        [Column("Permissions")]
+        public ISet<Permission> Permissions { get; set; } = new HashSet<Permission>();
+
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public DateTime CreateAt { get; set; } = DateTime.UtcNow;
+        public DateTime? UpdateAt { get; set; }
+
+        public int OrganizerId { get; set; }
+        public Organizer Organizer { get; set; } = null!;
+        
     }
 }

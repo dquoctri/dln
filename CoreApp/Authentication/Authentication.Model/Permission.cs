@@ -2,7 +2,7 @@
 
 namespace Authentication.Model
 {
-    public enum UserRole : ushort
+    public enum Permission : ushort
     {
         [OrganizerTypes(OrganizerType.SYSTEM)]
         PARTNER_MANAGER,

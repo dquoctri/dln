@@ -12,7 +12,7 @@ namespace Authentication.Api.DTOs
         public string? Description { get; set; }
 
         [Required(AllowEmptyStrings = false)]
-        public ISet<UserRole> Roles { get; set; } = new HashSet<UserRole>();
+        public ISet<Permission> Roles { get; set; } = new HashSet<Permission>();
 
         public Profile ToProfile()
         {
@@ -20,7 +20,7 @@ namespace Authentication.Api.DTOs
             {
                 Name = Name.Trim(),
                 Description = Description,
-                Roles = Roles
+                Permissions = Roles
             };
         }
     }

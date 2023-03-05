@@ -78,7 +78,7 @@ namespace Authentication.Api.Controllers
             }
             partner.Name = newPartner.Name;
             partner.Description = newPartner.Description;
-            partner.ModifiedDate = DateTime.UtcNow;
+            partner.UpdatedAt = DateTime.UtcNow;
             _partnerRepository.Update(partner);
             await _unitOfWork.DeadlineAsync();
             return Ok(partner);

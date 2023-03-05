@@ -68,7 +68,7 @@ namespace Authentication.Tests.Controllers
             var organizer = Assert.IsType<Organizer>(viewResult.Value);
             Assert.Equal(newOrganizer.Name, organizer.Name);
             Assert.Equal(newOrganizer.Description, organizer.Description);
-            Assert.Null(organizer.ModifiedDate);
+            Assert.Null(organizer.UpdateAt);
         }
 
         [Fact]
@@ -113,7 +113,7 @@ namespace Authentication.Tests.Controllers
             var organizer = Assert.IsType<Organizer>(viewResult.Value);
             Assert.Equal(organizer1.Name, organizer.Name);
             Assert.Equal("Existed Organizer Description", organizer.Description);
-            Assert.Null(organizer.ModifiedDate);
+            Assert.Null(organizer.UpdateAt);
         }
 
         [Fact]
