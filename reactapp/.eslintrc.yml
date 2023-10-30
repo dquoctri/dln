@@ -25,7 +25,8 @@ rules:
     - unix
   quotes:
     - warn
-    - single
+    - double
+  jsx-quotes: ["warn", "prefer-double"]
   semi:
     - warn
     - never

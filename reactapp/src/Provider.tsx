@@ -5,7 +5,7 @@ import { CookiesProvider } from "react-cookie"
 import { I18nextProvider } from "react-i18next"
 import { PersistGate } from "redux-persist/integration/react"
 import { store, persistor } from "./stote"
-import i18n from "./locales/I18n"
+import i18n from "./assets/locales/I18n"
 
 // define interface to represent component props
 interface Props {

@@ -53,6 +53,7 @@ yarn add @types/jest @types/node @types/react @types/react-dom @types/react-redu
 yarn add i i18next i18next-browser-languagedetector jwt-decode prop-types
 yarn add react react-cookie react-dom react-helmet-async react-i18next react-redux react-router-dom react-scripts
 yarn add redux redux-logger redux-persist redux-thunk typescript
+yarn add heroicons web-vitals
 yarn add --dev @typescript-eslint/eslint-plugin eslint eslint-plugin-react prettier
 
 # format code with pretier

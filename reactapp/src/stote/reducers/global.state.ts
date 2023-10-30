@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import Mode from "models/ui/mode"
-import { LanguageKeys } from "../../locales"
+import { LanguageKeys } from "../../assets/locales"
 
 export enum GlobalType {
   SET_LANGUAGE = "global/language",
