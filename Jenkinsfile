@@ -8,8 +8,9 @@ pipeline {
       steps {
         sh '''
           ls
-          cd /springapp
+          cd ./springapp
           ls
+          docker ps
         '''
       }
     }
