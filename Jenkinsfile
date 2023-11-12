@@ -4,16 +4,26 @@ pipeline {
     DOCKER_IMAGE = "test"
   }
   stages {
+    stage("Java build") {
+      steps {
+        sh '''
+          cd ./springapp
+          ./gradlew build
+          ls
+          java -jar build/libs/your-application-name.jar
+        '''
+      }
+    }
      stage("verify tooling") {
       steps {
         sh '''
-          ls
-          cd ./springapp
-          ls
           docker version
         '''
       }
     }
+    
+
+    
     // stage("verify tooling") {
     //   steps {
     //     sh '''
