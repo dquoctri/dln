@@ -5,8 +5,8 @@ namespace Authentication.Repository
 {
     public interface IUserRepository : ICrudRepository<User>
     {
-        public User? GetAccountByUsername(string username);
+        public User? GetAccountByEmail(string email);
 
-        public bool IsExistedUsername(string username);
+        public bool IsExistedEmail(string email);
     }
 }

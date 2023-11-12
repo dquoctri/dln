@@ -1,18 +1,10 @@
 ﻿using Authentication.Api.DTOs;
 using Authentication.Api.Models;
 using Authentication.Api.Services;
-using Authentication.Model;
 using Authentication.Repository;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using Repository.Common;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Authentication.Api.Controllers
 {
@@ -24,22 +16,16 @@ namespace Authentication.Api.Controllers
         private readonly IUserRepository _userRepository;
         private readonly IOrganizerRepository _organizerRepository;
         private readonly ITokenService _tokenService;
-        private readonly IPasswordService _passwordService;
-        private readonly IUserRepository _accountRepository;
         private readonly IConfiguration _configuration;
 
         public AuthController(IUnitOfWork unitOfWork,
                                         IUserRepository userRepository,
                                         IOrganizerRepository organizerRepository,
-                                        IUserRepository accountRepository,
                                         ITokenService service,
-                                        IPasswordService passwordService,
                                         IConfiguration configuration)
         {
-            _accountRepository = accountRepository;
             _userRepository = userRepository;
             _tokenService = service;
-            _passwordService = passwordService;
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _organizerRepository = organizerRepository;
             _configuration = configuration;
@@ -56,21 +42,24 @@ namespace Authentication.Api.Controllers
         }
 
         //This API endpoint is used to obtain a new access token using a refresh token.
+        [Authorize]
         [Route("refresh")]
         [HttpPost]
         public IActionResult Refresh()
         {
-            
-            return Ok(new AccessToken(Token.DEFAULT_TOKEN_TYPE, ""));
+            var currentUser = HttpContext.User;
+            var userName = HttpContext.User.Identity?.Name;
+            return Ok(_tokenService.CreateAccessToken(new Guid()));
         }
 
 
         //This API endpoint is used to obtain a new access token using a refresh token.
+        [Authorize]
         [Route("logout")]
         [HttpPost]
         public IActionResult Logout()
         {
-            //remote
+            //add refest token to blacklist
             return Ok("");
         }
 
@@ -86,6 +75,7 @@ namespace Authentication.Api.Controllers
         }
 
         //This API endpoint allows a user to change their password.
+        [Authorize]
         [Route("change-password")]
         [HttpPost]
         public IActionResult ChangePassword()
@@ -95,15 +85,17 @@ namespace Authentication.Api.Controllers
         }
 
         //This API endpoint is used to initiate the password reset process.
+        [AllowAnonymous]
         [Route("forgot-password")]
         [HttpPost]
-        public IActionResult ForgotPassword()
+        public IActionResult ForgotPassword(string email)
         {
 
             return Ok("");
         }
 
         //This API endpoint is used to reset a user's password.
+        [AllowAnonymous]
         [Route("reset-password")]
         [HttpPost]
         public IActionResult ResetPassword()
@@ -183,10 +175,4 @@ namespace Authentication.Api.Controllers
         //    return Ok(token);
         //}
     }
-}
-
-public class LoginRequest
-{
-    public string Username { get; set; }
-    public string Password { get; set; }
 }

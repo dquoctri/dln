@@ -8,14 +8,14 @@ namespace Authentication.Repository.Architectures
     {
         public UserRepository(DbContext dbContext) : base(dbContext) { }
 
-        public User? GetAccountByUsername(string username)
+        public User? GetAccountByEmail(string email)
         {
-            return _context.Set<User>().FirstOrDefault(a => a.Username == username);
+            return _context.Set<User>().FirstOrDefault(a => a.Email == email);
         }
 
-        public bool IsExistedUsername(string username)
+        public bool IsExistedEmail(string email)
         {
-            return _context.Set<User>().Any(a => a.Username == username);
+            return _context.Set<User>().Any(a => a.Email == email);
         }
     }
 }

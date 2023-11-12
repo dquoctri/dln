@@ -1,7 +1,7 @@
 import React, { lazy } from "react"
 import { Navigate, RouteObject } from "react-router-dom"
-import MainLayout from "../components/layout/MainLayout"
-import AdminLayout from "../components/layout/AdminLayout"
+import MainLayout from "../layouts/MainLayout"
+import AdminLayout from "../layouts/AdminLayout"
 import Loadable from "./Loadable"
 
 const NotFound = Loadable(lazy(() => import("../pages/warning/404")))
@@ -25,7 +25,7 @@ export const MainRoutes: RouteObject = {
   path: "/",
   element: <MainLayout />,
   children: [
-    { index: true, element: <Home /> },
+    { index: true, element: <Home title ="Xoai Home"/> },
     { path: "dashboard", element: <Dashboard title="dashnono" description="dashboard" abc="Jkkk" /> },
     { path: "profile", element: <Profile /> },
     { path: "setting", element: <Settings /> },

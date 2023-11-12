@@ -4,14 +4,14 @@ namespace Authentication.Api.DTOs
 {
     public class UserCredential
     {
-        public UserCredential(string username, string password)
+        public UserCredential(string email, string password)
         {
-            Username = username;
+            Email = email;
             Password = password;
         }
 
         [Required]
-        public string Username { get; set; }
+        public string Email { get; set; }
 
         [Required]
         public string Password { get; set; }

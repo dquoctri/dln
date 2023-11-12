@@ -14,7 +14,6 @@ namespace Authentication.Model
         [Required(AllowEmptyStrings = false)]
         public string Name { get; set; } = null!;
         public string? Description { get; set; }
-        [Column("Permissions")]
         public ISet<Permission> Permissions { get; set; } = new HashSet<Permission>();
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]

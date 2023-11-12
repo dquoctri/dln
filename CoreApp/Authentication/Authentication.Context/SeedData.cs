@@ -94,14 +94,14 @@ namespace Authentication.Context
             context.Accounts.AddRange(
                 new User
                 {
-                    Username = "admin",
+                    Email = "admin@dln.com",
                     Hash = "123547",
                     Salt = "abc",
                     Organizer = organizer,
                 },
                 new User
                 {
-                    Username = "user",
+                    Email = "user@dln.com",
                     Hash = "123547",
                     Salt = "abc",
                     Organizer = organizer,

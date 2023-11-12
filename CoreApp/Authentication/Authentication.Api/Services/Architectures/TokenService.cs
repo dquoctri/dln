@@ -10,7 +10,7 @@ using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
-namespace Authentication.Api.Services.Infrastructures
+namespace Authentication.Api.Services.Architectures
 {
     public class TokenService : ITokenService
     {
@@ -43,7 +43,7 @@ namespace Authentication.Api.Services.Infrastructures
 
         public Token? CreateToken(UserCredential credential)
         {
-            User? account = _accountRepository.GetAccountByUsername(credential.Username);
+            User? account = _accountRepository.GetAccountByEmail(credential.Email);
 
             SecurityTokenDescriptor tokenDescriptor = GetRefreshTokenDescriptor(credential);
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -55,9 +55,9 @@ namespace Authentication.Api.Services.Infrastructures
 
         private SecurityTokenDescriptor GetRefreshTokenDescriptor(UserCredential user)
         {
-            var claims = new List<Claim> { new Claim(ClaimTypes.NameIdentifier, user.Username),
-                new Claim(ClaimTypes.Name, user.Username) };
-            claims.Add(new Claim("organization", user.Username));
+            var claims = new List<Claim> { new Claim(ClaimTypes.NameIdentifier, user.Email),
+                new Claim(ClaimTypes.Name, user.Email) };
+            claims.Add(new Claim("organization", user.Email));
 
             var refreshSecurityKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_secretOptions.SecretKey));
             var signingCredentials = new SigningCredentials(refreshSecurityKey, SecurityAlgorithms.HmacSha512Signature);

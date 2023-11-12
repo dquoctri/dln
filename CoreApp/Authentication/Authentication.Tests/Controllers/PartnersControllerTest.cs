@@ -222,5 +222,6 @@ namespace Authentication.Tests.Controllers
             Assert.NotNull(result);
             Assert.IsType<NotFoundResult>(result);
         }
+
     }
 }

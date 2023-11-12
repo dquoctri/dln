@@ -6,14 +6,15 @@ namespace Authentication.Api.DTOs
     public class AccountDTO
     {
         [Required(AllowEmptyStrings = false)]
-        public string Username { get; set; } = null!;
+        [EmailAddress]
+        public string Email { get; set; } = null!;
 
         public int OrganizerId { get; set; }
 
         public User ToAccount()
         {
             return new User() {
-                Username = Username,
+                Email = Email,
                 OrganizerId = OrganizerId
             };
         }

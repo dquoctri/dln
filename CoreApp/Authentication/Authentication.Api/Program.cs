@@ -1,6 +1,6 @@
 using Authentication.Api.Models;
 using Authentication.Api.Services;
-using Authentication.Api.Services.Infrastructures;
+using Authentication.Api.Services.Architectures;
 using Authentication.Context;
 using Authentication.Repository;
 using Authentication.Repository.Architectures;
@@ -46,11 +46,10 @@ builder.Services.AddStackExchangeRedisCache(options =>
 #region Services
 builder.Services.AddSingleton<SecretSettings>();
 builder.Services.AddScoped<DbContext, AuthenticationContext>();
-builder.Services.AddSingleton<IPasswordService, PasswordService>();
 builder.Services.AddTransient<IPartnerRepository, PartnerRepository>();
 builder.Services.AddTransient<IOrganizerRepository, OrganizerRepository>();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
-builder.Services.AddTransient<IAccountRepository, AccountRepository>();
+builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 #endregion

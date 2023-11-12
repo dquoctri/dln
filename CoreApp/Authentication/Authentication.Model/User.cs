@@ -5,16 +5,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Authentication.Model
 {
-    [Index(nameof(Username), IsUnique = true)]
     [Index(nameof(Email), IsUnique = true)]
     public class User
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
-
-        [Required(AllowEmptyStrings = false)]
-        public string Username { get; set; } = null!;
 
         [Required(AllowEmptyStrings = false)]
         public string Email { get; set; } = null!;

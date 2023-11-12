@@ -4,22 +4,31 @@ pipeline {
     DOCKER_IMAGE = "test"
   }
   stages {
-    stage("verify tooling") {
+     stage("verify tooling") {
       steps {
         sh '''
-          docker version
-          docker info
-          docker-compose version 
-          curl --version
-          jq --version
+          ls
+          cd /springapp
+          ls
         '''
       }
     }
-    stage('Prune Docker data') {
-      steps {
-        sh 'docker system prune -a --volumes -f'
-      }
-    }
+    // stage("verify tooling") {
+    //   steps {
+    //     sh '''
+    //       docker version
+    //       docker info
+    //       docker-compose version 
+    //       curl --version
+    //       jq --version
+    //     '''
+    //   }
+    // }
+    // stage('Prune Docker data') {
+    //   steps {
+    //     sh 'docker system prune -a --volumes -f'
+    //   }
+    // }
     // stage('Start container') {
     //   steps {
     //     sh 'docker compose up -d --no-color --wait'

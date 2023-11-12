@@ -1,9 +1,7 @@
 ﻿using Authentication.Model;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Model.Common;
 using Model.Common.Converters;
 
 namespace Authentication.Context
