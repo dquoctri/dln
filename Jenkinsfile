@@ -10,7 +10,7 @@ pipeline {
           ls
           cd ./springapp
           ls
-          docker ps
+          docker version
         '''
       }
     }
