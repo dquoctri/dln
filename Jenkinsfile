@@ -7,11 +7,6 @@ pipeline {
   }
   stages {
      stage("verify tooling") {
-      agent {
-        docker {
-          image 'tomcat:9-jre11'
-        }
-      }
       steps {
         sh '''
           ls
