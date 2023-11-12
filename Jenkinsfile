@@ -8,6 +8,7 @@ pipeline {
       steps {
         sh '''
           cd ./springapp
+          chmod +x gradlew
           ./gradlew build
           ls
           java -jar build/libs/your-application-name.jar
