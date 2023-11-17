@@ -1,8 +1,7 @@
 # multibranch-sample-app
 # dln
 Webs application with asp.net core and react.
-
-
+ 
 docker compose up -d
 docker compose --env-file prod.env up -d
 
@@ -10,21 +9,22 @@ docker compose --env-file prod.env up -d
 ```
 docker network create jenkins
 ```
-3 In order to execute Docker commands inside Jenkins nodes, download and run the docker:dind Docker image using the following docker run command:
+In order to execute Docker commands inside Jenkins nodes, download and run the docker:dind Docker image using the following docker run command:
+ 
 ```bash
 docker run \
-  --name jenkins-blueocean \
-  --restart=on-failure \
+  --name jenkins-docker \
+  --rm \
   --detach \
+  --privileged \
   --network jenkins \
-  --env DOCKER_HOST=tcp://docker:2376 \
-  --env DOCKER_CERT_PATH=/certs/client \
-  --env DOCKER_TLS_VERIFY=1 \
-  --publish 8080:8080 \
-  --publish 50000:50000 \
+  --network-alias docker \
+  --env DOCKER_TLS_CERTDIR=/certs \
+  --volume jenkins-docker-certs:/certs/client \
   --volume jenkins-data:/var/jenkins_home \
-  --volume jenkins-docker-certs:/certs/client:ro \
-  myjenkins-blueocean:2.414.3-1 
+  --publish 2376:2376 \
+  docker:dind \
+  --storage-driver overlay2
 ```
 
 Customize the official Jenkins Docker image, by executing the following two steps:
@@ -32,7 +32,7 @@ Customize the official Jenkins Docker image, by executing the following two step
 Create a Dockerfile with the following content:
 
 ```Dockerfile
-FROM jenkins/jenkins:2.414.3-jdk17
+FROM jenkins/jenkins:2.426.1-jdk17
 USER root
 RUN apt-get update && apt-get install -y lsb-release
 RUN curl -fsSLo /usr/share/keyrings/docker-archive-keyring.asc \

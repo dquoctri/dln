@@ -25,7 +25,7 @@ export const MainRoutes: RouteObject = {
   path: "/",
   element: <MainLayout />,
   children: [
-    { index: true, element: <Home title ="Xoai Home"/> },
+    { index: true, element: <Home title="Xoai Home" /> },
     { path: "dashboard", element: <Dashboard title="dashnono" description="dashboard" abc="Jkkk" /> },
     { path: "profile", element: <Profile /> },
     { path: "setting", element: <Settings /> },
